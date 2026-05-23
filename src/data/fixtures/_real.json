@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-05-23T20:54:08.901Z",
+  "fetchedAt": "2026-05-23T21:02:55.066Z",
   "source": "ESPN site.api / site.web.api (public, unauth)",
   "odds": {
     "provider": "DraftKings",
@@ -28,7 +28,8 @@
       "team": "NYK",
       "position": "PG",
       "seasonMin": 35,
-      "projMin": 38,
+      "projMin": 36.083333333333336,
+      "projMinRosterDefault": 38,
       "usage": 0.2586336914656396,
       "ts": 0.5801499464476974,
       "per36": {
@@ -40,20 +41,47 @@
         "blk": 0.10285714285714286,
         "to": 2.4685714285714284
       },
-      "ptsStd": 9.293520645278615,
+      "ptsStd": 9.100105504981169,
       "starter": true,
       "split": {
-        "n": 78,
-        "homeN": 41,
-        "awayN": 37,
-        "seasonAvgPts": 25.192307692307693,
-        "seasonStdPts": 9.035367294020878,
-        "homePts": 25.634146341463413,
-        "awayPts": 24.7027027027027,
-        "homeMult": 1.017538633401601,
-        "awayMult": 0.98056529812255,
-        "last5Avg": 22.6,
-        "recentForm": 0.8970992366412214
+        "n": 90,
+        "homeN": 48,
+        "awayN": 42,
+        "seasonAvgPts": 25.511111111111113,
+        "seasonStdPts": 8.84732479650947,
+        "homePts": 26.354166666666668,
+        "awayPts": 24.547619047619047,
+        "homeMult": 1.0330466027874565,
+        "awayMult": 0.9622324539571926,
+        "last5Avg": 27.6,
+        "recentForm": 1.0818815331010452,
+        "restB2B": {
+          "n": 14,
+          "avgPts": 20.857142857142858,
+          "mult": 0.85
+        },
+        "rest1Day": {
+          "n": 51,
+          "avgPts": 26.254901960784313,
+          "mult": 1.0291555646648902
+        },
+        "rest2Plus": {
+          "n": 25,
+          "avgPts": 26.6,
+          "mult": 1.0426829268292683
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 26.8,
+          "avgReb": 2.8,
+          "avgAst": 6.6,
+          "mult": 1.0505226480836236
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 36.083333333333336,
+          "avgPts": 27.583333333333332
+        }
       }
     },
     {
@@ -63,7 +91,8 @@
       "team": "NYK",
       "position": "SF",
       "seasonMin": 32.8,
-      "projMin": 37,
+      "projMin": 31.25,
+      "projMinRosterDefault": 37,
       "usage": 0.14715727331609427,
       "ts": 0.5888125613346419,
       "per36": {
@@ -75,20 +104,47 @@
         "blk": 0.878048780487805,
         "to": 1.0975609756097562
       },
-      "ptsStd": 6.599341813555062,
+      "ptsStd": 6.722923844700736,
       "starter": true,
       "split": {
-        "n": 82,
-        "homeN": 41,
-        "awayN": 41,
-        "seasonAvgPts": 14.536585365853659,
-        "seasonStdPts": 6.0127336523501675,
-        "homePts": 13.463414634146341,
-        "awayPts": 15.609756097560975,
-        "homeMult": 0.9261744966442952,
-        "awayMult": 1.0738255033557047,
-        "last5Avg": 14.8,
-        "recentForm": 1.0181208053691275
+        "n": 94,
+        "homeN": 48,
+        "awayN": 46,
+        "seasonAvgPts": 14.457446808510639,
+        "seasonStdPts": 6.12533061406067,
+        "homePts": 13.583333333333334,
+        "awayPts": 15.369565217391305,
+        "homeMult": 0.9395388766249694,
+        "awayMult": 1.0630898678695972,
+        "last5Avg": 18,
+        "recentForm": 1.2450331125827814,
+        "restB2B": {
+          "n": 14,
+          "avgPts": 15.214285714285714,
+          "mult": 1.052349416587827
+        },
+        "rest1Day": {
+          "n": 59,
+          "avgPts": 14.525423728813559,
+          "mult": 1.0047018620371408
+        },
+        "rest2Plus": {
+          "n": 21,
+          "avgPts": 13.761904761904763,
+          "mult": 0.9518903955990049
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 16.6,
+          "avgReb": 4,
+          "avgAst": 3.2,
+          "mult": 1.148197203826343
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 31.25,
+          "avgPts": 13.916666666666666
+        }
       }
     },
     {
@@ -98,7 +154,8 @@
       "team": "NYK",
       "position": "G/F",
       "seasonMin": 30.2,
-      "projMin": 35,
+      "projMin": 33.583333333333336,
+      "projMinRosterDefault": 35,
       "usage": 0.1417994503834831,
       "ts": 0.6100040666937779,
       "per36": {
@@ -110,20 +167,47 @@
         "blk": 0.3576158940397351,
         "to": 2.2649006622516556
       },
-      "ptsStd": 7.509138277622197,
+      "ptsStd": 7.433208333002548,
       "starter": true,
       "split": {
-        "n": 67,
-        "homeN": 35,
-        "awayN": 32,
-        "seasonAvgPts": 11.985074626865671,
-        "seasonStdPts": 6.299332666227509,
-        "homePts": 12.514285714285714,
-        "awayPts": 11.40625,
-        "homeMult": 1.0441558441558443,
-        "awayMult": 0.9517045454545455,
-        "last5Avg": 8.6,
-        "recentForm": 0.8
+        "n": 79,
+        "homeN": 42,
+        "awayN": 37,
+        "seasonAvgPts": 11.962025316455696,
+        "seasonStdPts": 6.235635879352137,
+        "homePts": 12.5,
+        "awayPts": 11.35135135135135,
+        "homeMult": 1.0449735449735449,
+        "awayMult": 0.9489489489489489,
+        "last5Avg": 14.6,
+        "recentForm": 1.2205291005291006,
+        "restB2B": {
+          "n": 11,
+          "avgPts": 10.090909090909092,
+          "mult": 0.85
+        },
+        "rest1Day": {
+          "n": 42,
+          "avgPts": 13.738095238095237,
+          "mult": 1.1484756865709247
+        },
+        "rest2Plus": {
+          "n": 26,
+          "avgPts": 9.884615384615385,
+          "mult": 0.85
+        },
+        "vsOpponent": {
+          "n": 4,
+          "avgPts": 16,
+          "avgReb": 5,
+          "avgAst": 4.75,
+          "mult": 1.3
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 33.583333333333336,
+          "avgPts": 11.833333333333334
+        }
       }
     },
     {
@@ -133,7 +217,8 @@
       "team": "NYK",
       "position": "SF",
       "seasonMin": 33.2,
-      "projMin": 36,
+      "projMin": 34.8,
+      "projMinRosterDefault": 36,
       "usage": 0.1676293660349894,
       "ts": 0.6207255426702348,
       "per36": {
@@ -145,20 +230,47 @@
         "blk": 0.7590361445783131,
         "to": 1.9518072289156625
       },
-      "ptsStd": 8.023669256977772,
+      "ptsStd": 7.877486791853652,
       "starter": true,
       "split": {
-        "n": 68,
-        "homeN": 37,
-        "awayN": 31,
-        "seasonAvgPts": 16.852941176470587,
-        "seasonStdPts": 7.3996060925461675,
-        "homePts": 16.27027027027027,
-        "awayPts": 17.548387096774192,
-        "homeMult": 0.9654261591434367,
-        "awayMult": 1.0412655519900917,
-        "last5Avg": 18.6,
-        "recentForm": 1.1036649214659688
+        "n": 78,
+        "homeN": 44,
+        "awayN": 34,
+        "seasonAvgPts": 17.23076923076923,
+        "seasonStdPts": 7.2647933747094795,
+        "homePts": 16.363636363636363,
+        "awayPts": 18.352941176470587,
+        "homeMult": 0.9496753246753247,
+        "awayMult": 1.065126050420168,
+        "last5Avg": 19.6,
+        "recentForm": 1.1375000000000002,
+        "restB2B": {
+          "n": 12,
+          "avgPts": 15.833333333333334,
+          "mult": 0.9188988095238096
+        },
+        "rest1Day": {
+          "n": 45,
+          "avgPts": 17.177777777777777,
+          "mult": 0.9969246031746032
+        },
+        "rest2Plus": {
+          "n": 21,
+          "avgPts": 18.142857142857142,
+          "mult": 1.0529336734693877
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 12.8,
+          "avgReb": 5.6,
+          "avgAst": 2.2,
+          "mult": 0.7428571428571429
+        },
+        "playoff": {
+          "n": 10,
+          "avgMin": 34.8,
+          "avgPts": 19.8
+        }
       }
     },
     {
@@ -168,7 +280,8 @@
       "team": "NYK",
       "position": "C",
       "seasonMin": 31,
-      "projMin": 35,
+      "projMin": 30.083333333333332,
+      "projMinRosterDefault": 35,
       "usage": 0.22034618729687497,
       "ts": 0.6196054254007399,
       "per36": {
@@ -180,20 +293,47 @@
         "blk": 0.5806451612903226,
         "to": 2.903225806451613
       },
-      "ptsStd": 8.993968108448636,
+      "ptsStd": 8.627584605526893,
       "starter": true,
       "split": {
-        "n": 78,
-        "homeN": 38,
-        "awayN": 40,
-        "seasonAvgPts": 19.692307692307693,
-        "seasonStdPts": 7.744805871164103,
-        "homePts": 20.236842105263158,
-        "awayPts": 19.175,
-        "homeMult": 1.0276521381578947,
-        "awayMult": 0.97373046875,
-        "last5Avg": 20.2,
-        "recentForm": 1.0257812499999999
+        "n": 90,
+        "homeN": 45,
+        "awayN": 45,
+        "seasonAvgPts": 19.344444444444445,
+        "seasonStdPts": 7.429308965870379,
+        "homePts": 19.91111111111111,
+        "awayPts": 18.77777777777778,
+        "homeMult": 1.029293509477312,
+        "awayMult": 0.9707064905226881,
+        "last5Avg": 15.2,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 13,
+          "avgPts": 21.615384615384617,
+          "mult": 1.1173949542703132
+        },
+        "rest1Day": {
+          "n": 50,
+          "avgPts": 19.1,
+          "mult": 0.987363584147042
+        },
+        "rest2Plus": {
+          "n": 27,
+          "avgPts": 18.703703703703702,
+          "mult": 0.9668772735975492
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 15,
+          "avgReb": 11.6,
+          "avgAst": 2.2,
+          "mult": 0.7754164273406088
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 30.083333333333332,
+          "avgPts": 17.083333333333332
+        }
       }
     },
     {
@@ -203,7 +343,8 @@
       "team": "NYK",
       "position": "C",
       "seasonMin": 19.6,
-      "projMin": 20,
+      "projMin": 14.272727272727273,
+      "projMinRosterDefault": 20,
       "usage": 0.09025430565496015,
       "ts": 0.6870781099324976,
       "per36": {
@@ -215,20 +356,47 @@
         "blk": 2.204081632653061,
         "to": 1.2857142857142856
       },
-      "ptsStd": 7.734905291898694,
+      "ptsStd": 7.421963514392454,
       "starter": false,
       "split": {
-        "n": 61,
-        "homeN": 32,
-        "awayN": 29,
-        "seasonAvgPts": 5.639344262295082,
-        "seasonStdPts": 4.211226214478178,
-        "homePts": 6.0625,
-        "awayPts": 5.172413793103448,
-        "homeMult": 1.0750363372093024,
-        "awayMult": 0.9172012830793905,
-        "last5Avg": 8,
-        "recentForm": 1.25
+        "n": 72,
+        "homeN": 38,
+        "awayN": 34,
+        "seasonAvgPts": 5.597222222222222,
+        "seasonStdPts": 4.0408468022803365,
+        "homePts": 5.973684210526316,
+        "awayPts": 5.176470588235294,
+        "homeMult": 1.0672587175133865,
+        "awayMult": 0.9248284921909211,
+        "last5Avg": 4.4,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 0,
+          "avgPts": 0,
+          "mult": 1
+        },
+        "rest1Day": {
+          "n": 37,
+          "avgPts": 5.135135135135135,
+          "mult": 0.9174434980886593
+        },
+        "rest2Plus": {
+          "n": 35,
+          "avgPts": 6.085714285714285,
+          "mult": 1.0872740163062744
+        },
+        "vsOpponent": {
+          "n": 4,
+          "avgPts": 4.75,
+          "avgReb": 9.75,
+          "avgAst": 1,
+          "mult": 0.8486352357320099
+        },
+        "playoff": {
+          "n": 11,
+          "avgMin": 14.272727272727273,
+          "avgPts": 5.363636363636363
+        }
       }
     },
     {
@@ -238,7 +406,8 @@
       "team": "NYK",
       "position": "PG",
       "seasonMin": 26.3,
-      "projMin": 16,
+      "projMin": 19.666666666666668,
+      "projMinRosterDefault": 16,
       "usage": 0.1551682276343305,
       "ts": 0.5778120184899845,
       "per36": {
@@ -250,20 +419,47 @@
         "blk": 0.2737642585551331,
         "to": 1.0950570342205324
       },
-      "ptsStd": 9.189918977723663,
+      "ptsStd": 9.792433069745309,
       "starter": false,
       "split": {
-        "n": 41,
-        "homeN": 24,
-        "awayN": 17,
-        "seasonAvgPts": 11.975609756097562,
-        "seasonStdPts": 6.713746364281454,
-        "homePts": 11.666666666666666,
-        "awayPts": 12.411764705882353,
-        "homeMult": 0.974202308214528,
-        "awayMult": 1.0364202707559602,
-        "last5Avg": 8,
-        "recentForm": 0.8
+        "n": 53,
+        "homeN": 31,
+        "awayN": 22,
+        "seasonAvgPts": 10.773584905660377,
+        "seasonStdPts": 7.153916381508378,
+        "homePts": 9.774193548387096,
+        "awayPts": 12.181818181818182,
+        "homeMult": 0.9072368792723575,
+        "awayMult": 1.1307116701162236,
+        "last5Avg": 7.4,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 5,
+          "avgPts": 14.4,
+          "mult": 1.15
+        },
+        "rest1Day": {
+          "n": 29,
+          "avgPts": 11.517241379310345,
+          "mult": 1.0690259073615558
+        },
+        "rest2Plus": {
+          "n": 19,
+          "avgPts": 8.68421052631579,
+          "mult": 0.85
+        },
+        "vsOpponent": {
+          "n": 3,
+          "avgPts": 6.666666666666667,
+          "avgReb": 2.6666666666666665,
+          "avgAst": 1.6666666666666667,
+          "mult": 0.7
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 19.666666666666668,
+          "avgPts": 6.666666666666667
+        }
       }
     },
     {
@@ -273,7 +469,8 @@
       "team": "CLE",
       "position": "SG",
       "seasonMin": 33.5,
-      "projMin": 38,
+      "projMin": 36.375,
+      "projMinRosterDefault": 38,
       "usage": 0.2749098989945805,
       "ts": 0.6149709046023628,
       "per36": {
@@ -285,20 +482,47 @@
         "blk": 0.32238805970149254,
         "to": 3.008955223880597
       },
-      "ptsStd": 10.28569456388938,
+      "ptsStd": 9.850434910839699,
       "starter": true,
       "split": {
-        "n": 72,
-        "homeN": 39,
-        "awayN": 33,
-        "seasonAvgPts": 27.27777777777778,
-        "seasonStdPts": 9.57141021917484,
-        "homePts": 27.53846153846154,
-        "awayPts": 26.96969696969697,
-        "homeMult": 1.0095566348112173,
-        "awayMult": 0.9887057952231068,
-        "last5Avg": 27.6,
-        "recentForm": 1.0118126272912424
+        "n": 88,
+        "homeN": 46,
+        "awayN": 42,
+        "seasonAvgPts": 27.022727272727273,
+        "seasonStdPts": 9.166376930920276,
+        "homePts": 27.67391304347826,
+        "awayPts": 26.30952380952381,
+        "homeMult": 1.024097707243939,
+        "awayMult": 0.973607273018543,
+        "last5Avg": 24,
+        "recentForm": 0.8881412952060554,
+        "restB2B": {
+          "n": 12,
+          "avgPts": 25.75,
+          "mult": 0.952901597981497
+        },
+        "rest1Day": {
+          "n": 52,
+          "avgPts": 25.923076923076923,
+          "mult": 0.9593064630911561
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 30.041666666666668,
+          "mult": 1.1117185309784132
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 28.6,
+          "avgReb": 4.6,
+          "avgAst": 3.8,
+          "mult": 1.058368376787216
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 36.375,
+          "avgPts": 25.875
+        }
       }
     },
     {
@@ -308,7 +532,8 @@
       "team": "CLE",
       "position": "PF",
       "seasonMin": 31.9,
-      "projMin": 36,
+      "projMin": 35.625,
+      "projMinRosterDefault": 36,
       "usage": 0.19399124264316447,
       "ts": 0.5977404098791381,
       "per36": {
@@ -320,20 +545,47 @@
         "blk": 1.9184952978056429,
         "to": 2.1442006269592477
       },
-      "ptsStd": 6.780648042433779,
+      "ptsStd": 6.606347865230055,
       "starter": true,
       "split": {
-        "n": 65,
-        "homeN": 33,
-        "awayN": 32,
-        "seasonAvgPts": 18.153846153846153,
-        "seasonStdPts": 6.008407570934376,
-        "homePts": 18.515151515151516,
-        "awayPts": 17.78125,
-        "homeMult": 1.0199024139702106,
-        "awayMult": 0.9794756355932204,
-        "last5Avg": 14.8,
-        "recentForm": 0.8152542372881356
+        "n": 81,
+        "homeN": 40,
+        "awayN": 41,
+        "seasonAvgPts": 17.864197530864196,
+        "seasonStdPts": 5.8539582472455205,
+        "homePts": 18.425,
+        "awayPts": 17.317073170731707,
+        "homeMult": 1.0313925362819627,
+        "awayMult": 0.9693731353346706,
+        "last5Avg": 17.4,
+        "recentForm": 0.974015203870076,
+        "restB2B": {
+          "n": 9,
+          "avgPts": 14,
+          "mult": 0.85
+        },
+        "rest1Day": {
+          "n": 54,
+          "avgPts": 18.22222222222222,
+          "mult": 1.0200414651002074
+        },
+        "rest2Plus": {
+          "n": 18,
+          "avgPts": 18.72222222222222,
+          "mult": 1.048030407740152
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 15.4,
+          "avgReb": 8.8,
+          "avgAst": 2.6,
+          "mult": 0.8620594333102972
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 35.625,
+          "avgPts": 16.6875
+        }
       }
     },
     {
@@ -343,7 +595,8 @@
       "team": "CLE",
       "position": "C",
       "seasonMin": 27.1,
-      "projMin": 30,
+      "projMin": 29.125,
+      "projMinRosterDefault": 30,
       "usage": 0.17026334920102382,
       "ts": 0.6714335542378793,
       "per36": {
@@ -355,20 +608,47 @@
         "blk": 1.062730627306273,
         "to": 1.7269372693726939
       },
-      "ptsStd": 9.476374844296242,
+      "ptsStd": 9.264453214943448,
       "starter": true,
       "split": {
-        "n": 56,
-        "homeN": 25,
-        "awayN": 31,
-        "seasonAvgPts": 15.357142857142858,
-        "seasonStdPts": 7.133604396678559,
-        "homePts": 13.44,
-        "awayPts": 16.903225806451612,
-        "homeMult": 0.8751627906976743,
-        "awayMult": 1.100675168792198,
-        "last5Avg": 16.2,
-        "recentForm": 1.0548837209302324
+        "n": 72,
+        "homeN": 32,
+        "awayN": 40,
+        "seasonAvgPts": 14.805555555555555,
+        "seasonStdPts": 6.974074503471318,
+        "homePts": 13.34375,
+        "awayPts": 15.975,
+        "homeMult": 0.9012664165103189,
+        "awayMult": 1.0789868667917448,
+        "last5Avg": 15,
+        "recentForm": 1.0131332082551594,
+        "restB2B": {
+          "n": 7,
+          "avgPts": 16,
+          "mult": 1.0806754221388368
+        },
+        "rest1Day": {
+          "n": 47,
+          "avgPts": 15.127659574468085,
+          "mult": 1.0217556185381822
+        },
+        "rest2Plus": {
+          "n": 18,
+          "avgPts": 13.5,
+          "mult": 0.9118198874296436
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 10.6,
+          "avgReb": 7.8,
+          "avgAst": 1.4,
+          "mult": 0.7159474671669793
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 29.125,
+          "avgPts": 12.875
+        }
       }
     },
     {
@@ -378,7 +658,8 @@
       "team": "CLE",
       "position": "PG",
       "seasonMin": 35.4,
-      "projMin": 34,
+      "projMin": 37.375,
+      "projMinRosterDefault": 34,
       "usage": 0.2546013933091308,
       "ts": 0.5979284369114877,
       "per36": {
@@ -390,20 +671,47 @@
         "blk": 0.4067796610169492,
         "to": 3.76271186440678
       },
-      "ptsStd": 7.849425417505688,
+      "ptsStd": 7.639133572506234,
       "starter": true,
       "split": {
-        "n": 70,
-        "homeN": 33,
-        "awayN": 37,
-        "seasonAvgPts": 23.6,
-        "seasonStdPts": 7.71860166054726,
-        "homePts": 21.87878787878788,
-        "awayPts": 25.135135135135137,
-        "homeMult": 0.9270672829994864,
-        "awayMult": 1.065048098946404,
-        "last5Avg": 21,
-        "recentForm": 0.8898305084745762
+        "n": 86,
+        "homeN": 40,
+        "awayN": 46,
+        "seasonAvgPts": 22.86046511627907,
+        "seasonStdPts": 7.51181467963113,
+        "homePts": 21.975,
+        "awayPts": 23.630434782608695,
+        "homeMult": 0.9612665310274671,
+        "awayMult": 1.03368127736742,
+        "last5Avg": 19,
+        "recentForm": 0.8311291963377416,
+        "restB2B": {
+          "n": 11,
+          "avgPts": 22.90909090909091,
+          "mult": 1.0021270692684732
+        },
+        "rest1Day": {
+          "n": 48,
+          "avgPts": 23.0625,
+          "mult": 1.0088377416073244
+        },
+        "rest2Plus": {
+          "n": 27,
+          "avgPts": 22.48148148148148,
+          "mult": 0.9834218755887117
+        },
+        "vsOpponent": {
+          "n": 4,
+          "avgPts": 19,
+          "avgReb": 3.75,
+          "avgAst": 4.5,
+          "mult": 0.8311291963377416
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 37.375,
+          "avgPts": 19.625
+        }
       }
     },
     {
@@ -413,7 +721,8 @@
       "team": "CLE",
       "position": "SF",
       "seasonMin": 24,
-      "projMin": 28,
+      "projMin": 26.875,
+      "projMinRosterDefault": 28,
       "usage": 0.14985343916052096,
       "ts": 0.6118881118881118,
       "per36": {
@@ -425,20 +734,47 @@
         "blk": 0,
         "to": 1.2000000000000002
       },
-      "ptsStd": 12,
+      "ptsStd": 11.725024114098462,
       "starter": true,
       "split": {
-        "n": 12,
-        "homeN": 6,
-        "awayN": 6,
-        "seasonAvgPts": 11.166666666666666,
-        "seasonStdPts": 9.45643920427993,
-        "homePts": 14.333333333333334,
-        "awayPts": 8,
+        "n": 28,
+        "homeN": 13,
+        "awayN": 15,
+        "seasonAvgPts": 10.285714285714286,
+        "seasonStdPts": 7.816682742732308,
+        "homePts": 11.846153846153847,
+        "awayPts": 8.933333333333334,
         "homeMult": 1.15,
-        "awayMult": 0.85,
+        "awayMult": 0.8685185185185185,
         "last5Avg": 9.6,
-        "recentForm": 0.8597014925373134
+        "recentForm": 0.9333333333333332,
+        "restB2B": {
+          "n": 0,
+          "avgPts": 0,
+          "mult": 1
+        },
+        "rest1Day": {
+          "n": 18,
+          "avgPts": 8.5,
+          "mult": 0.85
+        },
+        "rest2Plus": {
+          "n": 10,
+          "avgPts": 13.5,
+          "mult": 1.15
+        },
+        "vsOpponent": {
+          "n": 2,
+          "avgPts": 6.5,
+          "avgReb": 3,
+          "avgAst": 2,
+          "mult": 0.7
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 26.875,
+          "avgPts": 9.625
+        }
       }
     },
     {
@@ -448,7 +784,8 @@
       "team": "CLE",
       "position": "SG",
       "seasonMin": 26.5,
-      "projMin": 19,
+      "projMin": 19.733333333333334,
+      "projMinRosterDefault": 19,
       "usage": 0.1455350272451386,
       "ts": 0.6482982171799028,
       "per36": {
@@ -460,20 +797,47 @@
         "blk": 0.13584905660377358,
         "to": 1.0867924528301887
       },
-      "ptsStd": 9.240692873985262,
+      "ptsStd": 9.283314835547353,
       "starter": false,
       "split": {
-        "n": 52,
-        "homeN": 23,
-        "awayN": 29,
-        "seasonAvgPts": 12.75,
-        "seasonStdPts": 6.802176698905819,
-        "homePts": 12.304347826086957,
-        "awayPts": 13.10344827586207,
-        "homeMult": 0.9650468883205456,
-        "awayMult": 1.0277214334009466,
-        "last5Avg": 9.8,
-        "recentForm": 0.8
+        "n": 67,
+        "homeN": 30,
+        "awayN": 37,
+        "seasonAvgPts": 11.701492537313433,
+        "seasonStdPts": 6.833551198389024,
+        "homePts": 11.333333333333334,
+        "awayPts": 12,
+        "homeMult": 0.9685374149659864,
+        "awayMult": 1.0255102040816326,
+        "last5Avg": 11,
+        "recentForm": 0.9400510204081632,
+        "restB2B": {
+          "n": 8,
+          "avgPts": 12.125,
+          "mult": 1.0361926020408163
+        },
+        "rest1Day": {
+          "n": 40,
+          "avgPts": 12.525,
+          "mult": 1.0703762755102042
+        },
+        "rest2Plus": {
+          "n": 19,
+          "avgPts": 9.789473684210526,
+          "mult": 0.85
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 9.2,
+          "avgReb": 2,
+          "avgAst": 1,
+          "mult": 0.7862244897959183
+        },
+        "playoff": {
+          "n": 15,
+          "avgMin": 19.733333333333334,
+          "avgPts": 8.066666666666666
+        }
       }
     },
     {
@@ -483,7 +847,8 @@
       "team": "CLE",
       "position": "PF",
       "seasonMin": 22.3,
-      "projMin": 17,
+      "projMin": 23.625,
+      "projMinRosterDefault": 17,
       "usage": 0.08530580909344032,
       "ts": 0.5842062852538275,
       "per36": {
@@ -495,20 +860,47 @@
         "blk": 0.6457399103139014,
         "to": 0.48430493273542596
       },
-      "ptsStd": 6.253736532231707,
+      "ptsStd": 5.974532481952733,
       "starter": false,
       "split": {
-        "n": 58,
-        "homeN": 30,
-        "awayN": 28,
-        "seasonAvgPts": 5.896551724137931,
-        "seasonStdPts": 3.873842351910196,
-        "homePts": 6.566666666666666,
-        "awayPts": 5.178571428571429,
-        "homeMult": 1.11364522417154,
-        "awayMult": 0.8782372598162073,
-        "last5Avg": 4,
-        "recentForm": 0.8
+        "n": 74,
+        "homeN": 37,
+        "awayN": 37,
+        "seasonAvgPts": 5.6891891891891895,
+        "seasonStdPts": 3.700890954098498,
+        "homePts": 6.027027027027027,
+        "awayPts": 5.351351351351352,
+        "homeMult": 1.0593824228028503,
+        "awayMult": 0.9406175771971497,
+        "last5Avg": 4.2,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 9,
+          "avgPts": 6.777777777777778,
+          "mult": 1.15
+        },
+        "rest1Day": {
+          "n": 48,
+          "avgPts": 5.520833333333333,
+          "mult": 0.9704077593032462
+        },
+        "rest2Plus": {
+          "n": 17,
+          "avgPts": 5.588235294117647,
+          "mult": 0.9822551348330305
+        },
+        "vsOpponent": {
+          "n": 5,
+          "avgPts": 8,
+          "avgReb": 4.4,
+          "avgAst": 2.2,
+          "mult": 1.3
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 23.625,
+          "avgPts": 4.9375
+        }
       }
     },
     {
@@ -518,7 +910,8 @@
       "team": "CLE",
       "position": "PG",
       "seasonMin": 26.4,
-      "projMin": 15,
+      "projMin": 16.25,
+      "projMinRosterDefault": 15,
       "usage": 0.19235425744333168,
       "ts": 0.5310321938267508,
       "per36": {
@@ -530,20 +923,47 @@
         "blk": 0.27272727272727276,
         "to": 2.7272727272727275
       },
-      "ptsStd": 9.44070132659162,
+      "ptsStd": 9.315842141835091,
       "starter": false,
       "split": {
-        "n": 70,
-        "homeN": 31,
-        "awayN": 39,
-        "seasonAvgPts": 10.8,
-        "seasonStdPts": 6.923180972833854,
-        "homePts": 9.580645161290322,
-        "awayPts": 11.76923076923077,
-        "homeMult": 0.8870967741935483,
-        "awayMult": 1.0897435897435896,
-        "last5Avg": 10.4,
-        "recentForm": 0.9629629629629629
+        "n": 86,
+        "homeN": 38,
+        "awayN": 48,
+        "seasonAvgPts": 9.848837209302326,
+        "seasonStdPts": 6.831617570679066,
+        "homePts": 9.026315789473685,
+        "awayPts": 10.5,
+        "homeMult": 0.916485428447151,
+        "awayMult": 1.0661157024793388,
+        "last5Avg": 2.8,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 14,
+          "avgPts": 11.214285714285714,
+          "mult": 1.1386405801990216
+        },
+        "rest1Day": {
+          "n": 53,
+          "avgPts": 9.226415094339623,
+          "mult": 0.936802477111225
+        },
+        "rest2Plus": {
+          "n": 19,
+          "avgPts": 10.578947368421053,
+          "mult": 1.0741316100167775
+        },
+        "vsOpponent": {
+          "n": 4,
+          "avgPts": 3.5,
+          "avgReb": 1.75,
+          "avgAst": 4.25,
+          "mult": 0.7
+        },
+        "playoff": {
+          "n": 16,
+          "avgMin": 16.25,
+          "avgPts": 5.6875
+        }
       }
     }
   ],
@@ -579,5 +999,10 @@
     "spreadCoverRate": 0.6153846153846154,
     "overRate": 0.5769230769230769,
     "games": 26
+  },
+  "tunedWeights": {
+    "mcWeight": 0.55,
+    "regWeight": 0.45,
+    "expectedBrier": 0.2057425769406479
   }
 }

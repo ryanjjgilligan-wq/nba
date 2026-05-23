@@ -76,6 +76,35 @@ describe("real ESPN data", () => {
     expect(allen.awayMult).toBeGreaterThan(allen.homeMult);
   });
 
+  it("loaded real opponent-specific history (vsOpponent splits)", () => {
+    // Mitchell has real vs-NYK history
+    const mitchell = PLAYERS.find((p) => p.id === "mitchell")!;
+    expect(mitchell.vsOpponentN).toBeGreaterThanOrEqual(3);
+    expect(mitchell.vsOpponentPPG).toBeGreaterThan(0);
+    // Mobley vs NYK: real history shows ~15.4 PPG vs ~18.2 season — multiplier below 1.0
+    const mobley = PLAYERS.find((p) => p.id === "mobley")!;
+    expect(mobley.vsOpponentN).toBeGreaterThanOrEqual(3);
+    expect(mobley.vsOpponentMult).toBeLessThan(1.0);
+  });
+
+  it("loaded real rest-day multipliers", () => {
+    const brunson = PLAYERS.find((p) => p.id === "brunson")!;
+    expect(brunson.rest2PlusMult).toBeGreaterThan(0);
+    expect(brunson.restB2BMult).toBeGreaterThan(0);
+    // The three multipliers should sum to roughly 3.0 (averaged near 1.0 each)
+    const sum = brunson.restB2BMult + brunson.rest1Mult + brunson.rest2PlusMult;
+    expect(sum).toBeGreaterThan(2.0);
+    expect(sum).toBeLessThan(4.0);
+  });
+
+  it("uses REAL playoff minutes when available (not synthetic projMin)", () => {
+    const brunson = PLAYERS.find((p) => p.id === "brunson")!;
+    expect(brunson.playoffN).toBeGreaterThanOrEqual(8);
+    expect(brunson.playoffMin).toBeGreaterThan(30);
+    // Minutes baseline should match playoff minutes within a couple
+    expect(Math.abs(brunson.minutes - brunson.playoffMin)).toBeLessThan(3);
+  });
+
   it("uses REAL team pace from sampled box scores (not assumed 98)", () => {
     expect(TEAMS.NYK.pace).toBeGreaterThan(97);
     expect(TEAMS.NYK.pace).toBeLessThan(101);

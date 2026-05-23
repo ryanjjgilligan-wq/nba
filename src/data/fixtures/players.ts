@@ -19,6 +19,11 @@ interface RealSplit {
   awayMult: number;
   last5Avg: number;
   recentForm: number;
+  restB2B: { n: number; avgPts: number; mult: number };
+  rest1Day: { n: number; avgPts: number; mult: number };
+  rest2Plus: { n: number; avgPts: number; mult: number };
+  vsOpponent: { n: number; avgPts: number; avgReb: number; avgAst: number; mult: number };
+  playoff: { n: number; avgMin: number; avgPts: number };
 }
 
 interface RealPlayer {
@@ -90,6 +95,16 @@ export const PLAYERS: PlayerBaseline[] = REAL.players.map((p) => {
     homeMult,
     awayMult,
     recentForm,
+    // NEW REAL features
+    vsOpponentMult: p.split?.vsOpponent.mult ?? 1.0,
+    vsOpponentN: p.split?.vsOpponent.n ?? 0,
+    vsOpponentPPG: p.split?.vsOpponent.avgPts ?? 0,
+    restB2BMult: p.split?.restB2B.mult ?? 1.0,
+    rest1Mult: p.split?.rest1Day.mult ?? 1.0,
+    rest2PlusMult: p.split?.rest2Plus.mult ?? 1.0,
+    playoffMin: p.split?.playoff.avgMin ?? 0,
+    playoffPpg: p.split?.playoff.avgPts ?? 0,
+    playoffN: p.split?.playoff.n ?? 0,
     notes: PER_PLAYER_NOTES[p.id],
   };
 });

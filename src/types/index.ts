@@ -33,6 +33,18 @@ export interface PlayerBaseline {
   awayMult: number;
   // Recent form last 5 vs season (multiplier)
   recentForm: number;
+  // NEW: opponent-specific multiplier (head-to-head history)
+  vsOpponentMult: number;
+  vsOpponentN: number;
+  vsOpponentPPG: number;
+  // NEW: rest-day multipliers
+  restB2BMult: number;
+  rest1Mult: number;
+  rest2PlusMult: number;
+  // NEW: playoff-only averages (truer signal for tonight)
+  playoffMin: number;
+  playoffPpg: number;
+  playoffN: number;
   // Notes
   notes?: string;
 }

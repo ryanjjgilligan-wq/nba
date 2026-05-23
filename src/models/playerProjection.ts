@@ -9,25 +9,39 @@ import type {
 } from "../types";
 import { matchupMultiplier, paceMultiplier, venueMultiplier } from "./matchup";
 
-// Bayesian-ish stat projection: blend prior (season) with per-game stochastic
-// modifiers (matchup, venue, pace, form, sentiment). We return mean/std and
-// quartiles assuming roughly normal game-to-game variance, which is a good
-// approximation for points and a serviceable one for rebs/asts at the volumes
-// these starters see.
+// Bayesian-ish per-player projection: blend prior (per-36 × minutes) with
+// per-game stochastic modifiers (matchup, venue, pace, form, opponent-specific
+// history, rest-day, sentiment). The mean/variance assumption is right-skewed
+// for points (long tail for big nights), modeled by inflating the upper
+// quartile distance relative to the lower — see dist() below.
 
-const Z25 = -0.6745; // standard normal quartiles
+const Z25 = -0.6745;
 const Z75 = 0.6745;
+// Skew factor: real game-to-game points are right-skewed; stretch upper tail.
+const SKEW_UPPER = 1.18;
+const SKEW_LOWER = 0.92;
 
-function dist(mean: number, std: number): ProjectionDist {
+function dist(mean: number, std: number, skew = false): ProjectionDist {
   const safe = Math.max(0, mean);
   const s = Math.max(0.5, std);
+  const lower = skew ? SKEW_LOWER : 1.0;
+  const upper = skew ? SKEW_UPPER : 1.0;
   return {
     mean: safe,
     std: s,
-    p25: Math.max(0, safe + Z25 * s),
+    p25: Math.max(0, safe + Z25 * s * lower),
     p50: safe,
-    p75: safe + Z75 * s,
+    p75: safe + Z75 * s * upper,
   };
+}
+
+// Days of rest before tonight's game (Game 2 was Thu 5/21, Game 3 is Sat 5/23 → 2 days = 1 day rest)
+const REST_DAYS_BEFORE_GAME: number = 1;
+
+function pickRestMult(p: PlayerBaseline, restDays: number): number {
+  if (restDays <= 0.5) return p.restB2BMult;
+  if (restDays <= 1.5) return p.rest1Mult;
+  return p.rest2PlusMult;
 }
 
 export function projectPlayer(
@@ -44,7 +58,6 @@ export function projectPlayer(
   let minutes = p.minutes;
   const injMyTeam = injuries.find((i) => i.team === p.team && i.player === p.name);
   if (injMyTeam) minutes += injMyTeam.minutesImpact;
-  // Implicit minutes bump if a same-position teammate is OUT
   const outTeammates = injuries.filter(
     (i) => i.team === p.team && i.status === "OUT" && i.player !== p.name,
   );
@@ -58,17 +71,30 @@ export function projectPlayer(
   }
   minutes = Math.max(0, Math.min(46, minutes));
 
-  // ----- Points -----
+  // ----- Points baseline -----
   const base = (p.ptsPer36 * minutes) / 36;
   const venue = venueMultiplier(p, homeTeam);
   const { mult: matchupMult, sources: matchupSources } = matchupMultiplier(p, homeTeam);
   const pace = paceMultiplier(p, teams);
 
-  const venueDelta = (venue - 1) * ensembleKnobs.venue;
-  const matchupDelta = (matchupMult - 1) * ensembleKnobs.matchup;
-  const formDelta = (p.recentForm - 1) * ensembleKnobs.form;
+  // Opponent-specific multiplier (real head-to-head history, gated on having
+  // enough sample). This REPLACES the synthetic DvP + defender prior when
+  // available. Otherwise we fall back to the DvP table.
+  const useOppHistory = p.vsOpponentN >= 3;
+  const oppHistoryMult = useOppHistory ? p.vsOpponentMult : 1.0;
 
-  // Sentiment: tiny, capped influence
+  // Rest-day adjustment (real)
+  const restMult = pickRestMult(p, REST_DAYS_BEFORE_GAME);
+
+  const venueDelta = (venue - 1) * ensembleKnobs.venue;
+  // If we have real opponent history, weight that over the synthetic DvP table
+  const matchupDelta = useOppHistory
+    ? (oppHistoryMult - 1) * ensembleKnobs.matchup
+    : (matchupMult - 1) * ensembleKnobs.matchup;
+  const formDelta = (p.recentForm - 1) * ensembleKnobs.form;
+  const restDelta = (restMult - 1) * 0.7; // dampen — single-game rest signal is noisy
+
+  // Sentiment
   const playerSentiment = sentiment.filter(
     (s) => (s.player === p.name || s.team === p.team) && !s.unverified,
   );
@@ -78,43 +104,57 @@ export function projectPlayer(
   }
   sentDelta = Math.max(-0.04, Math.min(0.04, sentDelta));
 
-  const totalMult = pace * (1 + venueDelta) * (1 + matchupDelta) * (1 + formDelta) * (1 + sentDelta);
+  const totalMult = pace
+    * (1 + venueDelta)
+    * (1 + matchupDelta)
+    * (1 + formDelta)
+    * (1 + restDelta)
+    * (1 + sentDelta);
   const pts = base * totalMult;
 
   factors.push({
-    factor: "Baseline (season per-36 × proj minutes)",
+    factor: "Baseline (per-36 × proj minutes)",
     delta: base,
-    rationale: `${p.ptsPer36.toFixed(1)} per-36 × ${minutes.toFixed(1)} min`,
+    rationale: `${p.ptsPer36.toFixed(1)} pts/36 × ${minutes.toFixed(1)} min — playoff minutes prior when available`,
   });
   factors.push({
     factor: "Pace adjustment",
     delta: base * (pace - 1),
-    rationale: `Game pace vs player team pace: x${pace.toFixed(3)}`,
+    rationale: `Game pace vs team pace: x${pace.toFixed(3)}`,
   });
   factors.push({
-    factor: "Venue (home/away split)",
+    factor: "Venue (real home/away split from gamelog)",
     delta: base * pace * venueDelta,
-    rationale: `${p.team === homeTeam ? "Home" : "Road"} multiplier x${venue.toFixed(3)} (weight ${ensembleKnobs.venue.toFixed(2)})`,
+    rationale: `${p.team === homeTeam ? "Home" : "Road"} mult x${venue.toFixed(3)} (weight ${ensembleKnobs.venue.toFixed(2)})`,
   });
   factors.push({
-    factor: "Matchup (DvP + defender)",
+    factor: useOppHistory
+      ? `Opponent history (real, n=${p.vsOpponentN} games vs ${p.team === homeTeam ? (homeTeam === "NYK" ? "CLE" : "NYK") : homeTeam})`
+      : "Matchup (DvP + defender prior)",
     delta: base * pace * (1 + venueDelta) * matchupDelta,
-    rationale: matchupSources.join(" · ") || "Neutral matchup",
+    rationale: useOppHistory
+      ? `Avg ${p.vsOpponentPPG.toFixed(1)} PPG vs this opponent → x${oppHistoryMult.toFixed(3)}`
+      : matchupSources.join(" · ") || "Neutral matchup",
   });
   factors.push({
     factor: "Recent form (last 5)",
     delta: base * pace * (1 + venueDelta) * (1 + matchupDelta) * formDelta,
-    rationale: `Recent form multiplier x${p.recentForm.toFixed(2)}`,
+    rationale: `Real form multiplier x${p.recentForm.toFixed(3)}`,
+  });
+  factors.push({
+    factor: `Rest (${REST_DAYS_BEFORE_GAME}-day, real history)`,
+    delta: base * pace * (1 + venueDelta) * (1 + matchupDelta) * (1 + formDelta) * restDelta,
+    rationale: `${REST_DAYS_BEFORE_GAME === 0 ? "B2B" : REST_DAYS_BEFORE_GAME === 1 ? "1-day rest" : "2+ rest"} avg multiplier x${restMult.toFixed(3)}`,
   });
   if (sentDelta !== 0) {
     factors.push({
-      factor: "Sentiment (low-weight)",
-      delta: base * pace * (1 + venueDelta) * (1 + matchupDelta) * (1 + formDelta) * sentDelta,
-      rationale: `Aggregated reporter signal (capped ±4%)`,
+      factor: "Sentiment (capped low-weight)",
+      delta: base * pace * (1 + venueDelta) * (1 + matchupDelta) * (1 + formDelta) * (1 + restDelta) * sentDelta,
+      rationale: "Aggregated reporter signal (capped ±4%)",
     });
   }
 
-  // ----- Other counting stats: scale per-36 × minutes, scaled by same totalMult for context-sensitive stats -----
+  // ----- Other counting stats -----
   const reb = (p.rebPer36 * minutes) / 36 * (1 + (totalMult - pace) * 0.3);
   const ast = (p.astPer36 * minutes) / 36 * (1 + (totalMult - pace) * 0.5);
   const tpm = (p.tpmPer36 * minutes) / 36 * (1 + venueDelta);
@@ -122,7 +162,6 @@ export function projectPlayer(
   const blk = (p.blkPer36 * minutes) / 36;
   const to = (p.toPer36 * minutes) / 36;
 
-  // Std scales with sqrt(minutes / baseline minutes)
   const sigmaScale = Math.sqrt(Math.max(0.1, minutes / Math.max(1, p.minutes)));
   const ptsStd = p.ptsStd * sigmaScale;
 
@@ -131,10 +170,10 @@ export function projectPlayer(
     name: p.name,
     team: p.team,
     minutes,
-    pts: dist(pts, ptsStd),
+    pts: dist(pts, ptsStd, true), // points are right-skewed → use skew distribution
     reb: dist(reb, Math.max(1.2, p.rebPer36 * 0.25 * sigmaScale)),
     ast: dist(ast, Math.max(0.9, p.astPer36 * 0.30 * sigmaScale)),
-    tpm: dist(tpm, Math.max(0.8, p.tpmPer36 * 0.55 * sigmaScale)),
+    tpm: dist(tpm, Math.max(0.8, p.tpmPer36 * 0.55 * sigmaScale), true), // 3PM also right-skewed
     stl: dist(stl, Math.max(0.5, p.stlPer36 * 0.60 * sigmaScale)),
     blk: dist(blk, Math.max(0.4, p.blkPer36 * 0.65 * sigmaScale)),
     to: dist(to, Math.max(0.5, p.toPer36 * 0.45 * sigmaScale)),

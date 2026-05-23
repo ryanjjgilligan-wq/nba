@@ -48,15 +48,28 @@ export function runMonteCarlo(input: SimInput): GameVerdict {
 
   const projPace = (teams[homeTeam].pace + teams[awayTeam].pace) / 2;
 
+  // Bivariate normal: home and away ORtg are mildly correlated through game
+  // pace (high-pace games push BOTH teams up). We model this by sampling pace
+  // once per game and using shared-pace + independent ORtg shocks. This
+  // produces realistic joint score distributions (P(total > T) is properly
+  // correlated with P(margin)).
+  const RHO_ORTG = 0.18; // empirical correlation between team ORtgs in shared games
+
   for (let i = 0; i < iterations; i++) {
     const pace = sampleNormal(rng, projPace, 2.4);
-    // Each team's effective ORtg = own ortg moderated by opponent drtg (deviation from league avg ~ 113.5)
     const leagueOrtg = 113.5;
     const homeAdjOrtg = baseHomeOrtg - (baseAwayDrtg - leagueOrtg) * 0.5;
     const awayAdjOrtg = baseAwayOrtg - (baseHomeDrtg - leagueOrtg) * 0.5;
 
-    const homeOrtgSample = sampleNormal(rng, homeAdjOrtg + homeCourtNet * 0.4, 4.6);
-    const awayOrtgSample = sampleNormal(rng, awayAdjOrtg - homeCourtNet * 0.2, 4.6);
+    // Sample correlated ORtg shocks via Cholesky decomposition (2x2)
+    const z1 = sampleNormal(rng, 0, 1);
+    const z2 = sampleNormal(rng, 0, 1);
+    const sigma = 4.6;
+    const homeShock = sigma * z1;
+    const awayShock = sigma * (RHO_ORTG * z1 + Math.sqrt(1 - RHO_ORTG ** 2) * z2);
+
+    const homeOrtgSample = homeAdjOrtg + homeCourtNet * 0.4 + homeShock;
+    const awayOrtgSample = awayAdjOrtg - homeCourtNet * 0.2 + awayShock;
 
     const homePts = (homeOrtgSample * pace) / 100;
     const awayPts = (awayOrtgSample * pace) / 100;

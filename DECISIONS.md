@@ -136,12 +136,54 @@ After v2, user pushed for ~90% real-data accuracy. Did the work:
   cover rate 61.5%, over rate 57.7%. All measured.
 
 What's still synthetic:
-- Defense-vs-position and individual-defender priors (would need play-by-play
-  tracking data — not in ESPN's free endpoints).
+- Defense-vs-position and individual-defender priors — used as FALLBACK
+  only; superseded by real opponent-specific history when we have ≥3 games.
 - Sentiment feed (no public unauth X API).
 - Injury report (would need a paid feed or scraping).
 - Per-player narrative notes in the players file (display only, no math
   impact).
+
+## v4 — added model upgrades + bankroll strategy + multi-book shopper
+
+User asked: "add all model upgrades and ship." Done:
+
+1. **Opponent-specific multiplier from real game logs.** Every rotation
+   player's history vs the OTHER team is pulled — Mitchell vs NYK (5 games,
+   28.6 PPG, x1.058), Mobley vs NYK (5 games, 15.4 PPG, x0.86 — real
+   defensive impact), Towns vs CLE (5 games, 15.0 PPG, x0.85 — Mobley factor).
+   When sample ≥ 3 games, this REPLACES the synthetic DvP/defender table.
+
+2. **Rest-day multipliers from real history.** Each player's B2B / 1-day /
+   2+-day rest splits computed from gamelog dates and applied to projection.
+   Game 3 is on 1 day rest (Game 2 was Thursday, Game 3 Saturday).
+
+3. **Real playoff-only minutes.** When ≥3 playoff games of data exist,
+   playoff average minutes overrides the static roster projection — for this
+   game, that's all 15 players.
+
+4. **Bivariate normal in Monte Carlo.** Home/away ORtg now sampled with
+   correlation ρ=0.18 (high-pace games push both teams up), via Cholesky
+   decomposition. Total/margin joint distribution is now realistic.
+
+5. **Skew-normal for player points + 3PM.** Real game-to-game distributions
+   are right-skewed (the long tail for big nights). Quantiles use stretched
+   upper-tail factor of 1.18 for PTS/3PM; symmetric for REB/AST/STL/BLK/TO.
+
+6. **Lineup-aware minute redistribution.** When KAT, Mobley, Allen, or
+   Harden gets into foul trouble (modeled per-player Bernoulli), minutes
+   shift to the backup at the same position, with variance inflation on both
+   players. Real correction for the previous independence assumption.
+
+7. **Multi-book line shopper (`/api/lineShop.ts`).** Pulls every available
+   US sportsbook from The Odds API when `ODDS_API_KEY` is set and returns the
+   BEST price per market. Highest-ROI operational improvement in real
+   betting — UI panel auto-activates when the key is present, otherwise
+   shows clear instructions to add it.
+
+8. **Bankroll strategy panel.** Four tiers ($<1k / $1-10k / $10-100k /
+   $100k+) with recommended Kelly cap, max single-bet %, and "set to
+   recommended" one-click. Includes the daily playbook (edge ≥4% HIGH →
+   1/4 K · 2-4% MED → 1/8 K · &lt;2% skip · 10% daily stop-loss).
 
 ## Things that are explicitly NOT in scope (decisions to NOT do them)
 

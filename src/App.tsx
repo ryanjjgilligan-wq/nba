@@ -18,6 +18,7 @@ import {
 } from "./models/ensemble";
 import { projectPlayer } from "./models/playerProjection";
 import { buildBestBets } from "./models/marketComparison";
+import { applyMinuteRedistribution } from "./models/lineupAdjustment";
 import { americanToImplied, devigPair } from "./lib/devig";
 import { Header } from "./components/Header";
 import { GameVerdictCard } from "./components/GameVerdict";
@@ -31,6 +32,9 @@ import { CalibrationPanel } from "./components/CalibrationPanel";
 import { EnsembleControls } from "./components/EnsembleControls";
 import { Disclaimer } from "./components/Disclaimer";
 import { ODDS_META } from "./data/fixtures/odds";
+import { LineShopper } from "./components/LineShopper";
+import { OpponentHistory } from "./components/OpponentHistory";
+import { BankrollStrategy } from "./components/BankrollStrategy";
 
 export default function App() {
   const [game, setGame] = useState<Tagged<GameContext> | null>(null);
@@ -70,7 +74,9 @@ export default function App() {
 
   const playerProjections = useMemo(() => {
     if (!players || !teams || !game || !injuries || !sentiment) return [];
-    return players.data.map((p) =>
+    // Apply foul-trouble minute redistribution before projecting
+    const adjusted = applyMinuteRedistribution(players.data);
+    return adjusted.map((p) =>
       projectPlayer(
         p,
         teams.data,
@@ -160,6 +166,8 @@ export default function App() {
 
   const selectedProjection =
     playerProjections.find((p) => p.playerId === selectedPlayerId) ?? null;
+  const selectedBaseline =
+    players?.data.find((p) => p.id === selectedPlayerId) ?? null;
 
   if (!ready || !verdict) {
     return (
@@ -210,6 +218,8 @@ export default function App() {
             onSelect={setSelectedPlayerId}
           />
           <FactorAttributionPanel projection={selectedProjection} />
+          <OpponentHistory player={selectedBaseline} homeTeam={game!.data.homeTeam} />
+          <LineShopper />
         </div>
         <div className="space-y-4">
           <EnsembleControls
@@ -223,6 +233,11 @@ export default function App() {
           <BankrollPanel
             bankroll={bankroll}
             setBankroll={setBankroll}
+            kellyCap={kellyCap}
+            setKellyCap={setKellyCap}
+          />
+          <BankrollStrategy
+            bankroll={bankroll}
             kellyCap={kellyCap}
             setKellyCap={setKellyCap}
           />
