@@ -61,6 +61,31 @@ describe("real ESPN data", () => {
     expect(v.homeWinProb).toBeLessThan(1);
   });
 
+  it("uses REAL per-player home/away multipliers from game logs", () => {
+    const mitchell = PLAYERS.find((p) => p.id === "mitchell")!;
+    // Real Mitchell split: home 27.5 / away 27.0 → nearly neutral mults
+    expect(Math.abs(mitchell.homeMult - 1.0)).toBeLessThan(0.05);
+    expect(Math.abs(mitchell.awayMult - 1.0)).toBeLessThan(0.05);
+
+    // Real Harden split: scores MORE on the road
+    const harden = PLAYERS.find((p) => p.id === "harden")!;
+    expect(harden.awayMult).toBeGreaterThan(harden.homeMult);
+
+    // Real Allen split: scores MORE on the road
+    const allen = PLAYERS.find((p) => p.id === "allen")!;
+    expect(allen.awayMult).toBeGreaterThan(allen.homeMult);
+  });
+
+  it("uses REAL team pace from sampled box scores (not assumed 98)", () => {
+    expect(TEAMS.NYK.pace).toBeGreaterThan(97);
+    expect(TEAMS.NYK.pace).toBeLessThan(101);
+    expect(TEAMS.CLE.pace).toBeGreaterThan(97);
+    expect(TEAMS.CLE.pace).toBeLessThan(102);
+    // The two teams have different real paces — neither is the placeholder 98 exactly
+    expect(TEAMS.NYK.pace).not.toBe(98);
+    expect(TEAMS.CLE.pace).not.toBe(97.6);
+  });
+
   it("real-data best bets produces ranked list with real player names", () => {
     const v = runEnsemble({
       homeTeam: GAME.homeTeam,

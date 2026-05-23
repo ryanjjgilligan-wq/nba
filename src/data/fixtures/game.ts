@@ -8,6 +8,7 @@ interface RealSplits {
 
 const REAL = realDump as {
   splits?: { NYK?: RealSplits; CLE?: RealSplits };
+  pace?: { NYK?: number | null; CLE?: number | null };
   odds?: { tipoffISO?: string; venue?: string; gameId?: string; homeRecord?: string; awayRecord?: string };
 };
 
@@ -31,12 +32,13 @@ export const GAME: GameContext = {
   ],
 };
 
-// Team-level baselines derived from REAL home/away splits. ORtg is approximated
-// as PPG / pace × 100; pace estimated at 98 league-typical (a refinement would
-// pull per-team possession counts directly).
-const PACE = 98;
-function ortgFrom(ppg: number) { return (ppg / PACE) * 100; }
-function drtgFrom(allow: number) { return (allow / PACE) * 100; }
+// Team-level baselines derived from REAL home/away splits and REAL pace
+// (sampled team box scores → average possessions per game).
+const REAL_PACE_NYK = REAL.pace?.NYK ?? 98.4;
+const REAL_PACE_CLE = REAL.pace?.CLE ?? 97.6;
+
+function ortgFrom(ppg: number, pace: number) { return (ppg / pace) * 100; }
+function drtgFrom(allow: number, pace: number) { return (allow / pace) * 100; }
 
 const cleSplit = REAL.splits?.CLE ?? { homePPG: 114.6, homeAllow: 109.6, awayPPG: 104.4, awayAllow: 108.9, homeN: 7, homeW: 6, awayN: 9, awayW: 2 };
 const nykSplit = REAL.splits?.NYK ?? { homePPG: 116.3, homeAllow: 100.4, awayPPG: 122.8, awayAllow: 100.8, homeN: 7, homeW: 6, awayN: 5, awayW: 4 };
@@ -45,13 +47,13 @@ export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
   NYK: {
     code: "NYK",
     name: "New York Knicks",
-    pace: 98.4,
-    ortg: (ortgFrom(nykSplit.homePPG) + ortgFrom(nykSplit.awayPPG)) / 2,
-    drtg: (drtgFrom(nykSplit.homeAllow) + drtgFrom(nykSplit.awayAllow)) / 2,
-    homeOrtg: ortgFrom(nykSplit.homePPG),
-    awayOrtg: ortgFrom(nykSplit.awayPPG),
-    homeDrtg: drtgFrom(nykSplit.homeAllow),
-    awayDrtg: drtgFrom(nykSplit.awayAllow),
+    pace: REAL_PACE_NYK,
+    ortg: (ortgFrom(nykSplit.homePPG, REAL_PACE_NYK) + ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK)) / 2,
+    drtg: (drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK) + drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK)) / 2,
+    homeOrtg: ortgFrom(nykSplit.homePPG, REAL_PACE_NYK),
+    awayOrtg: ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK),
+    homeDrtg: drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK),
+    awayDrtg: drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK),
     threePtRate: 0.39,
     recordWinPct: 53 / 82,
     restDays: 2,
@@ -59,13 +61,13 @@ export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
   CLE: {
     code: "CLE",
     name: "Cleveland Cavaliers",
-    pace: 97.6,
-    ortg: (ortgFrom(cleSplit.homePPG) + ortgFrom(cleSplit.awayPPG)) / 2,
-    drtg: (drtgFrom(cleSplit.homeAllow) + drtgFrom(cleSplit.awayAllow)) / 2,
-    homeOrtg: ortgFrom(cleSplit.homePPG),
-    awayOrtg: ortgFrom(cleSplit.awayPPG),
-    homeDrtg: drtgFrom(cleSplit.homeAllow),
-    awayDrtg: drtgFrom(cleSplit.awayAllow),
+    pace: REAL_PACE_CLE,
+    ortg: (ortgFrom(cleSplit.homePPG, REAL_PACE_CLE) + ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE)) / 2,
+    drtg: (drtgFrom(cleSplit.homeAllow, REAL_PACE_CLE) + drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE)) / 2,
+    homeOrtg: ortgFrom(cleSplit.homePPG, REAL_PACE_CLE),
+    awayOrtg: ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE),
+    homeDrtg: drtgFrom(cleSplit.homeAllow, REAL_PACE_CLE),
+    awayDrtg: drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE),
     threePtRate: 0.44,
     recordWinPct: 52 / 82,
     restDays: 2,

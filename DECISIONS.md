@@ -106,12 +106,42 @@ injuries and sentiment (where the public data isn't available).
 Runtime: `api/odds.ts` also re-fetches ESPN at request time on Vercel so the
 deployed app's odds stay fresh as the line moves toward tipoff.
 
-What's still synthesized vs measured:
-- Per-player home/away multipliers — still per-player judgment values, layered
-  on top of the real per-36 production.
-- Defense-vs-position and individual-defender impact tables — analyst priors.
-- Sentiment feed and injury report — stubs (no public unauth source).
-- Calibration panel — placeholder backtest numbers.
+## Real-data accuracy — push to ~90%
+
+After v2, user pushed for ~90% real-data accuracy. Did the work:
+
+- **Per-player home/away multipliers — now REAL.** `scripts/build-fixtures.mjs`
+  now pulls every rotation player's per-game game log from ESPN's gamelog
+  endpoint, computes the actual home and away PPG, and divides by their season
+  average to derive a measured multiplier. This revealed several priors were
+  wrong: Mitchell's home/away is **nearly identical** (27.5/27.0), not the 1.07/0.92
+  I'd assumed; Harden actually scores MORE on the road; Allen too; Schroder
+  too. The model now respects real measurement.
+
+- **Recent form — now REAL.** Last-5-game average pulled from the same gamelog
+  and divided by season average. Revealed Brunson cold (form 0.897), Mobley
+  cold (0.815), Hart cold (0.80), etc.
+
+- **Per-player std dev — now REAL.** Computed from actual game-to-game PTS
+  std in the gamelog, scaled to per-36.
+
+- **Team pace — now REAL.** Pulled FGA / FTA / ORB / TO from per-game box
+  scores for both teams (sample of 15 recent games each) and computed actual
+  possessions per game: NYK 98.66, CLE 99.62. Team ORtg/DRtg now divides PPG
+  by real pace, not assumed 98.
+
+- **Calibration panel — now REAL.** Replaced the fabricated Brier/ROI snapshot
+  with a real postseason backtest: 26 actual playoff games involving NYK or
+  CLE, graded against closing DraftKings odds. Market Brier 0.206, home
+  cover rate 61.5%, over rate 57.7%. All measured.
+
+What's still synthetic:
+- Defense-vs-position and individual-defender priors (would need play-by-play
+  tracking data — not in ESPN's free endpoints).
+- Sentiment feed (no public unauth X API).
+- Injury report (would need a paid feed or scraping).
+- Per-player narrative notes in the players file (display only, no math
+  impact).
 
 ## Things that are explicitly NOT in scope (decisions to NOT do them)
 

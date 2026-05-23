@@ -62,7 +62,79 @@ function madeAttempted(value) {
   return [m || 0, a || 0];
 }
 
-async function fetchPlayer(playerMeta, teamCode) {
+async function fetchPlayerGamelog(playerId) {
+  const d = await getJSON(
+    `https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/${playerId}/gamelog?season=2026`,
+  );
+  // Find the regular season seasonType
+  const regSeason = d.seasonTypes?.find((s) => /Regular Season/i.test(s.displayName));
+  if (!regSeason) return null;
+  // Concatenate every monthly category's events
+  const eventRows = [];
+  for (const cat of regSeason.categories || []) {
+    for (const e of cat.events || []) {
+      eventRows.push({ id: e.eventId, stats: e.stats });
+    }
+  }
+  // Cross-reference with the top-level events map for home/away
+  const events = d.events || {};
+  const labels = d.labels;
+  const idx = (name) => labels.indexOf(name);
+  const out = [];
+  for (const row of eventRows) {
+    const ev = events[row.id];
+    if (!ev) continue;
+    const isHome = ev.atVs === "vs";
+    const min = Number(row.stats[idx("MIN")]) || 0;
+    const pts = Number(row.stats[idx("PTS")]) || 0;
+    const reb = Number(row.stats[idx("REB")]) || 0;
+    const ast = Number(row.stats[idx("AST")]) || 0;
+    if (min < 5) continue; // DNPs / garbage time
+    out.push({
+      id: row.id,
+      date: ev.gameDate,
+      isHome,
+      min, pts, reb, ast,
+    });
+  }
+  // Sort by date ascending (most recent last)
+  out.sort((a, b) => new Date(a.date) - new Date(b.date));
+  return out;
+}
+
+function summarizeGamelog(games) {
+  if (!games?.length) return null;
+  const home = games.filter((g) => g.isHome);
+  const away = games.filter((g) => !g.isHome);
+  const mean = (xs, f) => xs.length ? xs.reduce((s, g) => s + f(g), 0) / xs.length : 0;
+  const std = (xs, f) => {
+    if (xs.length < 2) return 0;
+    const m = mean(xs, f);
+    return Math.sqrt(xs.reduce((s, g) => s + (f(g) - m) ** 2, 0) / (xs.length - 1));
+  };
+  const seasonAvgPts = mean(games, (g) => g.pts);
+  const seasonStdPts = std(games, (g) => g.pts);
+  const homePts = mean(home, (g) => g.pts);
+  const awayPts = mean(away, (g) => g.pts);
+  const last5 = games.slice(-5);
+  const last5Avg = mean(last5, (g) => g.pts);
+  return {
+    n: games.length,
+    homeN: home.length,
+    awayN: away.length,
+    seasonAvgPts,
+    seasonStdPts,
+    homePts,
+    awayPts,
+    // Multipliers: division by season avg gives relative effect, clipped to [0.85, 1.15]
+    homeMult: seasonAvgPts > 0 ? Math.max(0.85, Math.min(1.15, homePts / seasonAvgPts)) : 1.0,
+    awayMult: seasonAvgPts > 0 ? Math.max(0.85, Math.min(1.15, awayPts / seasonAvgPts)) : 1.0,
+    last5Avg,
+    recentForm: seasonAvgPts > 0 ? Math.max(0.80, Math.min(1.25, last5Avg / seasonAvgPts)) : 1.0,
+  };
+}
+
+async function fetchPlayer(playerMeta, teamCode, teamPace) {
   const url = `https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/${playerMeta.id}/stats?season=2026`;
   const d = await getJSON(url);
   const cat = d.categories?.find((c) => c.name === "averages");
@@ -103,12 +175,23 @@ async function fetchPlayer(playerMeta, teamCode) {
     to:  to  * k,
   };
 
-  // Usage approximation from FGA + FTA*0.44 + TO per 36, divided by team pace ~ team possessions per 36
-  // Without team-pace per minute we approximate usage via:
-  //   usage ≈ ((FGA + 0.44*FTA + TO) per 36) / (pace * minutes_share_factor)
-  // We'll fix pace=98 and assume player on the floor sees ~98 team possessions per 36 → close enough as a prior.
-  const teamPossPer36 = 98;
+  // Usage from FGA + FTA*0.44 + TO per 36, divided by REAL team possessions per 36.
+  const teamPossPer36 = teamPace || 98;
   const usage = ((fga + 0.44 * fta + to) * k) / teamPossPer36;
+
+  // Pull the real game-by-game log to compute home/away splits + recent form
+  let split = null;
+  try {
+    const games = await fetchPlayerGamelog(playerMeta.id);
+    split = summarizeGamelog(games);
+  } catch (e) {
+    console.warn(`${playerMeta.name}: gamelog fetch failed (${e.message})`);
+  }
+
+  // Use real ptsStd from gamelog if we have it (scaled per-36)
+  const realPtsStd = split && split.seasonStdPts > 0
+    ? split.seasonStdPts * (36 / Math.max(1, minPg))
+    : Math.max(3.5, Math.min(9.5, per36.pts * 0.30));
 
   return {
     id: playerMeta.key,
@@ -121,10 +204,54 @@ async function fetchPlayer(playerMeta, teamCode) {
     usage: Math.max(0.05, Math.min(0.42, usage)),
     ts: Math.max(0.45, Math.min(0.75, ts)),
     per36,
-    // Game-to-game std dev tuned per role
-    ptsStd: Math.max(3.5, Math.min(9.5, per36.pts * 0.30)),
+    ptsStd: Math.max(2.5, Math.min(12, realPtsStd)),
     starter: playerMeta.starter,
+    split, // null if gamelog unavailable
   };
+}
+
+// Compute real team pace from a sample of recent completed game box-scores.
+// Possessions ≈ FGA + 0.44 * FTA - ORB + TO. Pace = (possessions per game) × 48 / minutes_played.
+async function fetchTeamPace(teamId, sampleSize = 20) {
+  const sched = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026`);
+  const completed = (sched.events || []).filter((e) => {
+    const c = e.competitions?.[0];
+    const home = c?.competitors?.find((x) => x.homeAway === "home");
+    const away = c?.competitors?.find((x) => x.homeAway === "away");
+    return Number(home?.score?.value || 0) > 0 && Number(away?.score?.value || 0) > 0;
+  });
+  // Take the most recent sampleSize games
+  const sample = completed.slice(-sampleSize);
+  let totalPoss = 0, n = 0;
+  for (const ev of sample) {
+    try {
+      const s = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${ev.id}`);
+      const teams = s.boxscore?.teams || [];
+      const me = teams.find((t) => t.team?.id === String(teamId));
+      const opp = teams.find((t) => t.team?.id !== String(teamId));
+      if (!me || !opp) continue;
+      const stat = (t, name) => {
+        const s = (t.statistics || []).find((x) => x.name === name);
+        if (!s) return 0;
+        const v = s.displayValue ?? s.value;
+        if (typeof v === "string" && v.includes("-")) return Number(v.split("-")[1]) || 0;
+        return Number(v) || 0;
+      };
+      const myFGA = stat(me, "fieldGoalsMade-fieldGoalsAttempted");
+      const myFTA = stat(me, "freeThrowsMade-freeThrowsAttempted");
+      const myORB = stat(me, "offensiveRebounds");
+      const myTO = stat(me, "totalTurnovers") || stat(me, "turnovers");
+      const oppFGA = stat(opp, "fieldGoalsMade-fieldGoalsAttempted");
+      const oppFTA = stat(opp, "freeThrowsMade-freeThrowsAttempted");
+      const oppORB = stat(opp, "offensiveRebounds");
+      const oppTO  = stat(opp, "totalTurnovers") || stat(opp, "turnovers");
+      const myPoss  = myFGA + 0.44 * myFTA - myORB + myTO;
+      const oppPoss = oppFGA + 0.44 * oppFTA - oppORB + oppTO;
+      const avg = (myPoss + oppPoss) / 2;
+      if (avg > 70 && avg < 130) { totalPoss += avg; n++; }
+    } catch (e) { /* skip */ }
+  }
+  return n > 0 ? totalPoss / n : null;
 }
 
 async function fetchTeamSplits(teamId) {
@@ -151,6 +278,75 @@ async function fetchTeamSplits(teamId) {
   return {
     homeN, homeW, homePPG: homeN ? homePts / homeN : 0, homeAllow: homeN ? homeAllow / homeN : 0,
     awayN, awayW, awayPPG: awayN ? awayPts / awayN : 0, awayAllow: awayN ? awayAllow / awayN : 0,
+  };
+}
+
+// Real backtest: for every completed playoff game involving NYK or CLE, fetch
+// the closing odds + actual result and grade the model's win-prob calibration
+// using the simple market-de-vig baseline (assumes home favored implied prob
+// from the moneyline). Output a real Brier score + ATS / O-U record we can
+// surface on the calibration panel honestly.
+async function backtestPostseason(teamIds) {
+  const all = [];
+  for (const id of teamIds) {
+    const sched = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${id}/schedule?season=2026`);
+    for (const ev of sched.events || []) {
+      const c = ev.competitions?.[0];
+      const home = c?.competitors?.find((x) => x.homeAway === "home");
+      const away = c?.competitors?.find((x) => x.homeAway === "away");
+      const homeScore = Number(home?.score?.value || 0);
+      const awayScore = Number(away?.score?.value || 0);
+      if (homeScore === 0 || awayScore === 0) continue;
+      if (all.find(x => x.id === ev.id)) continue;
+      all.push({
+        id: ev.id, date: ev.date,
+        home: home.team.abbreviation, away: away.team.abbreviation,
+        homeScore, awayScore,
+      });
+    }
+  }
+  let brierN = 0, brierSum = 0;
+  let spreadHits = 0, spreadTotal = 0;
+  let totalHits = 0, totalTotal = 0;
+  for (const g of all) {
+    try {
+      const s = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${g.id}`);
+      const o = s.pickcenter?.[0] || s.odds?.[0];
+      if (!o) continue;
+      // Use moneyline to derive implied probability; if missing, skip
+      const homeML = Number(String(o.moneyline?.home?.close?.odds || o.homeTeamOdds?.moneyLine || 0));
+      const awayML = Number(String(o.moneyline?.away?.close?.odds || o.awayTeamOdds?.moneyLine || 0));
+      if (homeML !== 0 && awayML !== 0) {
+        const toImpl = (m) => m > 0 ? 100 / (m + 100) : -m / (-m + 100);
+        const hi = toImpl(homeML);
+        const ai = toImpl(awayML);
+        const sum = hi + ai;
+        const homeProb = hi / sum;
+        const homeWon = g.homeScore > g.awayScore ? 1 : 0;
+        brierSum += (homeProb - homeWon) ** 2;
+        brierN++;
+      }
+      const spread = Number(o.spread || o.pointSpread?.home?.close?.line || 0);
+      if (spread) {
+        const homeMargin = g.homeScore - g.awayScore;
+        const homeCovers = homeMargin + spread > 0 ? 1 : 0;
+        spreadHits += homeCovers;
+        spreadTotal++;
+      }
+      const total = Number(o.overUnder || 0);
+      if (total) {
+        const actualTotal = g.homeScore + g.awayScore;
+        if (actualTotal > total) totalHits++;
+        totalTotal++;
+      }
+    } catch { /* skip */ }
+  }
+  return {
+    sampleSize: all.length,
+    marketBrier: brierN ? brierSum / brierN : null,
+    spreadCoverRate: spreadTotal ? spreadHits / spreadTotal : null,
+    overRate: totalTotal ? totalHits / totalTotal : null,
+    games: all.length,
   };
 }
 
@@ -199,8 +395,16 @@ function writeFile(rel, content) {
   const odds = await fetchOdds();
   console.log("odds:", odds);
 
-  const nyk = (await Promise.all(ROSTER.NYK.map((p) => fetchPlayer(p, "NYK")))).filter(Boolean);
-  const cle = (await Promise.all(ROSTER.CLE.map((p) => fetchPlayer(p, "CLE")))).filter(Boolean);
+  // Need team pace first to compute real usage rates
+  console.log("Fetching real team pace…");
+  const pace = {
+    NYK: await fetchTeamPace(TEAM_IDS.NYK, 15),
+    CLE: await fetchTeamPace(TEAM_IDS.CLE, 15),
+  };
+  console.log("Real pace NYK:", pace.NYK, "CLE:", pace.CLE);
+
+  const nyk = (await Promise.all(ROSTER.NYK.map((p) => fetchPlayer(p, "NYK", pace.NYK)))).filter(Boolean);
+  const cle = (await Promise.all(ROSTER.CLE.map((p) => fetchPlayer(p, "CLE", pace.CLE)))).filter(Boolean);
   const all = [...nyk, ...cle];
 
   console.log("Fetching team splits…");
@@ -208,8 +412,10 @@ function writeFile(rel, content) {
     NYK: await fetchTeamSplits(TEAM_IDS.NYK),
     CLE: await fetchTeamSplits(TEAM_IDS.CLE),
   };
-  console.log("NYK splits:", splits.NYK);
-  console.log("CLE splits:", splits.CLE);
+
+  console.log("Running real postseason backtest…");
+  const backtest = await backtestPostseason([TEAM_IDS.NYK, TEAM_IDS.CLE]);
+  console.log("Backtest:", backtest);
 
   const fetchedAt = new Date().toISOString();
 
@@ -222,6 +428,8 @@ function writeFile(rel, content) {
       odds,
       players: all,
       splits,
+      pace,
+      backtest,
     }),
   );
 
