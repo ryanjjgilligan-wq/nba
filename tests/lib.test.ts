@@ -1,0 +1,151 @@
+import { describe, it, expect } from "vitest";
+import {
+  americanToDecimal,
+  americanToImplied,
+  devigPair,
+  evPerUnit,
+  fractionalKelly,
+  kellyFraction,
+} from "../src/lib/devig";
+import { normCdf, normInv, pNormalAbove, quantile } from "../src/lib/stats";
+import { mulberry32, sampleNormal } from "../src/lib/rng";
+import { runEnsemble, DEFAULT_WEIGHTS } from "../src/models/ensemble";
+import { TEAMS, GAME } from "../src/data/fixtures/game";
+import { PLAYERS } from "../src/data/fixtures/players";
+import { buildBestBets } from "../src/models/marketComparison";
+import { ODDS } from "../src/data/fixtures/odds";
+import { projectPlayer } from "../src/models/playerProjection";
+import { INJURIES } from "../src/data/fixtures/players";
+import { SENTIMENT } from "../src/data/fixtures/sentiment";
+
+describe("devig", () => {
+  it("converts american odds correctly", () => {
+    expect(americanToImplied(-110)).toBeCloseTo(0.5238, 3);
+    expect(americanToImplied(100)).toBeCloseTo(0.5, 3);
+    expect(americanToImplied(150)).toBeCloseTo(0.4, 3);
+    expect(americanToDecimal(-110)).toBeCloseTo(1.909, 3);
+    expect(americanToDecimal(150)).toBeCloseTo(2.5, 3);
+  });
+
+  it("devigs to sum 1", () => {
+    const dv = devigPair(americanToImplied(-110), americanToImplied(-110));
+    expect(dv.a + dv.b).toBeCloseTo(1, 6);
+  });
+
+  it("computes EV and Kelly", () => {
+    const ev = evPerUnit(0.6, -110);
+    expect(ev).toBeGreaterThan(0);
+    const k = kellyFraction(0.6, -110);
+    expect(k).toBeGreaterThan(0);
+    const fk = fractionalKelly(0.6, -110, 0.25);
+    expect(fk).toBeLessThanOrEqual(k * 0.25 + 1e-9);
+    expect(fractionalKelly(0.4, -110)).toBe(0);
+  });
+});
+
+describe("stats", () => {
+  it("normCdf sanity", () => {
+    expect(normCdf(0)).toBeCloseTo(0.5, 2);
+    expect(normCdf(1.96)).toBeCloseTo(0.975, 2);
+  });
+
+  it("normInv inverts", () => {
+    expect(normInv(0.5)).toBeCloseTo(0, 2);
+    expect(normInv(0.975)).toBeCloseTo(1.96, 1);
+  });
+
+  it("pNormalAbove", () => {
+    expect(pNormalAbove(28.5, 30, 8)).toBeGreaterThan(0.5);
+    expect(pNormalAbove(28.5, 20, 8)).toBeLessThan(0.5);
+  });
+
+  it("quantile", () => {
+    const xs = Array.from({ length: 1000 }, (_, i) => i);
+    expect(quantile(xs, 0.25)).toBeCloseTo(249.75, 0);
+    expect(quantile(xs, 0.5)).toBeCloseTo(499.5, 0);
+  });
+});
+
+describe("rng", () => {
+  it("seeded normal samples are reproducible", () => {
+    const r1 = mulberry32(42);
+    const r2 = mulberry32(42);
+    const a = sampleNormal(r1, 0, 1);
+    const b = sampleNormal(r2, 0, 1);
+    expect(a).toBeCloseTo(b, 10);
+  });
+});
+
+describe("ensemble", () => {
+  it("produces a coherent verdict", () => {
+    const v = runEnsemble({
+      homeTeam: GAME.homeTeam,
+      teams: TEAMS,
+      players: PLAYERS,
+      iterations: 2000,
+      seed: 42,
+      weights: DEFAULT_WEIGHTS,
+      marketTotal: 213.5,
+      marketSpread: -2.5,
+    });
+    expect(v.homeWinProb + v.awayWinProb).toBeCloseTo(1, 6);
+    expect(v.total.mean).toBeGreaterThan(180);
+    expect(v.total.mean).toBeLessThan(260);
+    expect(v.ensembleComponents.length).toBe(2);
+  });
+});
+
+describe("best bets", () => {
+  it("produces non-zero bet list and includes player props", () => {
+    const v = runEnsemble({
+      homeTeam: GAME.homeTeam,
+      teams: TEAMS,
+      players: PLAYERS,
+      iterations: 1500,
+      seed: 7,
+      weights: DEFAULT_WEIGHTS,
+      marketTotal: 213.5,
+      marketSpread: -2.5,
+    });
+    const playerProjs = PLAYERS.map((p) =>
+      projectPlayer(p, TEAMS, GAME.homeTeam, INJURIES, SENTIMENT, {
+        matchup: DEFAULT_WEIGHTS.matchup,
+        venue: DEFAULT_WEIGHTS.venue,
+        form: DEFAULT_WEIGHTS.form,
+        sentiment: DEFAULT_WEIGHTS.sentiment,
+      }),
+    );
+    const bets = buildBestBets({
+      lines: ODDS,
+      verdict: v,
+      players: playerProjs,
+      homeTeam: GAME.homeTeam,
+      kellyCap: 0.25,
+    });
+    expect(bets.length).toBeGreaterThan(5);
+    const propBets = bets.filter((b) => b.market === "playerProp");
+    expect(propBets.length).toBeGreaterThan(0);
+    for (const b of bets) {
+      expect(b.modelProb).toBeGreaterThanOrEqual(0);
+      expect(b.modelProb).toBeLessThanOrEqual(1);
+      expect(b.kellyFraction).toBeLessThanOrEqual(0.25 + 1e-9);
+    }
+  });
+});
+
+describe("player projections", () => {
+  it("projects Brunson with positive minutes and reasonable pts", () => {
+    const proj = projectPlayer(
+      PLAYERS.find((p) => p.id === "brunson")!,
+      TEAMS,
+      GAME.homeTeam,
+      INJURIES,
+      SENTIMENT,
+      { matchup: 1, venue: 1, form: 1, sentiment: 1 },
+    );
+    expect(proj.minutes).toBeGreaterThan(30);
+    expect(proj.pts.mean).toBeGreaterThan(18);
+    expect(proj.pts.mean).toBeLessThan(45);
+    expect(proj.factors.length).toBeGreaterThan(3);
+  });
+});
