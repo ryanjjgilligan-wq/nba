@@ -81,6 +81,38 @@ can be audited and changed.
   auth can't be completed from this autonomous session — but every other piece
   is wired so the deploy is one `vercel --prod` away once authed.
 
+## Real data sourcing (UPDATE)
+
+After the first push, the user pointed out the player baselines were
+hand-written priors, not pulled. I tested every NBA data source and discovered
+**ESPN's `site.api.espn.com` / `site.web.api.espn.com` endpoints are public
+and unauthenticated** — they give us everything we need with no API key:
+
+- `/v2/sports/basketball/nba/scoreboard` — today's games + DraftKings closing
+  odds (spread, ML, total) + opening lines (gives us real line movement).
+- `/v2/sports/basketball/nba/teams/{id}?enable=roster,stats` — current rosters
+  (revealed that CLE has Harden + Schroder, no Garland; NYK has Sochan/Clarkson).
+- `/v3/sports/basketball/nba/athletes/{id}/stats?season=2026` — full per-player
+  2025-26 season averages (MIN, PTS, REB, AST, 3PM, STL, BLK, TO, FG%, 3P%).
+- `/v2/sports/basketball/nba/teams/{id}/schedule?season=2026` — completed games
+  with real scores, used to compute real home/away PPG splits (matched the
+  brief's "CLE 114.6 home / 104.4 road" exactly).
+
+The build script `scripts/build-fixtures.mjs` pulls all of this and writes
+`src/data/fixtures/_real.json`, which the bundled "fixture" providers read
+from. The provenance tag in the UI is therefore `LIVE` for everything except
+injuries and sentiment (where the public data isn't available).
+
+Runtime: `api/odds.ts` also re-fetches ESPN at request time on Vercel so the
+deployed app's odds stay fresh as the line moves toward tipoff.
+
+What's still synthesized vs measured:
+- Per-player home/away multipliers — still per-player judgment values, layered
+  on top of the real per-36 production.
+- Defense-vs-position and individual-defender impact tables — analyst priors.
+- Sentiment feed and injury report — stubs (no public unauth source).
+- Calibration panel — placeholder backtest numbers.
+
 ## Things that are explicitly NOT in scope (decisions to NOT do them)
 
 - No user accounts / no persistence layer. The app is a stateless dashboard.

@@ -79,6 +79,32 @@ vercel --prod
 The included `.github/workflows/ci.yml` runs typecheck + tests + build on every
 push, so any auto-deploy ships a green build.
 
+## Real data — no API key required
+
+The app ships with **real 2025-26 ESPN data**, not synthetic fixtures:
+
+- **Player season averages** (per-36, usage, TS%) for all 15 rotation players —
+  pulled from ESPN's per-athlete stats endpoint.
+- **DraftKings closing odds** (CLE -2.5, total 215.5, ML -142/+120) and the
+  **opening line** for line-movement analysis — pulled from ESPN's scoreboard.
+- **Team home/away splits** (CLE 114.6 home / 104.4 road PPG) — computed from
+  real per-game scores in the postseason schedule.
+- **Real current rosters** — captured the Harden trade to CLE, no Garland.
+
+All of this comes from ESPN's `site.api.espn.com` endpoints, which are public
+and unauthenticated. Re-pull anytime with:
+
+```bash
+node scripts/build-fixtures.mjs
+```
+
+The runtime `/api/odds` route also re-fetches ESPN at request time, so the
+deployed app's odds stay current as the line moves.
+
+What's still synthetic (clearly marked `FIXTURE` in the UI): per-player
+home/away tilt multipliers, defense-vs-position priors, sentiment feed,
+injury report, and the calibration backtest numbers.
+
 ## Environment variables — fixtures → live
 
 The app deploys and runs with **zero env vars**, serving bundled fixtures

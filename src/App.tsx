@@ -30,6 +30,7 @@ import { BankrollPanel } from "./components/BankrollPanel";
 import { CalibrationPanel } from "./components/CalibrationPanel";
 import { EnsembleControls } from "./components/EnsembleControls";
 import { Disclaimer } from "./components/Disclaimer";
+import { ODDS_META } from "./data/fixtures/odds";
 
 export default function App() {
   const [game, setGame] = useState<Tagged<GameContext> | null>(null);
@@ -171,6 +172,29 @@ export default function App() {
   return (
     <div className="min-h-screen px-4 py-4 max-w-[1400px] mx-auto space-y-4">
       <Header game={game!.data} provenance={overallProvenance} source={overallSource} />
+
+      {ODDS_META.openSpread !== undefined && ODDS_META.closeSpread !== undefined && (
+        <div className="panel p-3 text-xs flex items-center justify-between gap-4">
+          <div>
+            <span className="chip bg-terminal-info/15 text-terminal-info mr-2">LINE MOVEMENT</span>
+            <span className="text-terminal-dim">Open</span>{" "}
+            CLE {ODDS_META.openSpread! >= 0 ? "+" : ""}{ODDS_META.openSpread}{" "}
+            ({ODDS_META.openMlHome ?? "—"}) · Total {ODDS_META.openTotal ?? "—"}
+            <span className="mx-2 text-terminal-dim">→</span>
+            <span className="text-terminal-dim">Close</span>{" "}
+            <span className="text-terminal-accent font-semibold">
+              CLE {ODDS_META.closeSpread! >= 0 ? "+" : ""}{ODDS_META.closeSpread}
+            </span>{" "}
+            (<span className="text-terminal-accent font-semibold">{ODDS_META.closeMlHome}</span>) ·{" "}
+            Total <span className="text-terminal-accent font-semibold">{ODDS_META.closeTotal}</span>
+          </div>
+          <div className="text-terminal-dim">
+            {ODDS_META.openSpread !== undefined && ODDS_META.closeSpread !== undefined && (
+              <>Spread moved {Math.abs(ODDS_META.closeSpread - ODDS_META.openSpread).toFixed(1)} pts toward CLE — sharp money on home favorite.</>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-[1fr_320px] gap-4">
         <div className="space-y-4">
