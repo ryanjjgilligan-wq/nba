@@ -1,14 +1,25 @@
+import { useState } from "react";
 import type { BestBet, Provenance } from "../types";
 import { fmtAmerican, fmtNum, fmtPct } from "../lib/format";
 import { displaySelection } from "../lib/display";
+import { trackBet } from "../lib/placedBets";
 
 interface Props {
   bets: BestBet[];
   oddsProvenance: Provenance;
   bankroll: number;
+  gameId: string;
 }
 
-export function BestBetsTable({ bets, oddsProvenance, bankroll }: Props) {
+export function BestBetsTable({ bets, oddsProvenance, bankroll, gameId }: Props) {
+  const [tracked, setTracked] = useState<Set<string>>(new Set());
+
+  const track = (bet: BestBet) => {
+    trackBet(bet, bankroll, gameId);
+    setTracked((s) => new Set([...s, bet.selection]));
+    // Trigger any open CLV trackers in the same tab to refresh
+    window.dispatchEvent(new Event("storage"));
+  };
   const positive = bets.filter((b) => b.edgePct > 0);
   return (
     <section className="panel p-4">
@@ -44,6 +55,7 @@ export function BestBetsTable({ bets, oddsProvenance, bankroll }: Props) {
               <th>Kelly Stake</th>
               <th>Conf</th>
               <th>Why</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -94,6 +106,22 @@ export function BestBetsTable({ bets, oddsProvenance, bankroll }: Props) {
                   </td>
                   <td className="text-[10px] text-terminal-dim max-w-md">
                     {b.rationale}
+                  </td>
+                  <td>
+                    {b.kellyFraction > 0 && (
+                      <button
+                        className={`text-[10px] px-2 py-1 rounded border transition ${
+                          tracked.has(b.selection)
+                            ? "border-terminal-accent text-terminal-accent bg-terminal-accent/10"
+                            : "border-terminal-border text-terminal-dim hover:text-terminal-ink hover:border-terminal-info"
+                        }`}
+                        onClick={() => track(b)}
+                        disabled={tracked.has(b.selection)}
+                        title="Log to CLV tracker"
+                      >
+                        {tracked.has(b.selection) ? "✓ tracked" : "+ track"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

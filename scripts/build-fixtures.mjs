@@ -71,8 +71,6 @@ async function fetchPlayerGamelog(playerId) {
   const d = await getJSON(
     `https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/${playerId}/gamelog?season=2026`,
   );
-  // Pull both regular season AND postseason — we'll split downstream so we
-  // can compute playoff-only minutes and rest-day features properly.
   const seasonTypes = d.seasonTypes || [];
   const eventRows = [];
   for (const st of seasonTypes) {
@@ -98,6 +96,13 @@ async function fetchPlayerGamelog(playerId) {
     const reb = Number(row.stats[idx("REB")]) || 0;
     const ast = Number(row.stats[idx("AST")]) || 0;
     if (min < 5) continue;
+    // Capture final margin to identify garbage-time games. Star players
+    // typically sit the 4th in 20+ pt games, which inflates their per-36
+    // when scaled from 28-30 actual minutes. We flag the game here so the
+    // summary can compute competitive-minute baselines.
+    const hScore = Number(ev.homeTeamScore || 0);
+    const aScore = Number(ev.awayTeamScore || 0);
+    const finalMargin = Math.abs(hScore - aScore);
     out.push({
       id: row.id,
       date: ev.gameDate,
@@ -106,6 +111,8 @@ async function fetchPlayerGamelog(playerId) {
       opponentId: ev.opponent?.id,
       opponentAbbr: ev.opponent?.abbreviation,
       min, pts, reb, ast,
+      finalMargin,
+      isGarbageGame: finalMargin > 20,
     });
   }
   out.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -171,6 +178,24 @@ function summarizeGamelog(games, opponentId) {
       avgMin: playoffAvgMin,
       avgPts: playoffAvgPts,
     },
+    // NEW: garbage-time-filtered baseline. Filter to games where final margin
+    // was ≤18 OR the player played ≥34 minutes (i.e., meaningful playing
+    // time regardless of score). Prevents per-36 inflation from blowouts
+    // where the star sat the 4th quarter.
+    competitive: (() => {
+      const comp = games.filter((g) => !g.isGarbageGame || g.min >= 34);
+      const compAvgPts = mean(comp, (g) => g.pts);
+      const compAvgMin = mean(comp, (g) => g.min);
+      return {
+        n: comp.length,
+        excludedN: games.length - comp.length,
+        avgPts: compAvgPts,
+        avgMin: compAvgMin,
+        // per-36 from the competitive sample only — this is what we want
+        // for the model baseline going forward.
+        per36Pts: compAvgMin > 0 ? (compAvgPts * 36) / compAvgMin : seasonAvgPts,
+      };
+    })(),
   };
 }
 
@@ -203,7 +228,7 @@ async function fetchPlayer(playerMeta, teamCode, teamPace) {
   // True shooting = pts / (2 * (FGA + 0.44 * FTA))
   const ts = fga + ftm > 0 ? pts / (2 * (fga + 0.44 * fta)) : 0.55;
 
-  // Per-36 conversion
+  // Per-36 conversion (raw season averages)
   const k = minPg > 0 ? 36 / minPg : 1;
   const per36 = {
     pts: pts * k,
@@ -214,6 +239,8 @@ async function fetchPlayer(playerMeta, teamCode, teamPace) {
     blk: blk * k,
     to:  to  * k,
   };
+  // Per-36 PTS will be replaced with the garbage-time-filtered version
+  // (split.competitive.per36Pts) downstream when available.
 
   // Usage from FGA + FTA*0.44 + TO per 36, divided by REAL team possessions per 36.
   const teamPossPer36 = teamPace || 98;
@@ -241,6 +268,13 @@ async function fetchPlayer(playerMeta, teamCode, teamPace) {
   const projMin = split?.playoff?.n >= 3 && split.playoff.avgMin > 5
     ? split.playoff.avgMin
     : playerMeta.projMin;
+
+  // Use garbage-time-filtered per-36 PTS when available (drops blowout games
+  // that inflate per-36 by scaling 28-min performances to 36-min equivalents).
+  // We only replace if the competitive sample is meaningfully sized.
+  if (split?.competitive?.n >= 10 && split.competitive.per36Pts > 0) {
+    per36.pts = split.competitive.per36Pts;
+  }
 
   return {
     id: playerMeta.key,

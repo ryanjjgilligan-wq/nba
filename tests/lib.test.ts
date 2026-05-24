@@ -133,6 +133,45 @@ describe("best bets", () => {
   });
 });
 
+import { findCorrelations } from "../src/models/correlation";
+import { computeClv } from "../src/lib/placedBets";
+
+describe("correlation detector", () => {
+  it("flags opposite-side totals as -1", () => {
+    const bets = [
+      { market: "total", selection: "OVER 219.5", bookPrice: -110, bookImpliedProb: 0.524, devigProb: 0.5, modelProb: 0.6, edgePct: 0.1, evPer1U: 0.05, kellyFraction: 0.05, confidence: "MED", rationale: "" },
+      { market: "total", selection: "UNDER 219.5", bookPrice: -110, bookImpliedProb: 0.524, devigProb: 0.5, modelProb: 0.4, edgePct: -0.1, evPer1U: -0.05, kellyFraction: 0, confidence: "MED", rationale: "" },
+    ] as any;
+    const corrs = findCorrelations(bets, new Map());
+    expect(corrs.length).toBe(1);
+    expect(corrs[0].correlation).toBe(-1.0);
+  });
+
+  it("flags spread + ML on same team as +0.75", () => {
+    const bets = [
+      { market: "spread", selection: "NYK +2.5", bookPrice: -110, bookImpliedProb: 0.524, devigProb: 0.5, modelProb: 0.6, edgePct: 0.1, evPer1U: 0.05, kellyFraction: 0.05, confidence: "MED", rationale: "" },
+      { market: "ml", selection: "NYK ML", bookPrice: 120, bookImpliedProb: 0.454, devigProb: 0.43, modelProb: 0.55, edgePct: 0.12, evPer1U: 0.1, kellyFraction: 0.08, confidence: "MED", rationale: "" },
+    ] as any;
+    const corrs = findCorrelations(bets, new Map());
+    expect(corrs.length).toBe(1);
+    expect(corrs[0].correlation).toBeCloseTo(0.75);
+  });
+});
+
+describe("clv computation", () => {
+  it("computes positive CLV when placement beat current line", () => {
+    const placed = {
+      id: "x", selection: "NYK +2.5", market: "spread",
+      priceAtPlacement: +110, modelProbAtPlacement: 0.55, edgePctAtPlacement: 0.05,
+      kellyAtPlacement: 0.05, stakeUSD: 50, placedAtISO: "2026-05-24T20:00:00Z", gameId: "g1",
+    } as any;
+    const r = computeClv(placed, -110);
+    // Placed at +110 (got better price than current -110) → BEAT close
+    expect(r.clvDirection).toBe("BEAT");
+    expect(r.clvPct!).toBeGreaterThan(0);
+  });
+});
+
 describe("player projections", () => {
   it("projects a star player with positive minutes and reasonable pts", () => {
     // Find any high-usage starter (works across whichever game is loaded)

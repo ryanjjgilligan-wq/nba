@@ -35,6 +35,8 @@ import { ODDS_META } from "./data/fixtures/odds";
 import { LineShopper } from "./components/LineShopper";
 import { OpponentHistory } from "./components/OpponentHistory";
 import { BankrollStrategy } from "./components/BankrollStrategy";
+import { CorrelationWarnings } from "./components/CorrelationWarnings";
+import { ClvTracker } from "./components/ClvTracker";
 import { DISPLAY } from "./lib/display";
 
 export default function App() {
@@ -216,6 +218,12 @@ export default function App() {
             bets={bets}
             oddsProvenance={odds!.provenance}
             bankroll={bankroll}
+            gameId={game!.data.id}
+          />
+          <CorrelationWarnings
+            bets={bets}
+            players={players!.data}
+            homeTeam={game!.data.homeTeam}
           />
           <ProjectedBoxScores
             players={playerProjections}
@@ -246,6 +254,7 @@ export default function App() {
             kellyCap={kellyCap}
             setKellyCap={setKellyCap}
           />
+          <ClvTracker currentLines={odds!.data} />
           <ModelDisagreementPanel items={disagreements} />
           <CalibrationPanel />
           <NarrativeContext notes={game!.data.notes} injuries={injuries!.data} />
