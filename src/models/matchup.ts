@@ -1,18 +1,37 @@
 import type { PlayerBaseline, TeamBaseline } from "../types";
+import { DVP_BY_TEAM } from "../data/fixtures/game";
 
-// Defense-vs-position multipliers tuned from this series so far. CLE's interior
-// D (Mobley + Allen) gives them a meaningful negative multiplier vs opposing
-// bigs at home; NYK perimeter defense (Bridges/Anunoby) hurts CLE guards.
-
-const DEF_VS_POS_AT_HOME: Record<string, Partial<Record<string, number>>> = {
-  // Defending team -> opposing position -> pts multiplier
-  CLE: { PG: 0.97, SG: 0.95, SF: 0.99, "G/F": 0.98, PF: 0.93, C: 0.91 },
-  NYK: { PG: 0.94, SG: 0.93, SF: 0.97, "G/F": 0.97, PF: 0.99, C: 1.00 },
+// REAL DvP from box scores (pulled by build-fixtures.mjs). For each team
+// we have PTS allowed per opposing position, averaged across sampled games.
+// We convert to a MULTIPLIER vs league average by dividing by the league
+// baseline for that position. League per-game team-totals by opposing
+// position (rough 2024-25 NBA averages):
+const LEAGUE_DVP_BASELINE: Record<string, number> = {
+  PG: 40, SG: 50, SF: 40, PF: 30, C: 20, G: 50, F: 40,
 };
 
-const DEF_VS_POS_AT_AWAY: Record<string, Partial<Record<string, number>>> = {
-  CLE: { PG: 1.02, SG: 1.04, SF: 1.02, "G/F": 1.01, PF: 1.00, C: 0.99 },
-  NYK: { PG: 0.96, SG: 0.95, SF: 0.97, "G/F": 0.98, PF: 1.00, C: 1.01 },
+function buildDvpMultipliers(): Record<string, Record<string, number>> {
+  const out: Record<string, Record<string, number>> = {};
+  for (const team of ["NYK", "CLE"] as const) {
+    out[team] = {};
+    const teamDvp = DVP_BY_TEAM[team] || {};
+    for (const [pos, ptsAllowed] of Object.entries(teamDvp)) {
+      const baseline = LEAGUE_DVP_BASELINE[pos];
+      if (!baseline) continue;
+      // Higher pts allowed → worse defense → bigger multiplier on offense
+      const raw = ptsAllowed / baseline;
+      // Clamp to [0.80, 1.20] — DvP is noisy on per-position samples
+      out[team][pos] = Math.max(0.80, Math.min(1.20, raw));
+    }
+  }
+  return out;
+}
+const REAL_DVP_MULT = buildDvpMultipliers();
+
+// Static fallback prior — only used when a position has no real DvP data.
+const DEF_VS_POS_FALLBACK: Record<string, Partial<Record<string, number>>> = {
+  CLE: { PG: 0.97, SG: 0.95, SF: 0.99, "G/F": 0.98, PF: 0.93, C: 0.91 },
+  NYK: { PG: 0.94, SG: 0.93, SF: 0.97, "G/F": 0.97, PF: 0.99, C: 1.00 },
 };
 
 // Individual defender priors for OKC @ SAS. Used as FALLBACK only — when a
@@ -54,14 +73,19 @@ export function matchupMultiplier(
   p: PlayerBaseline,
   homeTeam: "NYK" | "CLE",
 ): { mult: number; sources: string[] } {
-  const isHome = p.team === homeTeam;
   const defending = p.team === "NYK" ? "CLE" : "NYK";
-  const dvpTable = isHome ? DEF_VS_POS_AT_AWAY[defending] : DEF_VS_POS_AT_HOME[defending];
-  const dvp = (dvpTable?.[p.position] ?? 1.0) as number;
+  // Prefer REAL DvP from box scores; fall back to synthetic table.
+  let dvp = REAL_DVP_MULT[defending]?.[p.position];
+  let dvpSource = "real DvP from box scores";
+  if (dvp == null) {
+    const fb = DEF_VS_POS_FALLBACK[defending];
+    dvp = (fb?.[p.position] ?? 1.0);
+    dvpSource = "fallback prior";
+  }
   const individual = DEFENDER_MATCHUPS.find((m) => m.scorer === p.name);
   const indiv = individual ? 1 + individual.impact : 1.0;
   const sources: string[] = [];
-  if (dvp !== 1) sources.push(`DvP ${defending} vs ${p.position}: x${dvp.toFixed(2)}`);
+  if (dvp !== 1) sources.push(`DvP ${defending} vs ${p.position} (${dvpSource}): x${dvp.toFixed(2)}`);
   if (individual) sources.push(`Defender ${individual.primaryDefender}: x${indiv.toFixed(2)}`);
   return { mult: dvp * indiv, sources };
 }

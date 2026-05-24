@@ -9,8 +9,57 @@ interface RealSplits {
 const REAL = realDump as {
   splits?: { NYK?: RealSplits; CLE?: RealSplits };
   pace?: { NYK?: number | null; CLE?: number | null };
+  dvp?: { NYK?: Record<string, number>; CLE?: Record<string, number> };
   odds?: { tipoffISO?: string; venue?: string; gameId?: string; homeRecord?: string; awayRecord?: string };
 };
+
+// Real DvP per position, pulled from box scores. Used by matchup.ts as the
+// PRIMARY signal (replacing the static prior). Exposed here so the rest of
+// the app can read it without re-import.
+export const DVP_BY_TEAM: Record<"NYK" | "CLE", Record<string, number>> = {
+  NYK: REAL.dvp?.NYK ?? {},
+  CLE: REAL.dvp?.CLE ?? {},
+};
+
+// Series context: where this game sits in the playoff bracket. Drives the
+// desperation/letdown adjustment. Historical NBA priors:
+// - Home team down 0-2 or 1-3: home wins ~72% (desperation + crowd)
+// - Home team down 0-1 or 1-2: home wins ~60%
+// - Series tied or home leads slightly: neutral
+// - Home team up 2-0 or 3-1: slight letdown
+export interface SeriesContext {
+  homeTeamWins: number;
+  awayTeamWins: number;
+  // ORtg / DRtg adjustments applied to home team in tonight's game
+  homeOrtgAdj: number;
+  homeDrtgAdj: number;
+  rationale: string;
+}
+
+function computeSeriesContext(homeWins: number, awayWins: number): SeriesContext {
+  const diff = homeWins - awayWins; // positive = home leading
+  let homeOrtgAdj = 0, homeDrtgAdj = 0, rationale = "Series effect neutral.";
+  // Home team down meaningfully → desperation + crowd boost
+  if (diff <= -2) {
+    homeOrtgAdj = 2.0;
+    homeDrtgAdj = -1.5; // tighter D too
+    rationale = `Home down ${Math.abs(diff)} — must-win desperation + crowd boost (+3.5 net rating prior).`;
+  } else if (diff === -1) {
+    homeOrtgAdj = 1.0;
+    homeDrtgAdj = -0.5;
+    rationale = "Home down a game — measurable desperation lift.";
+  } else if (diff === 1) {
+    rationale = "Home up a game — neutral, no edge from series state.";
+  } else if (diff >= 2) {
+    // Letdown risk
+    homeOrtgAdj = -0.5;
+    rationale = `Home up ${diff} — letdown risk (-0.5 ORtg prior).`;
+  }
+  return { homeTeamWins: homeWins, awayTeamWins: awayWins, homeOrtgAdj, homeDrtgAdj, rationale };
+}
+
+// Current series state — SAS leads OKC 2-1 in the WCF
+export const SERIES_CONTEXT = computeSeriesContext(2, 1);
 
 // NYK = OKC (away), CLE = SAS (home) — internal codes preserved, display swapped.
 export const GAME: GameContext = {
@@ -29,6 +78,7 @@ export const GAME: GameContext = {
     "Wemby anchoring an interior wall that's swung this series — 3.7 BLK/G in the playoffs.",
     "SGA / Wemby = ~50% of combined usage. Single-MVP collisions decide possessions.",
     "Castle has been the X-factor at home — usage spikes ~5% in front of San Antonio.",
+    `Series context: ${SERIES_CONTEXT.rationale}`,
   ],
 };
 
@@ -62,6 +112,10 @@ function drtgFrom(allow: number, pace: number, n: number) {
 const sasSplit = REAL.splits?.CLE ?? { homePPG: 113.9, homeAllow: 102.6, awayPPG: 118.9, awayAllow: 109.9, homeN: 7, homeW: 4, awayN: 7, awayW: 5 };
 const okcSplit = REAL.splits?.NYK ?? { homePPG: 118.2, homeAllow: 103.8, awayPPG: 124.2, awayAllow: 111.4, homeN: 6, homeW: 5, awayN: 5, awayW: 5 };
 
+// Home team (SAS) gets series-context adjustment applied to its ratings.
+const sasHomeOrtg = ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN) + SERIES_CONTEXT.homeOrtgAdj;
+const sasHomeDrtg = drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN) + SERIES_CONTEXT.homeDrtgAdj;
+
 export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
   NYK: { // OKC
     code: "NYK",
@@ -77,15 +131,15 @@ export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
     recordWinPct: 64 / 82,
     restDays: 2,
   },
-  CLE: { // SAS
+  CLE: { // SAS — home tonight, gets series-context adjustment
     code: "CLE",
     name: "San Antonio Spurs",
     pace: REAL_PACE_CLE,
-    ortg: (ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN) + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN)) / 2,
-    drtg: (drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN) + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN)) / 2,
-    homeOrtg: ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN),
+    ortg: (sasHomeOrtg + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN)) / 2,
+    drtg: (sasHomeDrtg + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN)) / 2,
+    homeOrtg: sasHomeOrtg,
     awayOrtg: ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN),
-    homeDrtg: drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN),
+    homeDrtg: sasHomeDrtg,
     awayDrtg: drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN),
     threePtRate: 0.40,
     recordWinPct: 62 / 82,

@@ -135,6 +135,8 @@ export default function App() {
       weights,
       marketTotal: marketContext.marketTotal,
       marketSpread: marketContext.marketSpread,
+      marketHomeImpliedProb: marketContext.marketHomeImpliedProb,
+      calibrationShrinkAlpha: 0.40,
     });
   }, [game, teams, players, iterations, seed, weights, marketContext]);
 

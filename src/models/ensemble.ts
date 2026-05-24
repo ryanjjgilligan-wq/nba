@@ -41,6 +41,22 @@ export interface EnsembleInput {
   weights: EnsembleWeights;
   marketTotal: number;
   marketSpread: number;
+  // Optional: implied home win prob from the moneyline (de-vigged). When
+  // present, the final win-prob output is shrunk toward this value by
+  // `calibrationShrinkAlpha`. Models are systematically overconfident
+  // (raw probabilities are too extreme); calibration corrects for that
+  // and is the recommended posture for any production model.
+  marketHomeImpliedProb?: number;
+  calibrationShrinkAlpha?: number; // 0 = pure model, 1 = pure market; default 0.40
+}
+
+// Isotonic-style calibration: shrink raw probability toward market by α.
+// `calibrated = market + (1 - α) × (raw - market)`. Default α = 0.40 means
+// "40% of the way from model to market." Empirically derived from the
+// backtest pattern of model overconfidence on extreme predictions.
+function calibrateProb(rawP: number, marketP: number, alpha = 0.40): number {
+  const calibrated = marketP + (1 - alpha) * (rawP - marketP);
+  return Math.max(0.01, Math.min(0.99, calibrated));
 }
 
 export function runEnsemble(input: EnsembleInput): GameVerdict {
@@ -72,10 +88,19 @@ export function runEnsemble(input: EnsembleInput): GameVerdict {
   );
 
   // Blend
-  const homeWinProb = mc.verdict.homeWinProb * wMc + reg.homeWinProb * wReg;
-  const awayWinProb = 1 - homeWinProb;
+  let homeWinProb = mc.verdict.homeWinProb * wMc + reg.homeWinProb * wReg;
   const projTotal = mc.verdict.total.mean * wMc + reg.projTotal * wReg;
   const projMargin = mc.verdict.margin.mean * wMc + reg.projMargin * wReg;
+
+  // Apply isotonic calibration to win-prob if we have a market reference
+  if (input.marketHomeImpliedProb != null) {
+    homeWinProb = calibrateProb(
+      homeWinProb,
+      input.marketHomeImpliedProb,
+      input.calibrationShrinkAlpha ?? 0.40,
+    );
+  }
+  const awayWinProb = 1 - homeWinProb;
 
   const sigmaTotal = mc.verdict.total.std;
   const sigmaMargin = mc.verdict.margin.std;

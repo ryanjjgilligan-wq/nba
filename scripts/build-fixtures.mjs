@@ -260,19 +260,22 @@ async function fetchPlayer(playerMeta, teamCode, teamPace) {
   };
 }
 
-// Compute real team pace from a sample of recent completed game box-scores.
-// Possessions ≈ FGA + 0.44 * FTA - ORB + TO. Pace = (possessions per game) × 48 / minutes_played.
-async function fetchTeamPace(teamId, sampleSize = 20) {
-  const sched = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026`);
+// Compute real team pace AND real DvP-by-position from sampled box-scores.
+// Possessions ≈ FGA + 0.44 * FTA - ORB + TO. DvP = avg PTS allowed grouped
+// by opposing player's listed position. Returns both in one pass to keep
+// network costs down.
+async function fetchTeamPaceAndDvp(teamId, sampleSize = 20) {
+  const sched = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026&seasontype=2`);
   const completed = (sched.events || []).filter((e) => {
     const c = e.competitions?.[0];
     const home = c?.competitors?.find((x) => x.homeAway === "home");
     const away = c?.competitors?.find((x) => x.homeAway === "away");
     return Number(home?.score?.value || 0) > 0 && Number(away?.score?.value || 0) > 0;
   });
-  // Take the most recent sampleSize games
   const sample = completed.slice(-sampleSize);
   let totalPoss = 0, n = 0;
+  // DvP buckets — pts allowed to opposing players grouped by their position
+  const dvpBuckets = {}; // position → { ptsAllowed: number, games: number }
   for (const ev of sample) {
     try {
       const s = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${ev.id}`);
@@ -299,25 +302,58 @@ async function fetchTeamPace(teamId, sampleSize = 20) {
       const oppPoss = oppFGA + 0.44 * oppFTA - oppORB + oppTO;
       const avg = (myPoss + oppPoss) / 2;
       if (avg > 70 && avg < 130) { totalPoss += avg; n++; }
-    } catch (e) { /* skip */ }
+
+      // Per-position DvP from the opposing team's player rows
+      const oppPlayers = (s.boxscore?.players || []).find((p) => p.team?.id !== String(teamId));
+      const groups = oppPlayers?.statistics?.[0]?.athletes || [];
+      const labels = oppPlayers?.statistics?.[0]?.labels || ["MIN","FG","3PT","FT","OREB","DREB","REB","AST","STL","BLK","TO","PF","+/-","PTS"];
+      const ptsIdx = labels.indexOf("PTS");
+      // Sum points by position (PG/SG/SF/PF/C; coarsen G/F to nearest)
+      const ptsByPos = {};
+      for (const a of groups) {
+        if (a.didNotPlay) continue;
+        const pos = a.position?.abbreviation || a.athlete?.position?.abbreviation;
+        const pts = Number(a.stats?.[ptsIdx]) || 0;
+        if (!pos) continue;
+        const bucket = pos === "G" ? "SG" : pos === "F" ? "SF" : pos;
+        ptsByPos[bucket] = (ptsByPos[bucket] || 0) + pts;
+      }
+      for (const [pos, pts] of Object.entries(ptsByPos)) {
+        dvpBuckets[pos] = dvpBuckets[pos] || { ptsAllowed: 0, games: 0 };
+        dvpBuckets[pos].ptsAllowed += pts;
+        dvpBuckets[pos].games += 1;
+      }
+    } catch { /* skip */ }
   }
-  return n > 0 ? totalPoss / n : null;
+  const pace = n > 0 ? totalPoss / n : null;
+  const dvpAvg = {};
+  for (const [pos, b] of Object.entries(dvpBuckets)) {
+    if (b.games >= 3) dvpAvg[pos] = b.ptsAllowed / b.games;
+  }
+  return { pace, dvp: dvpAvg };
 }
 
 async function fetchTeamSplits(teamId) {
-  // Pull BOTH full regular season (82 games) and postseason, then blend
-  // 70/30 toward regular season. Postseason-only numbers are too small a
-  // sample to trust on their own (the root of the 17-pt total bias).
+  // Pull BOTH full regular season AND postseason, then apply EXPONENTIAL
+  // TIME-DECAY weighting (half-life 60 days). Old games count less; recent
+  // games count more. Captures the reality that team identity evolves
+  // through the season and recent form is the truest signal for tonight.
   const [regSeason, postSeason] = await Promise.all([
     getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026&seasontype=2`),
     getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026&seasontype=3`),
   ]);
 
-  function collect(d) {
-    const events = d.events || [];
-    let hP = 0, hA = 0, hN = 0, hW = 0;
-    let aP = 0, aA = 0, aN = 0, aW = 0;
-    for (const e of events) {
+  const HALF_LIFE_DAYS = 60;
+  const now = Date.now();
+  const decay = (dateISO) => {
+    const days = (now - new Date(dateISO).getTime()) / (1000 * 60 * 60 * 24);
+    return Math.pow(0.5, days / HALF_LIFE_DAYS);
+  };
+
+  function collect(events) {
+    let hP = 0, hA = 0, hN = 0, hW = 0, hWsum = 0;
+    let aP = 0, aA = 0, aN = 0, aW = 0, aWsum = 0;
+    for (const e of events || []) {
       const c = e.competitions?.[0];
       if (!c) continue;
       const home = c.competitors.find((x) => x.homeAway === "home");
@@ -328,40 +364,37 @@ async function fetchTeamSplits(teamId) {
       const isHome = home.team.id === String(teamId);
       const isAway = away.team.id === String(teamId);
       if (!isHome && !isAway) continue;
+      const w = decay(e.date || c.date);
       const myS = isHome ? homeScore : awayScore;
       const oppS = isHome ? awayScore : homeScore;
-      if (isHome) { hP += myS; hA += oppS; hN++; if (myS > oppS) hW++; }
-      else { aP += myS; aA += oppS; aN++; if (myS > oppS) aW++; }
+      if (isHome) { hP += myS * w; hA += oppS * w; hWsum += w; hN++; if (myS > oppS) hW++; }
+      else        { aP += myS * w; aA += oppS * w; aWsum += w; aN++; if (myS > oppS) aW++; }
     }
-    return { hP, hA, hN, hW, aP, aA, aN, aW };
+    return { hP, hA, hN, hW, hWsum, aP, aA, aN, aW, aWsum };
   }
 
-  const reg = collect(regSeason);
-  const post = collect(postSeason);
+  const reg = collect(regSeason.events);
+  const post = collect(postSeason.events);
 
-  // Blend with 70% regular season, 30% postseason (postseason is more relevant
-  // for tonight but small-sample; reg is the stable prior).
-  const REG_WEIGHT = 0.7, POST_WEIGHT = 0.3;
-  const blend = (regVal, postVal, regN, postN) => {
-    if (regN === 0 && postN === 0) return 0;
-    if (regN === 0) return postVal / postN;
-    if (postN === 0) return regVal / regN;
-    return REG_WEIGHT * (regVal / regN) + POST_WEIGHT * (postVal / postN);
-  };
+  // Combine reg + post weighted samples (post games get the same decay treatment,
+  // they're just recent so their effective weight is high).
+  const homeWsum = reg.hWsum + post.hWsum;
+  const awayWsum = reg.aWsum + post.aWsum;
+  const homePPG   = homeWsum ? (reg.hP + post.hP) / homeWsum : 0;
+  const homeAllow = homeWsum ? (reg.hA + post.hA) / homeWsum : 0;
+  const awayPPG   = awayWsum ? (reg.aP + post.aP) / awayWsum : 0;
+  const awayAllow = awayWsum ? (reg.aA + post.aA) / awayWsum : 0;
 
   return {
-    // Counts reflect TOTAL games, weights reflect blend
     homeN: reg.hN + post.hN,
     homeW: reg.hW + post.hW,
-    homePPG:   blend(reg.hP, post.hP, reg.hN, post.hN),
-    homeAllow: blend(reg.hA, post.hA, reg.hN, post.hN),
+    homePPG, homeAllow,
     awayN: reg.aN + post.aN,
     awayW: reg.aW + post.aW,
-    awayPPG:   blend(reg.aP, post.aP, reg.aN, post.aN),
-    awayAllow: blend(reg.aA, post.aA, reg.aN, post.aN),
-    // Provenance for the UI to show
+    awayPPG, awayAllow,
     regularSeasonGames: reg.hN + reg.aN,
     postseasonGames: post.hN + post.aN,
+    timeDecayHalfLifeDays: HALF_LIFE_DAYS,
   };
 }
 
@@ -493,13 +526,17 @@ function writeFile(rel, content) {
   const odds = await fetchOdds();
   console.log("odds:", odds);
 
-  // Need team pace first to compute real usage rates
-  console.log("Fetching real team pace…");
-  const pace = {
-    NYK: await fetchTeamPace(TEAM_IDS.NYK, 15),
-    CLE: await fetchTeamPace(TEAM_IDS.CLE, 15),
-  };
+  // Pull pace + DvP-by-position in a single pass
+  console.log("Fetching real team pace + DvP from box scores…");
+  const [nykPD, clePD] = await Promise.all([
+    fetchTeamPaceAndDvp(TEAM_IDS.NYK, 15),
+    fetchTeamPaceAndDvp(TEAM_IDS.CLE, 15),
+  ]);
+  const pace = { NYK: nykPD.pace, CLE: clePD.pace };
+  const dvp  = { NYK: nykPD.dvp,  CLE: clePD.dvp  };
   console.log("Real pace NYK:", pace.NYK, "CLE:", pace.CLE);
+  console.log("Real DvP NYK (pts allowed per opp pos):", nykPD.dvp);
+  console.log("Real DvP CLE (pts allowed per opp pos):", clePD.dvp);
 
   const nyk = (await Promise.all(ROSTER.NYK.map((p) => fetchPlayer(p, "NYK", pace.NYK)))).filter(Boolean);
   const cle = (await Promise.all(ROSTER.CLE.map((p) => fetchPlayer(p, "CLE", pace.CLE)))).filter(Boolean);
@@ -530,6 +567,7 @@ function writeFile(rel, content) {
       players: all,
       splits,
       pace,
+      dvp,
       backtest,
       tunedWeights: tuned,
     }),

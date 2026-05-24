@@ -17,6 +17,23 @@ interface SimInput {
   knobs: { matchup: number; venue: number; form: number; sentiment: number };
 }
 
+// Per-iteration "star availability" events. If a star fouls out / gets
+// limited (Bernoulli triggered), their team's ORtg drops by the impact for
+// the rest of the simulation. Models the team-level effect of foul trouble.
+interface StarRisk {
+  team: "NYK" | "CLE";
+  triggerProb: number;
+  ortgImpact: number; // points off team ORtg if triggered
+}
+const STAR_RISKS: StarRisk[] = [
+  // OKC
+  { team: "NYK", triggerProb: 0.18, ortgImpact: -4.0 }, // Chet foul trouble
+  { team: "NYK", triggerProb: 0.10, ortgImpact: -3.0 }, // Dort foul trouble
+  // SAS
+  { team: "CLE", triggerProb: 0.20, ortgImpact: -5.0 }, // Wemby foul trouble
+  { team: "CLE", triggerProb: 0.12, ortgImpact: -3.0 }, // Castle foul trouble
+];
+
 // Possession-level simulator: each iteration samples a game pace (possessions),
 // each team's offensive efficiency (ortg with venue + opponent drtg blending),
 // and aggregates a final score. Repeat → distributions.
@@ -74,8 +91,18 @@ export function runMonteCarlo(input: SimInput): GameVerdict {
     const homeShock = sigma * z1;
     const awayShock = sigma * (RHO_ORTG * z1 + Math.sqrt(1 - RHO_ORTG ** 2) * z2);
 
-    const homeOrtgSample = homeAdjOrtg + homeCourtNet * 0.4 + homeShock;
-    const awayOrtgSample = awayAdjOrtg - homeCourtNet * 0.2 + awayShock;
+    // Sample lineup-level disruption events (star foul trouble). When a star
+    // is limited, their team's ORtg drops by the impact for this iteration.
+    let homeOrtgPenalty = 0, awayOrtgPenalty = 0;
+    for (const r of STAR_RISKS) {
+      if (rng() < r.triggerProb) {
+        if ((r.team === input.homeTeam)) homeOrtgPenalty += r.ortgImpact;
+        else awayOrtgPenalty += r.ortgImpact;
+      }
+    }
+
+    const homeOrtgSample = homeAdjOrtg + homeCourtNet * 0.4 + homeShock + homeOrtgPenalty;
+    const awayOrtgSample = awayAdjOrtg - homeCourtNet * 0.2 + awayShock + awayOrtgPenalty;
 
     const homePts = (homeOrtgSample * pace) / 100;
     const awayPts = (awayOrtgSample * pace) / 100;
