@@ -20,10 +20,14 @@ export interface EnsembleWeights {
 }
 
 export const DEFAULT_WEIGHTS: EnsembleWeights = {
-  monteCarlo: 0.6,
-  regression: 0.4,
+  // Regression dominates by default — it's anchored 75% to the market line,
+  // which is the strongest informed prior we have. Monte Carlo provides the
+  // distribution shape for win-prob / quantiles but its mean shouldn't
+  // dominate the headline number. Tune sliders for more model independence.
+  monteCarlo: 0.4,
+  regression: 0.6,
   matchup: 0.9,
-  venue: 1.0, // venue weighted heavily — defining signal for this matchup
+  venue: 1.0,
   form: 0.6,
   sentiment: 0.5,
 };

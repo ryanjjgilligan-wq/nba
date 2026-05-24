@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-05-24T16:54:52.338Z",
+  "fetchedAt": "2026-05-24T17:09:37.533Z",
   "source": "ESPN site.api / site.web.api (public, unauth)",
   "odds": {
     "provider": "DraftKings",
@@ -1158,24 +1158,28 @@
   ],
   "splits": {
     "NYK": {
-      "homeN": 6,
-      "homeW": 5,
-      "homePPG": 118.16666666666667,
-      "homeAllow": 103.83333333333333,
-      "awayN": 5,
-      "awayW": 5,
-      "awayPPG": 124.2,
-      "awayAllow": 111.4
+      "homeN": 48,
+      "homeW": 39,
+      "homePPG": 118.68333333333332,
+      "homeAllow": 106.35,
+      "awayN": 45,
+      "awayW": 35,
+      "awayPPG": 120.66499999999999,
+      "awayAllow": 109.26499999999999,
+      "regularSeasonGames": 82,
+      "postseasonGames": 11
     },
     "CLE": {
-      "homeN": 7,
-      "homeW": 4,
-      "homePPG": 113.85714285714286,
-      "homeAllow": 102.57142857142857,
-      "awayN": 7,
-      "awayW": 5,
-      "awayPPG": 118.85714285714286,
-      "awayAllow": 109.85714285714286
+      "homeN": 47,
+      "homeW": 36,
+      "homePPG": 118.52464285714285,
+      "homeAllow": 109.10142857142857,
+      "awayN": 50,
+      "awayW": 35,
+      "awayPPG": 118.97342192691029,
+      "awayAllow": 110.98272425249168,
+      "regularSeasonGames": 83,
+      "postseasonGames": 14
     }
   },
   "pace": {

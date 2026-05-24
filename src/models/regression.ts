@@ -38,9 +38,13 @@ export function regressionComponent(input: RegInput, weight: number): {
   const homePts = ((blendedHomeOff + blendedAwayDef) / 2) * pace / 100;
   const awayPts = ((blendedAwayOff + blendedHomeDef) / 2) * pace / 100;
 
-  // Regression smoothing toward market (markets are efficient; we still want a tilt).
-  const marketBlendT = 0.55; // weight on model vs market for total
-  const marketBlendM = 0.55;
+  // Regression smoothing toward market. Markets are highly informed priors —
+  // they incorporate sharp action, sportsbook proprietary models, and inside
+  // info we don't have. We anchor 75% to the market and let the model tilt
+  // 25% based on data signal we genuinely have. This is the same posture
+  // professional NBA models take.
+  const marketBlendT = 0.25; // weight on model vs market for total (lower = MORE market trust)
+  const marketBlendM = 0.25;
 
   const projTotal = marketBlendT * (homePts + awayPts) + (1 - marketBlendT) * marketTotal;
 

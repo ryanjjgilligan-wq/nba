@@ -57,9 +57,15 @@ export function runMonteCarlo(input: SimInput): GameVerdict {
 
   for (let i = 0; i < iterations; i++) {
     const pace = sampleNormal(rng, projPace, 2.4);
-    const leagueOrtg = 113.5;
-    const homeAdjOrtg = baseHomeOrtg - (baseAwayDrtg - leagueOrtg) * 0.5;
-    const awayAdjOrtg = baseAwayOrtg - (baseHomeDrtg - leagueOrtg) * 0.5;
+    // League ORtg/DRtg baseline (matches the Bayesian shrinkage prior in
+    // game.ts so the adjustments are self-consistent).
+    const leagueOrtg = 114.5;
+    // Defensive adjustment: a GOOD opponent defense (low DRtg) should
+    // DEPRESS my offense. (oppDRtg - league) is negative for good D, so
+    // we ADD it (subtract from offense). The previous version had the
+    // sign flipped, which was inflating totals across the board.
+    const homeAdjOrtg = baseHomeOrtg + (baseAwayDrtg - leagueOrtg) * 0.5;
+    const awayAdjOrtg = baseAwayOrtg + (baseHomeDrtg - leagueOrtg) * 0.5;
 
     // Sample correlated ORtg shocks via Cholesky decomposition (2x2)
     const z1 = sampleNormal(rng, 0, 1);

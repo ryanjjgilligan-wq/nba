@@ -305,29 +305,63 @@ async function fetchTeamPace(teamId, sampleSize = 20) {
 }
 
 async function fetchTeamSplits(teamId) {
-  const d = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026`);
-  const events = d.events || [];
-  let homePts = 0, homeAllow = 0, homeN = 0, homeW = 0;
-  let awayPts = 0, awayAllow = 0, awayN = 0, awayW = 0;
-  for (const e of events) {
-    const c = e.competitions?.[0];
-    if (!c) continue;
-    const home = c.competitors.find((x) => x.homeAway === "home");
-    const away = c.competitors.find((x) => x.homeAway === "away");
-    const homeScore = Number(home?.score?.value || 0);
-    const awayScore = Number(away?.score?.value || 0);
-    if (homeScore === 0 || awayScore === 0) continue;
-    const isHome = home.team.id === String(teamId);
-    const isAway = away.team.id === String(teamId);
-    if (!isHome && !isAway) continue;
-    const myS = isHome ? homeScore : awayScore;
-    const oppS = isHome ? awayScore : homeScore;
-    if (isHome) { homePts += myS; homeAllow += oppS; homeN++; if (myS > oppS) homeW++; }
-    else { awayPts += myS; awayAllow += oppS; awayN++; if (myS > oppS) awayW++; }
+  // Pull BOTH full regular season (82 games) and postseason, then blend
+  // 70/30 toward regular season. Postseason-only numbers are too small a
+  // sample to trust on their own (the root of the 17-pt total bias).
+  const [regSeason, postSeason] = await Promise.all([
+    getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026&seasontype=2`),
+    getJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${teamId}/schedule?season=2026&seasontype=3`),
+  ]);
+
+  function collect(d) {
+    const events = d.events || [];
+    let hP = 0, hA = 0, hN = 0, hW = 0;
+    let aP = 0, aA = 0, aN = 0, aW = 0;
+    for (const e of events) {
+      const c = e.competitions?.[0];
+      if (!c) continue;
+      const home = c.competitors.find((x) => x.homeAway === "home");
+      const away = c.competitors.find((x) => x.homeAway === "away");
+      const homeScore = Number(home?.score?.value || 0);
+      const awayScore = Number(away?.score?.value || 0);
+      if (homeScore === 0 || awayScore === 0) continue;
+      const isHome = home.team.id === String(teamId);
+      const isAway = away.team.id === String(teamId);
+      if (!isHome && !isAway) continue;
+      const myS = isHome ? homeScore : awayScore;
+      const oppS = isHome ? awayScore : homeScore;
+      if (isHome) { hP += myS; hA += oppS; hN++; if (myS > oppS) hW++; }
+      else { aP += myS; aA += oppS; aN++; if (myS > oppS) aW++; }
+    }
+    return { hP, hA, hN, hW, aP, aA, aN, aW };
   }
+
+  const reg = collect(regSeason);
+  const post = collect(postSeason);
+
+  // Blend with 70% regular season, 30% postseason (postseason is more relevant
+  // for tonight but small-sample; reg is the stable prior).
+  const REG_WEIGHT = 0.7, POST_WEIGHT = 0.3;
+  const blend = (regVal, postVal, regN, postN) => {
+    if (regN === 0 && postN === 0) return 0;
+    if (regN === 0) return postVal / postN;
+    if (postN === 0) return regVal / regN;
+    return REG_WEIGHT * (regVal / regN) + POST_WEIGHT * (postVal / postN);
+  };
+
   return {
-    homeN, homeW, homePPG: homeN ? homePts / homeN : 0, homeAllow: homeN ? homeAllow / homeN : 0,
-    awayN, awayW, awayPPG: awayN ? awayPts / awayN : 0, awayAllow: awayN ? awayAllow / awayN : 0,
+    // Counts reflect TOTAL games, weights reflect blend
+    homeN: reg.hN + post.hN,
+    homeW: reg.hW + post.hW,
+    homePPG:   blend(reg.hP, post.hP, reg.hN, post.hN),
+    homeAllow: blend(reg.hA, post.hA, reg.hN, post.hN),
+    awayN: reg.aN + post.aN,
+    awayW: reg.aW + post.aW,
+    awayPPG:   blend(reg.aP, post.aP, reg.aN, post.aN),
+    awayAllow: blend(reg.aA, post.aA, reg.aN, post.aN),
+    // Provenance for the UI to show
+    regularSeasonGames: reg.hN + reg.aN,
+    postseasonGames: post.hN + post.aN,
   };
 }
 

@@ -35,8 +35,29 @@ export const GAME: GameContext = {
 const REAL_PACE_NYK = REAL.pace?.NYK ?? 99.6;
 const REAL_PACE_CLE = REAL.pace?.CLE ?? 102.4;
 
-function ortgFrom(ppg: number, pace: number) { return (ppg / pace) * 100; }
-function drtgFrom(allow: number, pace: number) { return (allow / pace) * 100; }
+// League-average baselines (2024-25 NBA, holds well for 2025-26)
+const LEAGUE_ORTG = 114.5;
+const LEAGUE_DRTG = 114.5;
+
+// Bayesian shrinkage: `(n × observed + k × prior) / (n + k)`. With k=12,
+// a team needs ~12 home games before its split deviates meaningfully from
+// the league mean. Standard PECOTA/Marcel-style shrinkage. Prevents the
+// 7-game-postseason sample from acting like ground truth.
+const SHRINK_K = 12;
+
+function shrink(observed: number, n: number, prior: number, k = SHRINK_K): number {
+  if (n <= 0) return prior;
+  return (n * observed + k * prior) / (n + k);
+}
+
+function ortgFrom(ppg: number, pace: number, n: number) {
+  const raw = (ppg / pace) * 100;
+  return shrink(raw, n, LEAGUE_ORTG);
+}
+function drtgFrom(allow: number, pace: number, n: number) {
+  const raw = (allow / pace) * 100;
+  return shrink(raw, n, LEAGUE_DRTG);
+}
 
 const sasSplit = REAL.splits?.CLE ?? { homePPG: 113.9, homeAllow: 102.6, awayPPG: 118.9, awayAllow: 109.9, homeN: 7, homeW: 4, awayN: 7, awayW: 5 };
 const okcSplit = REAL.splits?.NYK ?? { homePPG: 118.2, homeAllow: 103.8, awayPPG: 124.2, awayAllow: 111.4, homeN: 6, homeW: 5, awayN: 5, awayW: 5 };
@@ -46,12 +67,12 @@ export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
     code: "NYK",
     name: "Oklahoma City Thunder",
     pace: REAL_PACE_NYK,
-    ortg: (ortgFrom(okcSplit.homePPG, REAL_PACE_NYK) + ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK)) / 2,
-    drtg: (drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK) + drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK)) / 2,
-    homeOrtg: ortgFrom(okcSplit.homePPG, REAL_PACE_NYK),
-    awayOrtg: ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK),
-    homeDrtg: drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK),
-    awayDrtg: drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK),
+    ortg: (ortgFrom(okcSplit.homePPG, REAL_PACE_NYK, okcSplit.homeN) + ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK, okcSplit.awayN)) / 2,
+    drtg: (drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK, okcSplit.homeN) + drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK, okcSplit.awayN)) / 2,
+    homeOrtg: ortgFrom(okcSplit.homePPG, REAL_PACE_NYK, okcSplit.homeN),
+    awayOrtg: ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK, okcSplit.awayN),
+    homeDrtg: drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK, okcSplit.homeN),
+    awayDrtg: drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK, okcSplit.awayN),
     threePtRate: 0.39,
     recordWinPct: 64 / 82,
     restDays: 2,
@@ -60,12 +81,12 @@ export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
     code: "CLE",
     name: "San Antonio Spurs",
     pace: REAL_PACE_CLE,
-    ortg: (ortgFrom(sasSplit.homePPG, REAL_PACE_CLE) + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE)) / 2,
-    drtg: (drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE) + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE)) / 2,
-    homeOrtg: ortgFrom(sasSplit.homePPG, REAL_PACE_CLE),
-    awayOrtg: ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE),
-    homeDrtg: drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE),
-    awayDrtg: drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE),
+    ortg: (ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN) + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN)) / 2,
+    drtg: (drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN) + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN)) / 2,
+    homeOrtg: ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN),
+    awayOrtg: ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN),
+    homeDrtg: drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN),
+    awayDrtg: drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN),
     threePtRate: 0.40,
     recordWinPct: 62 / 82,
     restDays: 2,
