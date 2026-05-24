@@ -1,5 +1,6 @@
-import type { GameVerdict } from "../types";
+import type { GameVerdict, TeamCode } from "../types";
 import { fmtNum, fmtPct, fmtSign } from "../lib/format";
+import { DISPLAY } from "../lib/display";
 
 interface Props {
   verdict: GameVerdict;
@@ -26,20 +27,20 @@ export function GameVerdictCard({ verdict, homeTeam }: Props) {
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2 grid grid-cols-2 gap-3">
           <ScoreBlock
-            team={awayTeam}
+            team={DISPLAY[awayTeam].code}
             label="Away"
             mean={verdict.awayScore.mean}
             p25={verdict.awayScore.p25}
             p75={verdict.awayScore.p75}
-            color={awayTeam === "NYK" ? "nyk" : "cle"}
+            colorClass={DISPLAY[awayTeam].colorClass}
           />
           <ScoreBlock
-            team={homeTeam}
+            team={DISPLAY[homeTeam].code}
             label="Home"
             mean={verdict.homeScore.mean}
             p25={verdict.homeScore.p25}
             p75={verdict.homeScore.p75}
-            color={homeTeam === "NYK" ? "nyk" : "cle"}
+            colorClass={DISPLAY[homeTeam].colorClass}
           />
         </div>
         <div className="bg-terminal-bg/40 rounded p-3 flex flex-col justify-center">
@@ -47,17 +48,13 @@ export function GameVerdictCard({ verdict, homeTeam }: Props) {
             Win Probability
           </div>
           <div className="mt-1 text-2xl font-bold">
-            <span
-              className={
-                winner === "NYK" ? "text-terminal-nyk" : "text-terminal-cle"
-              }
-            >
-              {winner}
+            <span className={DISPLAY[winner as TeamCode].colorClass}>
+              {DISPLAY[winner as TeamCode].code}
             </span>{" "}
             {fmtPct(winnerProb)}
           </div>
           <div className="text-[11px] text-terminal-dim mt-1">
-            NYK {fmtPct(verdict.awayWinProb)} · CLE{" "}
+            {DISPLAY[awayTeam].code} {fmtPct(verdict.awayWinProb)} · {DISPLAY[homeTeam].code}{" "}
             {fmtPct(verdict.homeWinProb)}
           </div>
         </div>
@@ -115,22 +112,21 @@ function ScoreBlock({
   mean,
   p25,
   p75,
-  color,
+  colorClass,
 }: {
   team: string;
   label: string;
   mean: number;
   p25: number;
   p75: number;
-  color: "nyk" | "cle";
+  colorClass: string;
 }) {
-  const cls = color === "nyk" ? "text-terminal-nyk" : "text-terminal-cle";
   return (
     <div className="bg-terminal-bg/40 rounded p-3">
       <div className="text-[11px] text-terminal-dim uppercase tracking-widest">
         {label}
       </div>
-      <div className={`text-3xl font-bold ${cls}`}>
+      <div className={`text-3xl font-bold ${colorClass}`}>
         {team} {Math.round(mean)}
       </div>
       <div className="text-[11px] text-terminal-dim mt-1">

@@ -15,8 +15,9 @@ const DEF_VS_POS_AT_AWAY: Record<string, Partial<Record<string, number>>> = {
   NYK: { PG: 0.96, SG: 0.95, SF: 0.97, "G/F": 0.98, PF: 1.00, C: 1.01 },
 };
 
-// Individual defender matchups for Game 3 (built from rotations + series film).
-// Negative = projection drag, positive = projection lift.
+// Individual defender priors for OKC @ SAS. Used as FALLBACK only — when a
+// player has ≥3 real games of head-to-head history against the opposing team,
+// the opponent-specific multiplier overrides these.
 export const DEFENDER_MATCHUPS: Array<{
   scorer: string;
   primaryDefender: string;
@@ -24,52 +25,28 @@ export const DEFENDER_MATCHUPS: Array<{
   note: string;
 }> = [
   {
-    scorer: "Donovan Mitchell",
-    primaryDefender: "Mikal Bridges",
-    impact: -0.05,
-    note: "Bridges held Mitchell to 5/15 FG cumulatively across Games 1–2; switch onto Anunoby further drags TS%.",
-  },
-  {
-    scorer: "Jalen Brunson",
-    primaryDefender: "Sam Merrill / Garland",
-    impact: +0.04,
-    note: "Cleveland has no PoA stopper for Brunson; ICE coverage left him paint touches in Game 2.",
-  },
-  {
-    scorer: "Karl-Anthony Towns",
-    primaryDefender: "Mobley/Allen",
+    scorer: "Shai Gilgeous-Alexander",
+    primaryDefender: "Stephon Castle / Wemby help",
     impact: -0.03,
-    note: "Mobley shrinks KAT's rim conversion; he's still net-positive but capped vs DPOY-tier.",
+    note: "Castle PoA + Wemby rim-protection caps his drive efficiency.",
   },
   {
-    scorer: "Evan Mobley",
-    primaryDefender: "OG Anunoby + Towns help",
+    scorer: "Victor Wembanyama",
+    primaryDefender: "Holmgren switches",
     impact: -0.02,
-    note: "Anunoby switches keep Mobley from face-up post; usage holds, efficiency dips.",
+    note: "Chet length contests but Wemby's range neutralizes most help.",
   },
   {
-    scorer: "Darius Garland",
-    primaryDefender: "Brunson/Bridges blitz",
-    impact: -0.06,
-    note: "Aggressive PnR coverage forced 4 TO in Game 2; same script likely.",
-  },
-  {
-    scorer: "Mikal Bridges",
-    primaryDefender: "Strus/Wade",
-    impact: +0.03,
-    note: "Smaller wings get hunted off the ball; corner-three diet stays elevated.",
-  },
-  {
-    scorer: "OG Anunoby",
-    primaryDefender: "Strus/Hunter",
-    impact: +0.02,
-    note: "Mismatch hunter when CLE goes 3-guard.",
-  },
-  {
-    scorer: "Sam Merrill",
-    primaryDefender: "Bridges chase",
+    scorer: "De'Aaron Fox",
+    primaryDefender: "Wallace/Caruso",
     impact: -0.04,
-    note: "Top-side denial limits clean catch-and-shoot looks.",
+    note: "OKC's elite PoA shrinks paint touches; pull-up volume up.",
+  },
+  {
+    scorer: "Jalen Williams",
+    primaryDefender: "Vassell/Castle",
+    impact: -0.02,
+    note: "Two switchable wings; gets fewer mismatches than usual.",
   },
 ];
 

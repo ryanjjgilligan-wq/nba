@@ -1,14 +1,16 @@
-import type { PlayerBaseline } from "../types";
+import type { PlayerBaseline, TeamCode } from "../types";
 import { fmtNum } from "../lib/format";
+import { DISPLAY } from "../lib/display";
 
 interface Props {
   player: PlayerBaseline | null;
-  homeTeam: "NYK" | "CLE";
+  homeTeam: TeamCode;
 }
 
 export function OpponentHistory({ player, homeTeam }: Props) {
   if (!player) return null;
-  const opp = player.team === "NYK" ? "CLE" : "NYK";
+  const opp: TeamCode = player.team === "NYK" ? "CLE" : "NYK";
+  const oppDisplay = DISPLAY[opp].code;
   const hasOppHistory = player.vsOpponentN >= 2;
   return (
     <section className="panel p-4">
@@ -18,7 +20,7 @@ export function OpponentHistory({ player, homeTeam }: Props) {
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div className="bg-terminal-bg/40 rounded p-2">
           <div className="text-[10px] text-terminal-dim uppercase tracking-wider">
-            Vs {opp} (real history)
+            Vs {oppDisplay} (real history)
           </div>
           {hasOppHistory ? (
             <>

@@ -39,25 +39,27 @@ function buildLines(o: RealOdds): BettingLine[] {
     { market: "total", selection: `OVER ${o.total}`, price: o.totalOverPrice, book: o.provider, line: o.total },
     { market: "total", selection: `UNDER ${o.total}`, price: o.totalUnderPrice, book: o.provider, line: o.total },
 
-    // Player props — ESPN's free endpoint doesn't expose props, so these are
-    // representative lines anchored to the player's real season averages from
-    // the build script. UI will mark provenance accordingly.
-    { market: "playerProp", selection: "Brunson OVER 27.5 PTS",  price: -115, book: "consensus", line: 27.5, player: "Jalen Brunson", prop: "PTS" },
-    { market: "playerProp", selection: "Brunson UNDER 27.5 PTS", price: -105, book: "consensus", line: 27.5, player: "Jalen Brunson", prop: "PTS" },
-    { market: "playerProp", selection: "Towns OVER 20.5 PTS",     price: -110, book: "consensus", line: 20.5, player: "Karl-Anthony Towns", prop: "PTS" },
-    { market: "playerProp", selection: "Towns OVER 11.5 REB",     price: -120, book: "consensus", line: 11.5, player: "Karl-Anthony Towns", prop: "REB" },
-    { market: "playerProp", selection: "Bridges OVER 14.5 PTS",   price: -115, book: "consensus", line: 14.5, player: "Mikal Bridges", prop: "PTS" },
-    { market: "playerProp", selection: "Anunoby OVER 16.5 PTS",   price: -110, book: "consensus", line: 16.5, player: "OG Anunoby", prop: "PTS" },
-    { market: "playerProp", selection: "Hart OVER 7.5 REB",       price: -125, book: "consensus", line: 7.5,  player: "Josh Hart", prop: "REB" },
-    { market: "playerProp", selection: "Mitchell OVER 28.5 PTS",  price: -115, book: "consensus", line: 28.5, player: "Donovan Mitchell", prop: "PTS" },
-    { market: "playerProp", selection: "Mitchell OVER 5.5 AST",   price: -130, book: "consensus", line: 5.5,  player: "Donovan Mitchell", prop: "AST" },
-    { market: "playerProp", selection: "Harden OVER 24.5 PTS",    price: -110, book: "consensus", line: 24.5, player: "James Harden", prop: "PTS" },
-    { market: "playerProp", selection: "Harden OVER 7.5 AST",     price: -115, book: "consensus", line: 7.5,  player: "James Harden", prop: "AST" },
-    { market: "playerProp", selection: "Mobley OVER 18.5 PTS",    price: -110, book: "consensus", line: 18.5, player: "Evan Mobley", prop: "PTS" },
-    { market: "playerProp", selection: "Mobley OVER 9.5 REB",     price: -120, book: "consensus", line: 9.5,  player: "Evan Mobley", prop: "REB" },
-    { market: "playerProp", selection: "Allen OVER 8.5 REB",      price: -130, book: "consensus", line: 8.5,  player: "Jarrett Allen", prop: "REB" },
-    { market: "playerProp", selection: "Strus OVER 2.5 3PM",      price: -125, book: "consensus", line: 2.5,  player: "Max Strus", prop: "3PM" },
-    { market: "playerProp", selection: "Merrill OVER 2.5 3PM",    price: -140, book: "consensus", line: 2.5,  player: "Sam Merrill", prop: "3PM" },
+    // Player props — representative lines (ESPN free endpoint doesn't expose
+    // closing props). Re-verify against real DraftKings prop board before betting.
+    { market: "playerProp", selection: "SGA OVER 30.5 PTS",        price: -115, book: "consensus", line: 30.5, player: "Shai Gilgeous-Alexander", prop: "PTS" },
+    { market: "playerProp", selection: "SGA UNDER 30.5 PTS",       price: -105, book: "consensus", line: 30.5, player: "Shai Gilgeous-Alexander", prop: "PTS" },
+    { market: "playerProp", selection: "SGA OVER 6.5 AST",         price: -120, book: "consensus", line: 6.5,  player: "Shai Gilgeous-Alexander", prop: "AST" },
+    { market: "playerProp", selection: "J Williams OVER 19.5 PTS", price: -110, book: "consensus", line: 19.5, player: "Jalen Williams", prop: "PTS" },
+    { market: "playerProp", selection: "Chet OVER 16.5 PTS",       price: -115, book: "consensus", line: 16.5, player: "Chet Holmgren", prop: "PTS" },
+    { market: "playerProp", selection: "Chet OVER 9.5 REB",        price: -120, book: "consensus", line: 9.5,  player: "Chet Holmgren", prop: "REB" },
+    { market: "playerProp", selection: "Dort OVER 8.5 PTS",        price: -115, book: "consensus", line: 8.5,  player: "Luguentz Dort", prop: "PTS" },
+    { market: "playerProp", selection: "Wallace OVER 7.5 PTS",     price: -110, book: "consensus", line: 7.5,  player: "Cason Wallace", prop: "PTS" },
+    { market: "playerProp", selection: "Hartenstein OVER 7.5 REB", price: -125, book: "consensus", line: 7.5,  player: "Isaiah Hartenstein", prop: "REB" },
+    { market: "playerProp", selection: "Wemby OVER 25.5 PTS",      price: -115, book: "consensus", line: 25.5, player: "Victor Wembanyama", prop: "PTS" },
+    { market: "playerProp", selection: "Wemby OVER 11.5 REB",      price: -125, book: "consensus", line: 11.5, player: "Victor Wembanyama", prop: "REB" },
+    { market: "playerProp", selection: "Wemby OVER 3.5 BLK",       price: -130, book: "consensus", line: 3.5,  player: "Victor Wembanyama", prop: "BLK" },
+    { market: "playerProp", selection: "Fox OVER 22.5 PTS",        price: -110, book: "consensus", line: 22.5, player: "De'Aaron Fox", prop: "PTS" },
+    { market: "playerProp", selection: "Fox OVER 5.5 AST",         price: -120, book: "consensus", line: 5.5,  player: "De'Aaron Fox", prop: "AST" },
+    { market: "playerProp", selection: "Vassell OVER 17.5 PTS",    price: -110, book: "consensus", line: 17.5, player: "Devin Vassell", prop: "PTS" },
+    { market: "playerProp", selection: "Castle OVER 16.5 PTS",     price: -110, book: "consensus", line: 16.5, player: "Stephon Castle", prop: "PTS" },
+    { market: "playerProp", selection: "Castle OVER 5.5 AST",      price: -115, book: "consensus", line: 5.5,  player: "Stephon Castle", prop: "AST" },
+    { market: "playerProp", selection: "Johnson OVER 11.5 PTS",    price: -110, book: "consensus", line: 11.5, player: "Keldon Johnson", prop: "PTS" },
+    { market: "playerProp", selection: "Harper OVER 9.5 PTS",      price: -115, book: "consensus", line: 9.5,  player: "Dylan Harper", prop: "PTS" },
   ];
 }
 

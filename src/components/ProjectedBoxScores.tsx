@@ -18,14 +18,14 @@ export function ProjectedBoxScores({ players, selectedPlayerId, onSelect }: Prop
       </h2>
       <div className="grid lg:grid-cols-2 gap-4">
         <TeamTable
-          label="New York Knicks"
+          label="Oklahoma City Thunder"
           accent="nyk"
           players={nyk}
           selectedPlayerId={selectedPlayerId}
           onSelect={onSelect}
         />
         <TeamTable
-          label="Cleveland Cavaliers"
+          label="San Antonio Spurs"
           accent="cle"
           players={cle}
           selectedPlayerId={selectedPlayerId}

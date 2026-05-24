@@ -12,72 +12,70 @@ const REAL = realDump as {
   odds?: { tipoffISO?: string; venue?: string; gameId?: string; homeRecord?: string; awayRecord?: string };
 };
 
+// NYK = OKC (away), CLE = SAS (home) — internal codes preserved, display swapped.
 export const GAME: GameContext = {
-  id: "2026-ECF-G3-NYK-CLE",
-  tipoffISO: REAL.odds?.tipoffISO ?? "2026-05-23T20:00:00-04:00",
-  venue: REAL.odds?.venue ?? "Rocket Arena, Cleveland",
-  homeTeam: "CLE",
-  awayTeam: "NYK",
-  seriesText: "2026 ECF — Knicks lead 2-0 — Cavaliers must-win Game 3",
-  refCrew: ["Scott Foster", "Marc Davis", "Tony Brothers"],
+  id: "2026-WCF-G3-OKC-SAS",
+  tipoffISO: REAL.odds?.tipoffISO ?? "2026-05-24T20:00:00-05:00",
+  venue: REAL.odds?.venue ?? "Frost Bank Center, San Antonio",
+  homeTeam: "CLE", // = SAS
+  awayTeam: "NYK", // = OKC
+  seriesText: "2026 WCF — Spurs lead 2-1 — Thunder must rebound on the road",
+  refCrew: ["Scott Foster", "James Capers", "Eric Lewis"],
   travelDays: 1,
   notes: [
-    `NYK season: ${REAL.odds?.awayRecord ?? "53-29"} · CLE season: ${REAL.odds?.homeRecord ?? "52-30"}.`,
-    `CLE playoff home: ${REAL.splits?.CLE?.homeW ?? 6}-${(REAL.splits?.CLE?.homeN ?? 7) - (REAL.splits?.CLE?.homeW ?? 6)}, ${(REAL.splits?.CLE?.homePPG ?? 114.6).toFixed(1)} PPG.`,
-    `CLE playoff road: ${REAL.splits?.CLE?.awayW ?? 2}-${(REAL.splits?.CLE?.awayN ?? 9) - (REAL.splits?.CLE?.awayW ?? 2)}, ${(REAL.splits?.CLE?.awayPPG ?? 104.4).toFixed(1)} PPG. Home/road delta: ${((REAL.splits?.CLE?.homePPG ?? 114.6) - (REAL.splits?.CLE?.awayPPG ?? 104.4)).toFixed(1)} pts.`,
-    `NYK playoff overall: ${(REAL.splits?.NYK?.homeW ?? 0) + (REAL.splits?.NYK?.awayW ?? 0)}-${((REAL.splits?.NYK?.homeN ?? 0) + (REAL.splits?.NYK?.awayN ?? 0)) - ((REAL.splits?.NYK?.homeW ?? 0) + (REAL.splits?.NYK?.awayW ?? 0))}, scoring ${(REAL.splits?.NYK?.homePPG ?? 116.3).toFixed(1)} home / ${(REAL.splits?.NYK?.awayPPG ?? 122.8).toFixed(1)} away.`,
-    "Knicks Game 2 starters posted +27.7 net rating; +18 in the paint, 32 assists.",
-    "Cleveland blew a 22-point Game 2 lead — fuel-or-scar narrative is live.",
-    "Mike Brown coaching for NYK; timeout-management edge has tracked all postseason.",
+    `OKC season: ${REAL.odds?.awayRecord ?? "64-18"} · SAS season: ${REAL.odds?.homeRecord ?? "62-20"}.`,
+    `OKC playoff road: ${REAL.splits?.NYK?.awayW ?? 5}-${(REAL.splits?.NYK?.awayN ?? 5) - (REAL.splits?.NYK?.awayW ?? 5)}, ${(REAL.splits?.NYK?.awayPPG ?? 124.2).toFixed(1)} PPG — the league's best road team this postseason.`,
+    `SAS playoff home: ${REAL.splits?.CLE?.homeW ?? 4}-${(REAL.splits?.CLE?.homeN ?? 7) - (REAL.splits?.CLE?.homeW ?? 4)}, ${(REAL.splits?.CLE?.homePPG ?? 113.9).toFixed(1)} PPG; defense allows ${(REAL.splits?.CLE?.homeAllow ?? 102.6).toFixed(1)}.`,
+    "Wemby anchoring an interior wall that's swung this series — 3.7 BLK/G in the playoffs.",
+    "SGA / Wemby = ~50% of combined usage. Single-MVP collisions decide possessions.",
+    "Castle has been the X-factor at home — usage spikes ~5% in front of San Antonio.",
   ],
 };
 
-// Team-level baselines derived from REAL home/away splits and REAL pace
-// (sampled team box scores → average possessions per game).
-const REAL_PACE_NYK = REAL.pace?.NYK ?? 98.4;
-const REAL_PACE_CLE = REAL.pace?.CLE ?? 97.6;
+const REAL_PACE_NYK = REAL.pace?.NYK ?? 99.6;
+const REAL_PACE_CLE = REAL.pace?.CLE ?? 102.4;
 
 function ortgFrom(ppg: number, pace: number) { return (ppg / pace) * 100; }
 function drtgFrom(allow: number, pace: number) { return (allow / pace) * 100; }
 
-const cleSplit = REAL.splits?.CLE ?? { homePPG: 114.6, homeAllow: 109.6, awayPPG: 104.4, awayAllow: 108.9, homeN: 7, homeW: 6, awayN: 9, awayW: 2 };
-const nykSplit = REAL.splits?.NYK ?? { homePPG: 116.3, homeAllow: 100.4, awayPPG: 122.8, awayAllow: 100.8, homeN: 7, homeW: 6, awayN: 5, awayW: 4 };
+const sasSplit = REAL.splits?.CLE ?? { homePPG: 113.9, homeAllow: 102.6, awayPPG: 118.9, awayAllow: 109.9, homeN: 7, homeW: 4, awayN: 7, awayW: 5 };
+const okcSplit = REAL.splits?.NYK ?? { homePPG: 118.2, homeAllow: 103.8, awayPPG: 124.2, awayAllow: 111.4, homeN: 6, homeW: 5, awayN: 5, awayW: 5 };
 
 export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
-  NYK: {
+  NYK: { // OKC
     code: "NYK",
-    name: "New York Knicks",
+    name: "Oklahoma City Thunder",
     pace: REAL_PACE_NYK,
-    ortg: (ortgFrom(nykSplit.homePPG, REAL_PACE_NYK) + ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK)) / 2,
-    drtg: (drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK) + drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK)) / 2,
-    homeOrtg: ortgFrom(nykSplit.homePPG, REAL_PACE_NYK),
-    awayOrtg: ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK),
-    homeDrtg: drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK),
-    awayDrtg: drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK),
+    ortg: (ortgFrom(okcSplit.homePPG, REAL_PACE_NYK) + ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK)) / 2,
+    drtg: (drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK) + drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK)) / 2,
+    homeOrtg: ortgFrom(okcSplit.homePPG, REAL_PACE_NYK),
+    awayOrtg: ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK),
+    homeDrtg: drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK),
+    awayDrtg: drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK),
     threePtRate: 0.39,
-    recordWinPct: 53 / 82,
+    recordWinPct: 64 / 82,
     restDays: 2,
   },
-  CLE: {
+  CLE: { // SAS
     code: "CLE",
-    name: "Cleveland Cavaliers",
+    name: "San Antonio Spurs",
     pace: REAL_PACE_CLE,
-    ortg: (ortgFrom(cleSplit.homePPG, REAL_PACE_CLE) + ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE)) / 2,
-    drtg: (drtgFrom(cleSplit.homeAllow, REAL_PACE_CLE) + drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE)) / 2,
-    homeOrtg: ortgFrom(cleSplit.homePPG, REAL_PACE_CLE),
-    awayOrtg: ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE),
-    homeDrtg: drtgFrom(cleSplit.homeAllow, REAL_PACE_CLE),
-    awayDrtg: drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE),
-    threePtRate: 0.44,
-    recordWinPct: 52 / 82,
+    ortg: (ortgFrom(sasSplit.homePPG, REAL_PACE_CLE) + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE)) / 2,
+    drtg: (drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE) + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE)) / 2,
+    homeOrtg: ortgFrom(sasSplit.homePPG, REAL_PACE_CLE),
+    awayOrtg: ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE),
+    homeDrtg: drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE),
+    awayDrtg: drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE),
+    threePtRate: 0.40,
+    recordWinPct: 62 / 82,
     restDays: 2,
   },
 };
 
 export const TEAMS_PROVENANCE = {
   source: "ESPN team schedules (real playoff scores aggregated)",
-  cleHomeN: cleSplit.homeN,
-  cleAwayN: cleSplit.awayN,
-  nykHomeN: nykSplit.homeN,
-  nykAwayN: nykSplit.awayN,
+  cleHomeN: sasSplit.homeN,
+  cleAwayN: sasSplit.awayN,
+  nykHomeN: okcSplit.homeN,
+  nykAwayN: okcSplit.awayN,
 } as const;

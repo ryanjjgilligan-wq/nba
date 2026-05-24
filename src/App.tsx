@@ -35,6 +35,7 @@ import { ODDS_META } from "./data/fixtures/odds";
 import { LineShopper } from "./components/LineShopper";
 import { OpponentHistory } from "./components/OpponentHistory";
 import { BankrollStrategy } from "./components/BankrollStrategy";
+import { DISPLAY } from "./lib/display";
 
 export default function App() {
   const [game, setGame] = useState<Tagged<GameContext> | null>(null);
@@ -172,7 +173,7 @@ export default function App() {
   if (!ready || !verdict) {
     return (
       <div className="min-h-screen flex items-center justify-center text-terminal-dim">
-        Loading Game 3 Oracle…
+        Loading Single-Game Oracle…
       </div>
     );
   }
@@ -186,19 +187,21 @@ export default function App() {
           <div>
             <span className="chip bg-terminal-info/15 text-terminal-info mr-2">LINE MOVEMENT</span>
             <span className="text-terminal-dim">Open</span>{" "}
-            CLE {ODDS_META.openSpread! >= 0 ? "+" : ""}{ODDS_META.openSpread}{" "}
+            {DISPLAY[game!.data.homeTeam].code} {ODDS_META.openSpread! >= 0 ? "+" : ""}{ODDS_META.openSpread}{" "}
             ({ODDS_META.openMlHome ?? "—"}) · Total {ODDS_META.openTotal ?? "—"}
             <span className="mx-2 text-terminal-dim">→</span>
             <span className="text-terminal-dim">Close</span>{" "}
             <span className="text-terminal-accent font-semibold">
-              CLE {ODDS_META.closeSpread! >= 0 ? "+" : ""}{ODDS_META.closeSpread}
+              {DISPLAY[game!.data.homeTeam].code} {ODDS_META.closeSpread! >= 0 ? "+" : ""}{ODDS_META.closeSpread}
             </span>{" "}
             (<span className="text-terminal-accent font-semibold">{ODDS_META.closeMlHome}</span>) ·{" "}
             Total <span className="text-terminal-accent font-semibold">{ODDS_META.closeTotal}</span>
           </div>
           <div className="text-terminal-dim">
-            {ODDS_META.openSpread !== undefined && ODDS_META.closeSpread !== undefined && (
-              <>Spread moved {Math.abs(ODDS_META.closeSpread - ODDS_META.openSpread).toFixed(1)} pts toward CLE — sharp money on home favorite.</>
+            {ODDS_META.openSpread !== ODDS_META.closeSpread ? (
+              <>Spread moved {Math.abs(ODDS_META.closeSpread - ODDS_META.openSpread).toFixed(1)} pts.</>
+            ) : (
+              <>Spread held at open — minimal sharp action.</>
             )}
           </div>
         </div>
@@ -250,7 +253,7 @@ export default function App() {
       <SentimentFeed items={sentiment!.data} />
       <Disclaimer />
       <footer className="text-center text-[10px] text-terminal-dim py-4">
-        Game 3 Oracle · Built for educational/analytical use · Not gambling
+        Single-Game Oracle · Built for educational/analytical use · Not gambling
         advice · {new Date().getFullYear()}
       </footer>
     </div>

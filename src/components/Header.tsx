@@ -1,4 +1,5 @@
 import type { GameContext, Provenance } from "../types";
+import { DISPLAY } from "../lib/display";
 
 interface Props {
   game: GameContext;
@@ -21,15 +22,15 @@ export function Header({ game, provenance, source }: Props) {
     <header className="panel px-4 py-3 flex items-start justify-between gap-4">
       <div>
         <div className="flex items-center gap-2 text-xs text-terminal-dim uppercase tracking-widest">
-          Game 3 Oracle
+          Single-Game Oracle
           <span className="chip bg-terminal-info/10 text-terminal-info">
-            single-game engine
+            real ESPN data
           </span>
         </div>
         <div className="mt-1 text-xl font-bold flex items-center gap-3">
-          <span className="text-terminal-nyk">NYK</span>
+          <span className={DISPLAY[game.awayTeam].colorClass}>{DISPLAY[game.awayTeam].code}</span>
           <span className="text-terminal-dim">@</span>
-          <span className="text-terminal-cle">CLE</span>
+          <span className={DISPLAY[game.homeTeam].colorClass}>{DISPLAY[game.homeTeam].code}</span>
           <span className="text-terminal-dim text-sm font-normal">
             · {game.seriesText}
           </span>

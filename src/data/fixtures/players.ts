@@ -45,21 +45,26 @@ interface RealPlayer {
 // Player notes layered on top of real measured splits — narrative only,
 // no math impact (the actual multipliers below come from real game logs).
 const PER_PLAYER_NOTES: Record<string, string> = {
-  brunson:  "Carrying late-clock offense; cooled L5 (real split shows form dip).",
-  bridges:  "Primary Mitchell defender; real split shows higher road scoring.",
-  hart:     "Glue minutes; +18 in Game 2; real L5 cold streak (8.6 PPG).",
-  anunoby:  "Real split shows trending up: L5 18.6 PPG, slightly higher on road.",
-  kat:      "Pulls Allen out of paint; small but real home tilt.",
-  robinson: "Bench rim-protector; small real-split home bump.",
-  mcbride:  "Backup PG, real split shows L5 cold (8.0 PPG).",
-  mitchell: "REAL DATA: home/road PPG nearly identical (27.5/27.0); home-only narrative overstated.",
-  mobley:   "DPOY-tier rim protection; real L5 form dip (14.8).",
-  allen:    "REAL DATA: actually scores MORE on the road (16.9 vs 13.4).",
-  harden:   "REAL DATA: scores more on the road (25.1 vs 21.9). Inverts home-bias prior.",
-  strus:    "REAL DATA: huge real home boost (14.3 vs 8.0) on small sample (n=12).",
-  merrill:  "Real split: slight road tilt. L5 form cold (9.8 PPG).",
-  wade:     "Real split: clear home tilt (6.6 vs 5.2). L5 cold (4.0 PPG).",
-  schroder: "REAL DATA: scores more on the road (11.8 vs 9.6).",
+  // OKC
+  sga:         "MVP-tier usage; 30+ in every road game this postseason. Wemby challenges every rim attempt.",
+  jdub:        "Jalen Williams — secondary creator; matchup with Vassell/Castle is the swing.",
+  chet:        "Real H2H drops his PPG vs Wemby — long-armed defender shrinks his rim diet.",
+  dort:        "Catch-and-shoot specialist + Fox primary defender — opportunity cost in his offense.",
+  wallace:     "Pestering on-ball guard; minutes spike when Fox heats up.",
+  hartenstein: "Backup C minutes shrink against Wemby switchability.",
+  caruso:      "Plus-defender, off-ball cuts; foul-prone in postseason.",
+  wiggins:     "Three-point variance off the bench.",
+  joe:         "Pure shooter; tiny floor, high ceiling on hot nights.",
+  // SAS
+  wemby:       "DPOY favorite + 27 PPG home; the gravitational center of every SAS possession.",
+  fox:         "Pace-changer in transition; matchup with Wallace/Caruso is grueling.",
+  vassell:     "Two-way wing; absorbs Caruso when on the floor.",
+  castle:      "Real split shows usage spike at home — primary secondary creator.",
+  kjohnson:    "Streaky scorer; H2H against OKC has been quiet.",
+  harper:      "Rookie spark off the bench; high variance.",
+  champagnie:  "Switchable wing; matchup-specific minutes.",
+  barnes:      "Veteran spot-up minutes when SAS needs spacing.",
+  kornet:      "Specialist big when Wemby sits.",
 };
 
 const REAL = realDump as {
@@ -118,12 +123,4 @@ export const PLAYERS_PROVENANCE = {
 
 // Injuries are not in the public ESPN endpoints we use here; they're stubs.
 // The /api/injuries route can replace these with live data when wired up.
-export const INJURIES: InjuryNote[] = [
-  {
-    player: "Caris LeVert",
-    team: "CLE",
-    status: "QUESTIONABLE",
-    note: "Right ankle sprain — game-time decision.",
-    minutesImpact: -6,
-  },
-];
+export const INJURIES: InjuryNote[] = [];

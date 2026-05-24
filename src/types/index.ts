@@ -91,7 +91,7 @@ export interface BettingLine {
   book: string;
   line?: number;
   player?: string;
-  prop?: "PTS" | "REB" | "AST" | "3PM";
+  prop?: "PTS" | "REB" | "AST" | "3PM" | "BLK" | "STL";
 }
 
 export interface SentimentItem {

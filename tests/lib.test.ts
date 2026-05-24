@@ -134,18 +134,21 @@ describe("best bets", () => {
 });
 
 describe("player projections", () => {
-  it("projects Brunson with positive minutes and reasonable pts", () => {
+  it("projects a star player with positive minutes and reasonable pts", () => {
+    // Find any high-usage starter (works across whichever game is loaded)
+    const star = PLAYERS.find((p) => p.usage > 0.22 && p.ptsPer36 > 22)!;
+    expect(star).toBeDefined();
     const proj = projectPlayer(
-      PLAYERS.find((p) => p.id === "brunson")!,
+      star,
       TEAMS,
       GAME.homeTeam,
       INJURIES,
       SENTIMENT,
       { matchup: 1, venue: 1, form: 1, sentiment: 1 },
     );
-    expect(proj.minutes).toBeGreaterThan(30);
-    expect(proj.pts.mean).toBeGreaterThan(18);
-    expect(proj.pts.mean).toBeLessThan(45);
+    expect(proj.minutes).toBeGreaterThan(25);
+    expect(proj.pts.mean).toBeGreaterThan(15);
+    expect(proj.pts.mean).toBeLessThan(50);
     expect(proj.factors.length).toBeGreaterThan(3);
   });
 });

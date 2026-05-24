@@ -1,1008 +1,1197 @@
 {
-  "fetchedAt": "2026-05-23T21:02:55.066Z",
+  "fetchedAt": "2026-05-24T04:47:11.656Z",
   "source": "ESPN site.api / site.web.api (public, unauth)",
   "odds": {
     "provider": "DraftKings",
     "spreadHome": -2.5,
-    "spreadHomePrice": -112,
-    "spreadAwayPrice": -108,
-    "mlHome": -142,
-    "mlAway": 120,
-    "total": 215.5,
+    "spreadHomePrice": -110,
+    "spreadAwayPrice": -110,
+    "mlHome": -135,
+    "mlAway": 114,
+    "total": 218.5,
     "totalOverPrice": -110,
     "totalUnderPrice": -110,
-    "openSpread": 1.5,
-    "openTotal": "o213.5",
-    "openMlHome": "+100",
-    "homeRecord": "52-30",
-    "awayRecord": "53-29",
-    "venue": "Rocket Arena",
-    "tipoffISO": "2026-05-24T00:00Z",
-    "gameId": "401873343"
+    "openSpread": -2.5,
+    "openTotal": "o217.5",
+    "openMlHome": "-135",
+    "homeRecord": "62-20",
+    "awayRecord": "64-18",
+    "venue": "Frost Bank Center",
+    "tipoffISO": "2026-05-25T00:00Z",
+    "gameId": "401873200"
   },
   "players": [
     {
-      "id": "brunson",
-      "espnId": 3934672,
-      "name": "Jalen Brunson",
+      "id": "sga",
+      "espnId": 4278073,
+      "name": "Shai Gilgeous-Alexander",
       "team": "NYK",
       "position": "PG",
-      "seasonMin": 35,
-      "projMin": 36.083333333333336,
-      "projMinRosterDefault": 38,
-      "usage": 0.2586336914656396,
-      "ts": 0.5801499464476974,
+      "seasonMin": 33.2,
+      "projMin": 36.63636363636363,
+      "projMinRosterDefault": 36,
+      "usage": 0.2782900258841705,
+      "ts": 0.6656678082191781,
       "per36": {
-        "pts": 26.74285714285714,
-        "reb": 3.3942857142857137,
-        "ast": 6.994285714285714,
-        "tpm": 2.674285714285714,
-        "stl": 0.8228571428571428,
-        "blk": 0.10285714285714286,
-        "to": 2.4685714285714284
+        "pts": 33.72289156626506,
+        "reb": 4.662650602409638,
+        "ast": 7.156626506024096,
+        "tpm": 1.8433734939759034,
+        "stl": 1.5180722891566263,
+        "blk": 0.8674698795180723,
+        "to": 2.3855421686746987
       },
-      "ptsStd": 9.100105504981169,
-      "starter": true,
-      "split": {
-        "n": 90,
-        "homeN": 48,
-        "awayN": 42,
-        "seasonAvgPts": 25.511111111111113,
-        "seasonStdPts": 8.84732479650947,
-        "homePts": 26.354166666666668,
-        "awayPts": 24.547619047619047,
-        "homeMult": 1.0330466027874565,
-        "awayMult": 0.9622324539571926,
-        "last5Avg": 27.6,
-        "recentForm": 1.0818815331010452,
-        "restB2B": {
-          "n": 14,
-          "avgPts": 20.857142857142858,
-          "mult": 0.85
-        },
-        "rest1Day": {
-          "n": 51,
-          "avgPts": 26.254901960784313,
-          "mult": 1.0291555646648902
-        },
-        "rest2Plus": {
-          "n": 25,
-          "avgPts": 26.6,
-          "mult": 1.0426829268292683
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 26.8,
-          "avgReb": 2.8,
-          "avgAst": 6.6,
-          "mult": 1.0505226480836236
-        },
-        "playoff": {
-          "n": 12,
-          "avgMin": 36.083333333333336,
-          "avgPts": 27.583333333333332
-        }
-      }
-    },
-    {
-      "id": "bridges",
-      "espnId": 3147657,
-      "name": "Mikal Bridges",
-      "team": "NYK",
-      "position": "SF",
-      "seasonMin": 32.8,
-      "projMin": 31.25,
-      "projMinRosterDefault": 37,
-      "usage": 0.14715727331609427,
-      "ts": 0.5888125613346419,
-      "per36": {
-        "pts": 15.80487804878049,
-        "reb": 4.170731707317073,
-        "ast": 4.060975609756098,
-        "tpm": 2.0853658536585367,
-        "stl": 1.426829268292683,
-        "blk": 0.878048780487805,
-        "to": 1.0975609756097562
-      },
-      "ptsStd": 6.722923844700736,
-      "starter": true,
-      "split": {
-        "n": 94,
-        "homeN": 48,
-        "awayN": 46,
-        "seasonAvgPts": 14.457446808510639,
-        "seasonStdPts": 6.12533061406067,
-        "homePts": 13.583333333333334,
-        "awayPts": 15.369565217391305,
-        "homeMult": 0.9395388766249694,
-        "awayMult": 1.0630898678695972,
-        "last5Avg": 18,
-        "recentForm": 1.2450331125827814,
-        "restB2B": {
-          "n": 14,
-          "avgPts": 15.214285714285714,
-          "mult": 1.052349416587827
-        },
-        "rest1Day": {
-          "n": 59,
-          "avgPts": 14.525423728813559,
-          "mult": 1.0047018620371408
-        },
-        "rest2Plus": {
-          "n": 21,
-          "avgPts": 13.761904761904763,
-          "mult": 0.9518903955990049
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 16.6,
-          "avgReb": 4,
-          "avgAst": 3.2,
-          "mult": 1.148197203826343
-        },
-        "playoff": {
-          "n": 12,
-          "avgMin": 31.25,
-          "avgPts": 13.916666666666666
-        }
-      }
-    },
-    {
-      "id": "hart",
-      "espnId": 3062679,
-      "name": "Josh Hart",
-      "team": "NYK",
-      "position": "G/F",
-      "seasonMin": 30.2,
-      "projMin": 33.583333333333336,
-      "projMinRosterDefault": 35,
-      "usage": 0.1417994503834831,
-      "ts": 0.6100040666937779,
-      "per36": {
-        "pts": 14.304635761589406,
-        "reb": 8.821192052980134,
-        "ast": 5.7218543046357615,
-        "tpm": 1.7880794701986757,
-        "stl": 1.3112582781456956,
-        "blk": 0.3576158940397351,
-        "to": 2.2649006622516556
-      },
-      "ptsStd": 7.433208333002548,
+      "ptsStd": 7.808107746863087,
       "starter": true,
       "split": {
         "n": 79,
-        "homeN": 42,
-        "awayN": 37,
-        "seasonAvgPts": 11.962025316455696,
-        "seasonStdPts": 6.235635879352137,
-        "homePts": 12.5,
-        "awayPts": 11.35135135135135,
-        "homeMult": 1.0449735449735449,
-        "awayMult": 0.9489489489489489,
-        "last5Avg": 14.6,
-        "recentForm": 1.2205291005291006,
+        "homeN": 43,
+        "awayN": 36,
+        "seasonAvgPts": 30.759493670886076,
+        "seasonStdPts": 7.200810477662625,
+        "homePts": 30.511627906976745,
+        "awayPts": 31.055555555555557,
+        "homeMult": 0.9919418126136472,
+        "awayMult": 1.0096250571559213,
+        "last5Avg": 27.6,
+        "recentForm": 0.8972839506172839,
         "restB2B": {
-          "n": 11,
-          "avgPts": 10.090909090909092,
-          "mult": 0.85
+          "n": 10,
+          "avgPts": 31.1,
+          "mult": 1.0110699588477368
         },
         "rest1Day": {
-          "n": 42,
-          "avgPts": 13.738095238095237,
-          "mult": 1.1484756865709247
+          "n": 44,
+          "avgPts": 30.90909090909091,
+          "mult": 1.0048634493078938
         },
         "rest2Plus": {
-          "n": 26,
-          "avgPts": 9.884615384615385,
-          "mult": 0.85
+          "n": 25,
+          "avgPts": 30.36,
+          "mult": 0.9870123456790123
         },
         "vsOpponent": {
-          "n": 4,
-          "avgPts": 16,
-          "avgReb": 5,
-          "avgAst": 4.75,
-          "mult": 1.3
+          "n": 7,
+          "avgPts": 28.285714285714285,
+          "avgReb": 3.857142857142857,
+          "avgAst": 7.857142857142857,
+          "mult": 0.9195767195767195
         },
         "playoff": {
-          "n": 12,
-          "avgMin": 33.583333333333336,
-          "avgPts": 11.833333333333334
+          "n": 11,
+          "avgMin": 36.63636363636363,
+          "avgPts": 28.454545454545453
         }
       }
     },
     {
-      "id": "anunoby",
-      "espnId": 3934719,
-      "name": "OG Anunoby",
+      "id": "jdub",
+      "espnId": 4593803,
+      "name": "Jalen Williams",
       "team": "NYK",
       "position": "SF",
-      "seasonMin": 33.2,
-      "projMin": 34.8,
-      "projMinRosterDefault": 36,
-      "usage": 0.1676293660349894,
-      "ts": 0.6207255426702348,
+      "seasonMin": 28.4,
+      "projMin": 24,
+      "projMinRosterDefault": 34,
+      "usage": 0.21785062646949319,
+      "ts": 0.5619085173501578,
       "per36": {
-        "pts": 18.10843373493976,
-        "reb": 5.63855421686747,
-        "ast": 2.3855421686746987,
-        "tpm": 2.4939759036144573,
-        "stl": 1.7349397590361446,
-        "blk": 0.7590361445783131,
-        "to": 1.9518072289156625
+        "pts": 21.67605633802817,
+        "reb": 5.830985915492958,
+        "ast": 6.971830985915494,
+        "tpm": 0.8873239436619719,
+        "stl": 1.5211267605633803,
+        "blk": 0.38028169014084506,
+        "to": 2.408450704225352
       },
-      "ptsStd": 7.877486791853652,
+      "ptsStd": 7.3862863027878385,
       "starter": true,
       "split": {
-        "n": 78,
-        "homeN": 44,
-        "awayN": 34,
-        "seasonAvgPts": 17.23076923076923,
-        "seasonStdPts": 7.2647933747094795,
-        "homePts": 16.363636363636363,
-        "awayPts": 18.352941176470587,
-        "homeMult": 0.9496753246753247,
-        "awayMult": 1.065126050420168,
-        "last5Avg": 19.6,
-        "recentForm": 1.1375000000000002,
+        "n": 37,
+        "homeN": 22,
+        "awayN": 15,
+        "seasonAvgPts": 17.135135135135137,
+        "seasonStdPts": 5.826959194421517,
+        "homePts": 16.727272727272727,
+        "awayPts": 17.733333333333334,
+        "homeMult": 0.9761973042730139,
+        "awayMult": 1.0349106203995793,
+        "last5Avg": 17.8,
+        "recentForm": 1.038801261829653,
         "restB2B": {
-          "n": 12,
-          "avgPts": 15.833333333333334,
-          "mult": 0.9188988095238096
-        },
-        "rest1Day": {
-          "n": 45,
-          "avgPts": 17.177777777777777,
-          "mult": 0.9969246031746032
-        },
-        "rest2Plus": {
-          "n": 21,
-          "avgPts": 18.142857142857142,
-          "mult": 1.0529336734693877
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 12.8,
-          "avgReb": 5.6,
-          "avgAst": 2.2,
-          "mult": 0.7428571428571429
-        },
-        "playoff": {
-          "n": 10,
-          "avgMin": 34.8,
-          "avgPts": 19.8
-        }
-      }
-    },
-    {
-      "id": "kat",
-      "espnId": 3136195,
-      "name": "Karl-Anthony Towns",
-      "team": "NYK",
-      "position": "C",
-      "seasonMin": 31,
-      "projMin": 30.083333333333332,
-      "projMinRosterDefault": 35,
-      "usage": 0.22034618729687497,
-      "ts": 0.6196054254007399,
-      "per36": {
-        "pts": 23.34193548387097,
-        "reb": 13.819354838709678,
-        "ast": 3.483870967741936,
-        "tpm": 1.741935483870968,
-        "stl": 1.0451612903225806,
-        "blk": 0.5806451612903226,
-        "to": 2.903225806451613
-      },
-      "ptsStd": 8.627584605526893,
-      "starter": true,
-      "split": {
-        "n": 90,
-        "homeN": 45,
-        "awayN": 45,
-        "seasonAvgPts": 19.344444444444445,
-        "seasonStdPts": 7.429308965870379,
-        "homePts": 19.91111111111111,
-        "awayPts": 18.77777777777778,
-        "homeMult": 1.029293509477312,
-        "awayMult": 0.9707064905226881,
-        "last5Avg": 15.2,
-        "recentForm": 0.8,
-        "restB2B": {
-          "n": 13,
-          "avgPts": 21.615384615384617,
-          "mult": 1.1173949542703132
-        },
-        "rest1Day": {
-          "n": 50,
-          "avgPts": 19.1,
-          "mult": 0.987363584147042
-        },
-        "rest2Plus": {
-          "n": 27,
-          "avgPts": 18.703703703703702,
-          "mult": 0.9668772735975492
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 15,
-          "avgReb": 11.6,
-          "avgAst": 2.2,
-          "mult": 0.7754164273406088
-        },
-        "playoff": {
-          "n": 12,
-          "avgMin": 30.083333333333332,
-          "avgPts": 17.083333333333332
-        }
-      }
-    },
-    {
-      "id": "robinson",
-      "espnId": 4351852,
-      "name": "Mitchell Robinson",
-      "team": "NYK",
-      "position": "C",
-      "seasonMin": 19.6,
-      "projMin": 14.272727272727273,
-      "projMinRosterDefault": 20,
-      "usage": 0.09025430565496015,
-      "ts": 0.6870781099324976,
-      "per36": {
-        "pts": 10.46938775510204,
-        "reb": 16.163265306122447,
-        "ast": 1.6530612244897958,
-        "tpm": 0,
-        "stl": 1.6530612244897958,
-        "blk": 2.204081632653061,
-        "to": 1.2857142857142856
-      },
-      "ptsStd": 7.421963514392454,
-      "starter": false,
-      "split": {
-        "n": 72,
-        "homeN": 38,
-        "awayN": 34,
-        "seasonAvgPts": 5.597222222222222,
-        "seasonStdPts": 4.0408468022803365,
-        "homePts": 5.973684210526316,
-        "awayPts": 5.176470588235294,
-        "homeMult": 1.0672587175133865,
-        "awayMult": 0.9248284921909211,
-        "last5Avg": 4.4,
-        "recentForm": 0.8,
-        "restB2B": {
-          "n": 0,
-          "avgPts": 0,
-          "mult": 1
-        },
-        "rest1Day": {
-          "n": 37,
-          "avgPts": 5.135135135135135,
-          "mult": 0.9174434980886593
-        },
-        "rest2Plus": {
-          "n": 35,
-          "avgPts": 6.085714285714285,
-          "mult": 1.0872740163062744
-        },
-        "vsOpponent": {
           "n": 4,
-          "avgPts": 4.75,
-          "avgReb": 9.75,
-          "avgAst": 1,
-          "mult": 0.8486352357320099
+          "avgPts": 17.5,
+          "mult": 1.0212933753943216
+        },
+        "rest1Day": {
+          "n": 18,
+          "avgPts": 16.5,
+          "mult": 0.9629337539432176
+        },
+        "rest2Plus": {
+          "n": 15,
+          "avgPts": 17.8,
+          "mult": 1.038801261829653
+        },
+        "vsOpponent": {
+          "n": 6,
+          "avgPts": 16,
+          "avgReb": 3.8333333333333335,
+          "avgAst": 4,
+          "mult": 0.9337539432176655
         },
         "playoff": {
-          "n": 11,
-          "avgMin": 14.272727272727273,
-          "avgPts": 5.363636363636363
+          "n": 4,
+          "avgMin": 24,
+          "avgPts": 17.75
         }
       }
     },
     {
-      "id": "mcbride",
-      "espnId": 4431823,
-      "name": "Miles McBride",
+      "id": "chet",
+      "espnId": 4433255,
+      "name": "Chet Holmgren",
       "team": "NYK",
-      "position": "PG",
-      "seasonMin": 26.3,
-      "projMin": 19.666666666666668,
-      "projMinRosterDefault": 16,
-      "usage": 0.1551682276343305,
-      "ts": 0.5778120184899845,
+      "position": "C",
+      "seasonMin": 28.9,
+      "projMin": 31.454545454545453,
+      "projMinRosterDefault": 32,
+      "usage": 0.18391304150076085,
+      "ts": 0.6524725274725275,
       "per36": {
-        "pts": 16.425855513307983,
-        "reb": 3.2851711026615966,
-        "ast": 3.55893536121673,
-        "tpm": 3.6958174904942966,
-        "stl": 1.2319391634980987,
-        "blk": 0.2737642585551331,
-        "to": 1.0950570342205324
+        "pts": 21.301038062283737,
+        "reb": 11.086505190311419,
+        "ast": 2.1176470588235294,
+        "tpm": 1.6193771626297577,
+        "stl": 0.7474048442906575,
+        "blk": 2.366782006920415,
+        "to": 1.9930795847750866
       },
-      "ptsStd": 9.792433069745309,
-      "starter": false,
+      "ptsStd": 8.075690414129932,
+      "starter": true,
       "split": {
-        "n": 53,
-        "homeN": 31,
-        "awayN": 22,
-        "seasonAvgPts": 10.773584905660377,
-        "seasonStdPts": 7.153916381508378,
-        "homePts": 9.774193548387096,
-        "awayPts": 12.181818181818182,
-        "homeMult": 0.9072368792723575,
-        "awayMult": 1.1307116701162236,
-        "last5Avg": 7.4,
-        "recentForm": 0.8,
+        "n": 83,
+        "homeN": 41,
+        "awayN": 42,
+        "seasonAvgPts": 16.566265060240966,
+        "seasonStdPts": 6.482984804676528,
+        "homePts": 16.73170731707317,
+        "awayPts": 16.404761904761905,
+        "homeMult": 1.0099866962305986,
+        "awayMult": 0.9902510822510822,
+        "last5Avg": 13.8,
+        "recentForm": 0.8330181818181818,
         "restB2B": {
-          "n": 5,
-          "avgPts": 14.4,
-          "mult": 1.15
+          "n": 11,
+          "avgPts": 15.454545454545455,
+          "mult": 0.932892561983471
         },
         "rest1Day": {
-          "n": 29,
-          "avgPts": 11.517241379310345,
-          "mult": 1.0690259073615558
+          "n": 44,
+          "avgPts": 17.09090909090909,
+          "mult": 1.0316694214876032
         },
         "rest2Plus": {
-          "n": 19,
-          "avgPts": 8.68421052631579,
-          "mult": 0.85
+          "n": 28,
+          "avgPts": 16.178571428571427,
+          "mult": 0.9765974025974024
         },
         "vsOpponent": {
-          "n": 3,
-          "avgPts": 6.666666666666667,
-          "avgReb": 2.6666666666666665,
-          "avgAst": 1.6666666666666667,
+          "n": 7,
+          "avgPts": 11,
+          "avgReb": 6.714285714285714,
+          "avgAst": 0.8571428571428571,
           "mult": 0.7
         },
         "playoff": {
-          "n": 12,
-          "avgMin": 19.666666666666668,
-          "avgPts": 6.666666666666667
+          "n": 11,
+          "avgMin": 31.454545454545453,
+          "avgPts": 16.727272727272727
         }
       }
     },
     {
-      "id": "mitchell",
-      "espnId": 3908809,
-      "name": "Donovan Mitchell",
-      "team": "CLE",
+      "id": "dort",
+      "espnId": 4397020,
+      "name": "Luguentz Dort",
+      "team": "NYK",
       "position": "SG",
-      "seasonMin": 33.5,
-      "projMin": 36.375,
-      "projMinRosterDefault": 38,
-      "usage": 0.2749098989945805,
-      "ts": 0.6149709046023628,
+      "seasonMin": 26.8,
+      "projMin": 23.727272727272727,
+      "projMinRosterDefault": 32,
+      "usage": 0.11804494396718031,
+      "ts": 0.5218812877263582,
       "per36": {
-        "pts": 29.982089552238804,
+        "pts": 11.149253731343283,
         "reb": 4.835820895522388,
-        "ast": 6.125373134328358,
-        "tpm": 3.4388059701492537,
-        "stl": 1.6119402985074627,
-        "blk": 0.32238805970149254,
-        "to": 3.008955223880597
+        "ast": 1.6119402985074625,
+        "tpm": 2.552238805970149,
+        "stl": 1.208955223880597,
+        "blk": 0.5373134328358209,
+        "to": 1.0746268656716418
       },
-      "ptsStd": 9.850434910839699,
+      "ptsStd": 6.1556755041264966,
+      "starter": true,
+      "split": {
+        "n": 80,
+        "homeN": 43,
+        "awayN": 37,
+        "seasonAvgPts": 8.0125,
+        "seasonStdPts": 4.582558430849725,
+        "homePts": 7.744186046511628,
+        "awayPts": 8.324324324324325,
+        "homeMult": 0.9665130791278164,
+        "awayMult": 1.0389172323649705,
+        "last5Avg": 5.8,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 10,
+          "avgPts": 8.6,
+          "mult": 1.0733229329173168
+        },
+        "rest1Day": {
+          "n": 46,
+          "avgPts": 8.478260869565217,
+          "mult": 1.0581292816930068
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 6.875,
+          "mult": 0.858034321372855
+        },
+        "vsOpponent": {
+          "n": 6,
+          "avgPts": 6.5,
+          "avgReb": 3.3333333333333335,
+          "avgAst": 2,
+          "mult": 0.811232449297972
+        },
+        "playoff": {
+          "n": 11,
+          "avgMin": 23.727272727272727,
+          "avgPts": 5.909090909090909
+        }
+      }
+    },
+    {
+      "id": "wallace",
+      "espnId": 4683692,
+      "name": "Cason Wallace",
+      "team": "NYK",
+      "position": "SG",
+      "seasonMin": 26.6,
+      "projMin": 24.09090909090909,
+      "projMinRosterDefault": 26,
+      "usage": 0.12088934180053608,
+      "ts": 0.5377688844422212,
+      "per36": {
+        "pts": 11.639097744360901,
+        "reb": 4.195488721804511,
+        "ast": 3.518796992481203,
+        "tpm": 1.7593984962406015,
+        "stl": 2.571428571428571,
+        "blk": 0.5413533834586466,
+        "to": 1.218045112781955
+      },
+      "ptsStd": 7.666869322206662,
       "starter": true,
       "split": {
         "n": 88,
         "homeN": 46,
         "awayN": 42,
-        "seasonAvgPts": 27.022727272727273,
-        "seasonStdPts": 9.166376930920276,
-        "homePts": 27.67391304347826,
-        "awayPts": 26.30952380952381,
-        "homeMult": 1.024097707243939,
-        "awayMult": 0.973607273018543,
-        "last5Avg": 24,
-        "recentForm": 0.8881412952060554,
+        "seasonAvgPts": 8.511363636363637,
+        "seasonStdPts": 5.66496455474159,
+        "homePts": 8.565217391304348,
+        "awayPts": 8.452380952380953,
+        "homeMult": 1.0063272769489753,
+        "awayMult": 0.9930701252463602,
+        "last5Avg": 10,
+        "recentForm": 1.1748998664886514,
         "restB2B": {
-          "n": 12,
-          "avgPts": 25.75,
-          "mult": 0.952901597981497
-        },
-        "rest1Day": {
-          "n": 52,
-          "avgPts": 25.923076923076923,
-          "mult": 0.9593064630911561
-        },
-        "rest2Plus": {
-          "n": 24,
-          "avgPts": 30.041666666666668,
-          "mult": 1.1117185309784132
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 28.6,
-          "avgReb": 4.6,
-          "avgAst": 3.8,
-          "mult": 1.058368376787216
-        },
-        "playoff": {
-          "n": 16,
-          "avgMin": 36.375,
-          "avgPts": 25.875
-        }
-      }
-    },
-    {
-      "id": "mobley",
-      "espnId": 4432158,
-      "name": "Evan Mobley",
-      "team": "CLE",
-      "position": "PF",
-      "seasonMin": 31.9,
-      "projMin": 35.625,
-      "projMinRosterDefault": 36,
-      "usage": 0.19399124264316447,
-      "ts": 0.5977404098791381,
-      "per36": {
-        "pts": 20.539184952978058,
-        "reb": 10.156739811912226,
-        "ast": 4.062695924764891,
-        "tpm": 1.1285266457680252,
-        "stl": 0.7899686520376176,
-        "blk": 1.9184952978056429,
-        "to": 2.1442006269592477
-      },
-      "ptsStd": 6.606347865230055,
-      "starter": true,
-      "split": {
-        "n": 81,
-        "homeN": 40,
-        "awayN": 41,
-        "seasonAvgPts": 17.864197530864196,
-        "seasonStdPts": 5.8539582472455205,
-        "homePts": 18.425,
-        "awayPts": 17.317073170731707,
-        "homeMult": 1.0313925362819627,
-        "awayMult": 0.9693731353346706,
-        "last5Avg": 17.4,
-        "recentForm": 0.974015203870076,
-        "restB2B": {
-          "n": 9,
-          "avgPts": 14,
-          "mult": 0.85
-        },
-        "rest1Day": {
-          "n": 54,
-          "avgPts": 18.22222222222222,
-          "mult": 1.0200414651002074
-        },
-        "rest2Plus": {
-          "n": 18,
-          "avgPts": 18.72222222222222,
-          "mult": 1.048030407740152
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 15.4,
-          "avgReb": 8.8,
-          "avgAst": 2.6,
-          "mult": 0.8620594333102972
-        },
-        "playoff": {
-          "n": 16,
-          "avgMin": 35.625,
-          "avgPts": 16.6875
-        }
-      }
-    },
-    {
-      "id": "allen",
-      "espnId": 4066328,
-      "name": "Jarrett Allen",
-      "team": "CLE",
-      "position": "C",
-      "seasonMin": 27.1,
-      "projMin": 29.125,
-      "projMinRosterDefault": 30,
-      "usage": 0.17026334920102382,
-      "ts": 0.6714335542378793,
-      "per36": {
-        "pts": 20.45756457564576,
-        "reb": 11.291512915129152,
-        "ast": 2.3911439114391144,
-        "tpm": 0,
-        "stl": 1.3284132841328413,
-        "blk": 1.062730627306273,
-        "to": 1.7269372693726939
-      },
-      "ptsStd": 9.264453214943448,
-      "starter": true,
-      "split": {
-        "n": 72,
-        "homeN": 32,
-        "awayN": 40,
-        "seasonAvgPts": 14.805555555555555,
-        "seasonStdPts": 6.974074503471318,
-        "homePts": 13.34375,
-        "awayPts": 15.975,
-        "homeMult": 0.9012664165103189,
-        "awayMult": 1.0789868667917448,
-        "last5Avg": 15,
-        "recentForm": 1.0131332082551594,
-        "restB2B": {
-          "n": 7,
-          "avgPts": 16,
-          "mult": 1.0806754221388368
+          "n": 14,
+          "avgPts": 7.5,
+          "mult": 0.8811748998664887
         },
         "rest1Day": {
           "n": 47,
-          "avgPts": 15.127659574468085,
-          "mult": 1.0217556185381822
-        },
-        "rest2Plus": {
-          "n": 18,
-          "avgPts": 13.5,
-          "mult": 0.9118198874296436
-        },
-        "vsOpponent": {
-          "n": 5,
-          "avgPts": 10.6,
-          "avgReb": 7.8,
-          "avgAst": 1.4,
-          "mult": 0.7159474671669793
-        },
-        "playoff": {
-          "n": 16,
-          "avgMin": 29.125,
-          "avgPts": 12.875
-        }
-      }
-    },
-    {
-      "id": "harden",
-      "espnId": 3992,
-      "name": "James Harden",
-      "team": "CLE",
-      "position": "PG",
-      "seasonMin": 35.4,
-      "projMin": 37.375,
-      "projMinRosterDefault": 34,
-      "usage": 0.2546013933091308,
-      "ts": 0.5979284369114877,
-      "per36": {
-        "pts": 25.83050847457627,
-        "reb": 4.881355932203389,
-        "ast": 8.23728813559322,
-        "tpm": 3.152542372881356,
-        "stl": 1.3220338983050848,
-        "blk": 0.4067796610169492,
-        "to": 3.76271186440678
-      },
-      "ptsStd": 7.639133572506234,
-      "starter": true,
-      "split": {
-        "n": 86,
-        "homeN": 40,
-        "awayN": 46,
-        "seasonAvgPts": 22.86046511627907,
-        "seasonStdPts": 7.51181467963113,
-        "homePts": 21.975,
-        "awayPts": 23.630434782608695,
-        "homeMult": 0.9612665310274671,
-        "awayMult": 1.03368127736742,
-        "last5Avg": 19,
-        "recentForm": 0.8311291963377416,
-        "restB2B": {
-          "n": 11,
-          "avgPts": 22.90909090909091,
-          "mult": 1.0021270692684732
-        },
-        "rest1Day": {
-          "n": 48,
-          "avgPts": 23.0625,
-          "mult": 1.0088377416073244
+          "avgPts": 8.553191489361701,
+          "mult": 1.0049143538902934
         },
         "rest2Plus": {
           "n": 27,
-          "avgPts": 22.48148148148148,
-          "mult": 0.9834218755887117
+          "avgPts": 8.962962962962964,
+          "mult": 1.0530583988527915
         },
         "vsOpponent": {
-          "n": 4,
-          "avgPts": 19,
-          "avgReb": 3.75,
-          "avgAst": 4.5,
-          "mult": 0.8311291963377416
-        },
-        "playoff": {
-          "n": 16,
-          "avgMin": 37.375,
-          "avgPts": 19.625
-        }
-      }
-    },
-    {
-      "id": "strus",
-      "espnId": 4065778,
-      "name": "Max Strus",
-      "team": "CLE",
-      "position": "SF",
-      "seasonMin": 24,
-      "projMin": 26.875,
-      "projMinRosterDefault": 28,
-      "usage": 0.14985343916052096,
-      "ts": 0.6118881118881118,
-      "per36": {
-        "pts": 16.799999999999997,
-        "reb": 8.100000000000001,
-        "ast": 3,
-        "tpm": 4.199999999999999,
-        "stl": 0.44999999999999996,
-        "blk": 0,
-        "to": 1.2000000000000002
-      },
-      "ptsStd": 11.725024114098462,
-      "starter": true,
-      "split": {
-        "n": 28,
-        "homeN": 13,
-        "awayN": 15,
-        "seasonAvgPts": 10.285714285714286,
-        "seasonStdPts": 7.816682742732308,
-        "homePts": 11.846153846153847,
-        "awayPts": 8.933333333333334,
-        "homeMult": 1.15,
-        "awayMult": 0.8685185185185185,
-        "last5Avg": 9.6,
-        "recentForm": 0.9333333333333332,
-        "restB2B": {
-          "n": 0,
-          "avgPts": 0,
-          "mult": 1
-        },
-        "rest1Day": {
-          "n": 18,
-          "avgPts": 8.5,
-          "mult": 0.85
-        },
-        "rest2Plus": {
-          "n": 10,
-          "avgPts": 13.5,
-          "mult": 1.15
-        },
-        "vsOpponent": {
-          "n": 2,
-          "avgPts": 6.5,
-          "avgReb": 3,
+          "n": 8,
+          "avgPts": 8.25,
+          "avgReb": 3.5,
           "avgAst": 2,
-          "mult": 0.7
+          "mult": 0.9692923898531375
         },
         "playoff": {
-          "n": 16,
-          "avgMin": 26.875,
-          "avgPts": 9.625
+          "n": 11,
+          "avgMin": 24.09090909090909,
+          "avgPts": 8.090909090909092
         }
       }
     },
     {
-      "id": "merrill",
-      "espnId": 4066757,
-      "name": "Sam Merrill",
-      "team": "CLE",
-      "position": "SG",
-      "seasonMin": 26.5,
-      "projMin": 19.733333333333334,
-      "projMinRosterDefault": 19,
-      "usage": 0.1455350272451386,
-      "ts": 0.6482982171799028,
+      "id": "hartenstein",
+      "espnId": 4222252,
+      "name": "Isaiah Hartenstein",
+      "team": "NYK",
+      "position": "C",
+      "seasonMin": 24.2,
+      "projMin": 24.09090909090909,
+      "projMinRosterDefault": 22,
+      "usage": 0.1339538218463295,
+      "ts": 0.6329113924050632,
       "per36": {
-        "pts": 17.38867924528302,
-        "reb": 3.5320754716981133,
-        "ast": 3.2603773584905658,
-        "tpm": 4.0754716981132075,
-        "stl": 0.8150943396226414,
-        "blk": 0.13584905660377358,
-        "to": 1.0867924528301887
+        "pts": 13.685950413223141,
+        "reb": 13.983471074380168,
+        "ast": 5.206611570247935,
+        "tpm": 0,
+        "stl": 1.4876033057851241,
+        "blk": 1.1900826446280994,
+        "to": 2.5289256198347108
       },
-      "ptsStd": 9.283314835547353,
+      "ptsStd": 8.193978808173469,
       "starter": false,
       "split": {
-        "n": 67,
-        "homeN": 30,
-        "awayN": 37,
-        "seasonAvgPts": 11.701492537313433,
-        "seasonStdPts": 6.833551198389024,
-        "homePts": 11.333333333333334,
-        "awayPts": 12,
-        "homeMult": 0.9685374149659864,
-        "awayMult": 1.0255102040816326,
-        "last5Avg": 11,
-        "recentForm": 0.9400510204081632,
+        "n": 58,
+        "homeN": 28,
+        "awayN": 30,
+        "seasonAvgPts": 9.10344827586207,
+        "seasonStdPts": 5.508174643272165,
+        "homePts": 8.5,
+        "awayPts": 9.666666666666666,
+        "homeMult": 0.9337121212121212,
+        "awayMult": 1.0618686868686869,
+        "last5Avg": 6.8,
+        "recentForm": 0.8,
         "restB2B": {
-          "n": 8,
-          "avgPts": 12.125,
-          "mult": 1.0361926020408163
+          "n": 4,
+          "avgPts": 8.75,
+          "mult": 0.9611742424242424
         },
         "rest1Day": {
-          "n": 40,
-          "avgPts": 12.525,
-          "mult": 1.0703762755102042
+          "n": 31,
+          "avgPts": 10.387096774193548,
+          "mult": 1.1410068426197457
         },
         "rest2Plus": {
-          "n": 19,
-          "avgPts": 9.789473684210526,
+          "n": 23,
+          "avgPts": 7.434782608695652,
+          "mult": 0.85
+        },
+        "vsOpponent": {
+          "n": 6,
+          "avgPts": 8,
+          "avgReb": 9.333333333333334,
+          "avgAst": 2.1666666666666665,
+          "mult": 0.8787878787878788
+        },
+        "playoff": {
+          "n": 11,
+          "avgMin": 24.09090909090909,
+          "avgPts": 8.727272727272727
+        }
+      }
+    },
+    {
+      "id": "caruso",
+      "espnId": 2991350,
+      "name": "Alex Caruso",
+      "team": "NYK",
+      "position": "G",
+      "seasonMin": 18.2,
+      "projMin": 22.545454545454547,
+      "projMinRosterDefault": 22,
+      "usage": 0.1329899835814835,
+      "ts": 0.5348516218081435,
+      "per36": {
+        "pts": 12.263736263736265,
+        "reb": 5.538461538461538,
+        "ast": 3.956043956043956,
+        "tpm": 1.7802197802197803,
+        "stl": 2.5714285714285716,
+        "blk": 0.5934065934065934,
+        "to": 1.7802197802197803
+      },
+      "ptsStd": 10.650518705669734,
+      "starter": false,
+      "split": {
+        "n": 66,
+        "homeN": 36,
+        "awayN": 30,
+        "seasonAvgPts": 7.151515151515151,
+        "seasonStdPts": 5.384428901199699,
+        "homePts": 7.777777777777778,
+        "awayPts": 6.4,
+        "homeMult": 1.0875706214689265,
+        "awayMult": 0.8949152542372882,
+        "last5Avg": 15.6,
+        "recentForm": 1.25,
+        "restB2B": {
+          "n": 8,
+          "avgPts": 6.25,
+          "mult": 0.8739406779661018
+        },
+        "rest1Day": {
+          "n": 32,
+          "avgPts": 6.90625,
+          "mult": 0.9657044491525424
+        },
+        "rest2Plus": {
+          "n": 26,
+          "avgPts": 7.730769230769231,
+          "mult": 1.0809973924380705
+        },
+        "vsOpponent": {
+          "n": 7,
+          "avgPts": 14.428571428571429,
+          "avgReb": 3.2857142857142856,
+          "avgAst": 2.142857142857143,
+          "mult": 1.3
+        },
+        "playoff": {
+          "n": 11,
+          "avgMin": 22.545454545454547,
+          "avgPts": 11.272727272727273
+        }
+      }
+    },
+    {
+      "id": "wiggins",
+      "espnId": 4397183,
+      "name": "Aaron Wiggins",
+      "team": "NYK",
+      "position": "G",
+      "seasonMin": 21.8,
+      "projMin": 8.75,
+      "projMinRosterDefault": 18,
+      "usage": 0.1638894955669328,
+      "ts": 0.5412252418240443,
+      "per36": {
+        "pts": 15.522935779816514,
+        "reb": 5.1192660550458715,
+        "ast": 2.807339449541284,
+        "tpm": 2.477064220183486,
+        "stl": 1.4862385321100917,
+        "blk": 0.6605504587155964,
+        "to": 1.9816513761467887
+      },
+      "ptsStd": 10.181500668389909,
+      "starter": false,
+      "split": {
+        "n": 68,
+        "homeN": 35,
+        "awayN": 33,
+        "seasonAvgPts": 9.044117647058824,
+        "seasonStdPts": 6.165464293636112,
+        "homePts": 7.257142857142857,
+        "awayPts": 10.93939393939394,
+        "homeMult": 0.85,
+        "awayMult": 1.15,
+        "last5Avg": 1.8,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 9,
+          "avgPts": 14,
+          "mult": 1.15
+        },
+        "rest1Day": {
+          "n": 34,
+          "avgPts": 8.941176470588236,
+          "mult": 0.9886178861788617
+        },
+        "rest2Plus": {
+          "n": 25,
+          "avgPts": 7.4,
           "mult": 0.85
         },
         "vsOpponent": {
           "n": 5,
-          "avgPts": 9.2,
-          "avgReb": 2,
-          "avgAst": 1,
-          "mult": 0.7862244897959183
+          "avgPts": 6.6,
+          "avgReb": 2.2,
+          "avgAst": 2.2,
+          "mult": 0.7297560975609755
         },
         "playoff": {
-          "n": 15,
-          "avgMin": 19.733333333333334,
-          "avgPts": 8.066666666666666
+          "n": 4,
+          "avgMin": 8.75,
+          "avgPts": 1.5
         }
       }
     },
     {
-      "id": "wade",
-      "espnId": 3912848,
-      "name": "Dean Wade",
-      "team": "CLE",
-      "position": "PF",
-      "seasonMin": 22.3,
-      "projMin": 23.625,
-      "projMinRosterDefault": 17,
-      "usage": 0.08530580909344032,
-      "ts": 0.5842062852538275,
+      "id": "joe",
+      "espnId": 4395702,
+      "name": "Isaiah Joe",
+      "team": "NYK",
+      "position": "SG",
+      "seasonMin": 21.2,
+      "projMin": 11.777777777777779,
+      "projMinRosterDefault": 14,
+      "usage": 0.1525685398645874,
+      "ts": 0.6648298993770964,
       "per36": {
-        "pts": 9.36322869955157,
-        "reb": 6.780269058295964,
-        "ast": 2.42152466367713,
-        "tpm": 1.9372197309417039,
-        "stl": 1.1300448430493273,
-        "blk": 0.6457399103139014,
-        "to": 0.48430493273542596
+        "pts": 18.849056603773587,
+        "reb": 4.245283018867925,
+        "ast": 2.207547169811321,
+        "tpm": 4.245283018867925,
+        "stl": 1.1886792452830188,
+        "blk": 0.339622641509434,
+        "to": 1.0188679245283019
       },
-      "ptsStd": 5.974532481952733,
+      "ptsStd": 11.08360698529581,
       "starter": false,
       "split": {
-        "n": 74,
-        "homeN": 37,
-        "awayN": 37,
-        "seasonAvgPts": 5.6891891891891895,
-        "seasonStdPts": 3.700890954098498,
-        "homePts": 6.027027027027027,
-        "awayPts": 5.351351351351352,
-        "homeMult": 1.0593824228028503,
-        "awayMult": 0.9406175771971497,
-        "last5Avg": 4.2,
+        "n": 80,
+        "homeN": 41,
+        "awayN": 39,
+        "seasonAvgPts": 10.425,
+        "seasonStdPts": 6.5270130024519775,
+        "homePts": 10.78048780487805,
+        "awayPts": 10.051282051282051,
+        "homeMult": 1.0340995496285899,
+        "awayMult": 0.964151755518662,
+        "last5Avg": 3.8,
         "recentForm": 0.8,
         "restB2B": {
+          "n": 13,
+          "avgPts": 9.23076923076923,
+          "mult": 0.8854454897620364
+        },
+        "rest1Day": {
+          "n": 46,
+          "avgPts": 10.978260869565217,
+          "mult": 1.0530705870086539
+        },
+        "rest2Plus": {
+          "n": 21,
+          "avgPts": 9.952380952380953,
+          "mult": 0.9546648395569258
+        },
+        "vsOpponent": {
+          "n": 6,
+          "avgPts": 4.333333333333333,
+          "avgReb": 2,
+          "avgAst": 1.1666666666666667,
+          "mult": 0.7
+        },
+        "playoff": {
           "n": 9,
-          "avgPts": 6.777777777777778,
+          "avgMin": 11.777777777777779,
+          "avgPts": 5.444444444444445
+        }
+      }
+    },
+    {
+      "id": "wemby",
+      "espnId": 5104157,
+      "name": "Victor Wembanyama",
+      "team": "CLE",
+      "position": "C",
+      "seasonMin": 29.2,
+      "projMin": 31.76923076923077,
+      "projMinRosterDefault": 34,
+      "usage": 0.2694998615170506,
+      "ts": 0.6256256256256257,
+      "per36": {
+        "pts": 30.82191780821918,
+        "reb": 14.178082191780822,
+        "ast": 3.8219178082191783,
+        "tpm": 2.3424657534246576,
+        "stl": 1.2328767123287672,
+        "blk": 3.8219178082191783,
+        "to": 2.958904109589041
+      },
+      "ptsStd": 11.226001503549286,
+      "starter": true,
+      "split": {
+        "n": 80,
+        "homeN": 41,
+        "awayN": 39,
+        "seasonAvgPts": 24.275,
+        "seasonStdPts": 9.105534552878865,
+        "homePts": 25.024390243902438,
+        "awayPts": 23.487179487179485,
+        "homeMult": 1.0308708648363518,
+        "awayMult": 0.9675460138899892,
+        "last5Avg": 26.8,
+        "recentForm": 1.1040164778578785,
+        "restB2B": {
+          "n": 13,
+          "avgPts": 21.76923076923077,
+          "mult": 0.8967757268478176
+        },
+        "rest1Day": {
+          "n": 42,
+          "avgPts": 24.595238095238095,
+          "mult": 1.0131920945515178
+        },
+        "rest2Plus": {
+          "n": 25,
+          "avgPts": 25.04,
+          "mult": 1.031513903192585
+        },
+        "vsOpponent": {
+          "n": 8,
+          "avgPts": 22.5,
+          "avgReb": 11.375,
+          "avgAst": 2.75,
+          "mult": 0.9268795056642637
+        },
+        "playoff": {
+          "n": 13,
+          "avgMin": 31.76923076923077,
+          "avgPts": 22.384615384615383
+        }
+      }
+    },
+    {
+      "id": "fox",
+      "espnId": 4066259,
+      "name": "De'Aaron Fox",
+      "team": "CLE",
+      "position": "PG",
+      "seasonMin": 31,
+      "projMin": 33.083333333333336,
+      "projMinRosterDefault": 35,
+      "usage": 0.20752755688608202,
+      "ts": 0.5813953488372093,
+      "per36": {
+        "pts": 21.6,
+        "reb": 4.412903225806452,
+        "ast": 7.200000000000001,
+        "tpm": 2.0903225806451613,
+        "stl": 1.3935483870967742,
+        "blk": 0.34838709677419355,
+        "to": 2.670967741935484
+      },
+      "ptsStd": 7.993111821798274,
+      "starter": true,
+      "split": {
+        "n": 86,
+        "homeN": 45,
+        "awayN": 41,
+        "seasonAvgPts": 18.325581395348838,
+        "seasonStdPts": 6.8829574021040685,
+        "homePts": 18.133333333333333,
+        "awayPts": 18.536585365853657,
+        "homeMult": 0.9895093062605752,
+        "awayMult": 1.011514176055466,
+        "last5Avg": 19,
+        "recentForm": 1.0368020304568528,
+        "restB2B": {
+          "n": 13,
+          "avgPts": 17.384615384615383,
+          "mult": 0.9486528699726668
+        },
+        "rest1Day": {
+          "n": 50,
+          "avgPts": 19.72,
+          "mult": 1.0760913705583754
+        },
+        "rest2Plus": {
+          "n": 23,
+          "avgPts": 15.826086956521738,
+          "mult": 0.8636062679320238
+        },
+        "vsOpponent": {
+          "n": 6,
+          "avgPts": 16.833333333333332,
+          "avgReb": 4.166666666666667,
+          "avgAst": 6.166666666666667,
+          "mult": 0.918570219966159
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 33.083333333333336,
+          "avgPts": 18.5
+        }
+      }
+    },
+    {
+      "id": "vassell",
+      "espnId": 4395630,
+      "name": "Devin Vassell",
+      "team": "CLE",
+      "position": "SG",
+      "seasonMin": 30.5,
+      "projMin": 34.357142857142854,
+      "projMinRosterDefault": 33,
+      "usage": 0.15028852706060614,
+      "ts": 0.5726763348714567,
+      "per36": {
+        "pts": 16.40655737704918,
+        "reb": 4.721311475409836,
+        "ast": 2.9508196721311473,
+        "tpm": 2.9508196721311473,
+        "stl": 1.0622950819672132,
+        "blk": 0.4721311475409836,
+        "to": 1.0622950819672132
+      },
+      "ptsStd": 6.991829411211278,
+      "starter": true,
+      "split": {
+        "n": 82,
+        "homeN": 42,
+        "awayN": 40,
+        "seasonAvgPts": 13.853658536585366,
+        "seasonStdPts": 5.923633251165111,
+        "homePts": 12.952380952380953,
+        "awayPts": 14.8,
+        "homeMult": 0.9349429912810194,
+        "awayMult": 1.0683098591549296,
+        "last5Avg": 15.6,
+        "recentForm": 1.126056338028169,
+        "restB2B": {
+          "n": 10,
+          "avgPts": 13.9,
+          "mult": 1.0033450704225353
+        },
+        "rest1Day": {
+          "n": 48,
+          "avgPts": 14.479166666666666,
+          "mult": 1.0451511150234742
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 12.583333333333334,
+          "mult": 0.9083039906103287
+        },
+        "vsOpponent": {
+          "n": 7,
+          "avgPts": 15,
+          "avgReb": 4.857142857142857,
+          "avgAst": 1.7142857142857142,
+          "mult": 1.0827464788732395
+        },
+        "playoff": {
+          "n": 14,
+          "avgMin": 34.357142857142854,
+          "avgPts": 13.714285714285714
+        }
+      }
+    },
+    {
+      "id": "castle",
+      "espnId": 4845367,
+      "name": "Stephon Castle",
+      "team": "CLE",
+      "position": "SG",
+      "seasonMin": 30,
+      "projMin": 33.714285714285715,
+      "projMinRosterDefault": 30,
+      "usage": 0.20703754866256435,
+      "ts": 0.5772953539823008,
+      "per36": {
+        "pts": 20.04,
+        "reb": 6.359999999999999,
+        "ast": 8.88,
+        "tpm": 1.44,
+        "stl": 1.32,
+        "blk": 0.36,
+        "to": 3.84
+      },
+      "ptsStd": 7.686337012364614,
+      "starter": true,
+      "split": {
+        "n": 83,
+        "homeN": 41,
+        "awayN": 42,
+        "seasonAvgPts": 17.14457831325301,
+        "seasonStdPts": 6.405280843637179,
+        "homePts": 16.804878048780488,
+        "awayPts": 17.476190476190474,
+        "homeMult": 0.9801861405824178,
+        "awayMult": 1.0193421008600208,
+        "last5Avg": 21,
+        "recentForm": 1.22487702037948,
+        "restB2B": {
+          "n": 13,
+          "avgPts": 14.23076923076923,
+          "mult": 0.85
+        },
+        "rest1Day": {
+          "n": 46,
+          "avgPts": 17.847826086956523,
+          "mult": 1.041018668459165
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 17.375,
+          "mult": 1.0134399156711174
+        },
+        "vsOpponent": {
+          "n": 8,
+          "avgPts": 19.375,
+          "avgReb": 4.5,
+          "avgAst": 6.25,
+          "mult": 1.1300948699929727
+        },
+        "playoff": {
+          "n": 14,
+          "avgMin": 33.714285714285715,
+          "avgPts": 19.642857142857142
+        }
+      }
+    },
+    {
+      "id": "kjohnson",
+      "espnId": 4395723,
+      "name": "Keldon Johnson",
+      "team": "CLE",
+      "position": "SF",
+      "seasonMin": 23.3,
+      "projMin": 18.928571428571427,
+      "projMinRosterDefault": 27,
+      "usage": 0.17590368329058376,
+      "ts": 0.6136110078095945,
+      "per36": {
+        "pts": 20.39484978540772,
+        "reb": 8.343347639484978,
+        "ast": 2.1630901287553645,
+        "tpm": 1.8540772532188838,
+        "stl": 0.9270386266094419,
+        "blk": 0.15450643776824036,
+        "to": 1.390557939914163
+      },
+      "ptsStd": 9.517065558655993,
+      "starter": true,
+      "split": {
+        "n": 97,
+        "homeN": 49,
+        "awayN": 48,
+        "seasonAvgPts": 12.360824742268042,
+        "seasonStdPts": 6.159656319907907,
+        "homePts": 12.63265306122449,
+        "awayPts": 12.083333333333334,
+        "homeMult": 1.0219911150448502,
+        "awayMult": 0.9775507367250487,
+        "last5Avg": 9.8,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 15,
+          "avgPts": 13.866666666666667,
+          "mult": 1.1218237420072283
+        },
+        "rest1Day": {
+          "n": 58,
+          "avgPts": 12.724137931034482,
+          "mult": 1.0293923096833568
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 10.541666666666666,
+          "mult": 0.8528287461773699
+        },
+        "vsOpponent": {
+          "n": 8,
+          "avgPts": 12.375,
+          "avgReb": 3.75,
+          "avgAst": 0.5,
+          "mult": 1.0011467889908257
+        },
+        "playoff": {
+          "n": 14,
+          "avgMin": 18.928571428571427,
+          "avgPts": 8.214285714285714
+        }
+      }
+    },
+    {
+      "id": "harper",
+      "espnId": 5037871,
+      "name": "Dylan Harper",
+      "team": "CLE",
+      "position": "PG",
+      "seasonMin": 22.6,
+      "projMin": 26.071428571428573,
+      "projMinRosterDefault": 22,
+      "usage": 0.18122755798666174,
+      "ts": 0.5757220921155348,
+      "per36": {
+        "pts": 18.79646017699115,
+        "reb": 5.4159292035398225,
+        "ast": 6.212389380530973,
+        "tpm": 1.4336283185840706,
+        "stl": 1.2743362831858407,
+        "blk": 0.4778761061946902,
+        "to": 2.2300884955752207
+      },
+      "ptsStd": 9.742378601052314,
+      "starter": false,
+      "split": {
+        "n": 84,
+        "homeN": 40,
+        "awayN": 44,
+        "seasonAvgPts": 12.226190476190476,
+        "seasonStdPts": 6.116048788438398,
+        "homePts": 11.775,
+        "awayPts": 12.636363636363637,
+        "homeMult": 0.9630963972736125,
+        "awayMult": 1.0335487297512613,
+        "last5Avg": 13.8,
+        "recentForm": 1.1287244401168453,
+        "restB2B": {
+          "n": 12,
+          "avgPts": 9.75,
+          "mult": 0.85
+        },
+        "rest1Day": {
+          "n": 49,
+          "avgPts": 12.122448979591837,
+          "mult": 0.9915148142996245
+        },
+        "rest2Plus": {
+          "n": 23,
+          "avgPts": 13.73913043478261,
+          "mult": 1.1237458193979935
+        },
+        "vsOpponent": {
+          "n": 7,
+          "avgPts": 11.142857142857142,
+          "avgReb": 4.142857142857143,
+          "avgAst": 3.857142857142857,
+          "mult": 0.9113924050632911
+        },
+        "playoff": {
+          "n": 14,
+          "avgMin": 26.071428571428573,
+          "avgPts": 13.785714285714286
+        }
+      }
+    },
+    {
+      "id": "champagnie",
+      "espnId": 4592479,
+      "name": "Julian Champagnie",
+      "team": "CLE",
+      "position": "SF",
+      "seasonMin": 27.6,
+      "projMin": 30.428571428571427,
+      "projMinRosterDefault": 18,
+      "usage": 0.12617777510842723,
+      "ts": 0.609622144112478,
+      "per36": {
+        "pts": 14.478260869565217,
+        "reb": 7.565217391304348,
+        "ast": 1.9565217391304348,
+        "tpm": 3.130434782608696,
+        "stl": 1.0434782608695652,
+        "blk": 0.6521739130434783,
+        "to": 1.0434782608695652
+      },
+      "ptsStd": 8.324094847191638,
+      "starter": false,
+      "split": {
+        "n": 97,
+        "homeN": 49,
+        "awayN": 48,
+        "seasonAvgPts": 10.958762886597938,
+        "seasonStdPts": 6.381806049513589,
+        "homePts": 10.73469387755102,
+        "awayPts": 11.1875,
+        "homeMult": 0.9795534394378635,
+        "awayMult": 1.0208725305738475,
+        "last5Avg": 11,
+        "recentForm": 1.0037629350893698,
+        "restB2B": {
+          "n": 15,
+          "avgPts": 14.4,
+          "mult": 1.15
+        },
+        "rest1Day": {
+          "n": 58,
+          "avgPts": 10.517241379310345,
+          "mult": 0.9597106432672657
+        },
+        "rest2Plus": {
+          "n": 24,
+          "avgPts": 9.875,
+          "mult": 0.9011053621825024
+        },
+        "vsOpponent": {
+          "n": 8,
+          "avgPts": 7.125,
+          "avgReb": 6.625,
+          "avgAst": 1.5,
+          "mult": 0.7
+        },
+        "playoff": {
+          "n": 14,
+          "avgMin": 30.428571428571427,
+          "avgPts": 10.642857142857142
+        }
+      }
+    },
+    {
+      "id": "barnes",
+      "espnId": 6578,
+      "name": "Harrison Barnes",
+      "team": "CLE",
+      "position": "SF",
+      "seasonMin": 25.8,
+      "projMin": 10.083333333333334,
+      "projMinRosterDefault": 17,
+      "usage": 0.12271484297044376,
+      "ts": 0.6033642125792297,
+      "per36": {
+        "pts": 13.813953488372094,
+        "reb": 3.9069767441860463,
+        "ast": 2.6511627906976742,
+        "tpm": 2.511627906976744,
+        "stl": 0.8372093023255814,
+        "blk": 0.27906976744186046,
+        "to": 1.1162790697674418
+      },
+      "ptsStd": 8.70137516654429,
+      "starter": false,
+      "split": {
+        "n": 90,
+        "homeN": 43,
+        "awayN": 47,
+        "seasonAvgPts": 9.011111111111111,
+        "seasonStdPts": 6.235985536023408,
+        "homePts": 10.046511627906977,
+        "awayPts": 8.063829787234043,
+        "homeMult": 1.1149026467467669,
+        "awayMult": 0.8948763019125325,
+        "last5Avg": 2,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 14,
+          "avgPts": 10.5,
+          "mult": 1.15
+        },
+        "rest1Day": {
+          "n": 51,
+          "avgPts": 9.03921568627451,
+          "mult": 1.0031188801044462
+        },
+        "rest2Plus": {
+          "n": 25,
+          "avgPts": 8.12,
+          "mult": 0.9011097410604192
+        },
+        "vsOpponent": {
+          "n": 7,
+          "avgPts": 8.142857142857142,
+          "avgReb": 3,
+          "avgAst": 1.1428571428571428,
+          "mult": 0.9036462920556632
+        },
+        "playoff": {
+          "n": 12,
+          "avgMin": 10.083333333333334,
+          "avgPts": 2.9166666666666665
+        }
+      }
+    },
+    {
+      "id": "kornet",
+      "espnId": 3064560,
+      "name": "Luke Kornet",
+      "team": "CLE",
+      "position": "C",
+      "seasonMin": 21,
+      "projMin": 15.214285714285714,
+      "projMinRosterDefault": 16,
+      "usage": 0.08619866884340073,
+      "ts": 0.6844987363100252,
+      "per36": {
+        "pts": 11.142857142857142,
+        "reb": 10.457142857142856,
+        "ast": 3.2571428571428567,
+        "tpm": 0,
+        "stl": 0.8571428571428571,
+        "blk": 1.7142857142857142,
+        "to": 0.6857142857142857
+      },
+      "ptsStd": 7.72509492769044,
+      "starter": false,
+      "split": {
+        "n": 83,
+        "homeN": 43,
+        "awayN": 40,
+        "seasonAvgPts": 6.36144578313253,
+        "seasonStdPts": 4.50630537448609,
+        "homePts": 6.674418604651163,
+        "awayPts": 6.025,
+        "homeMult": 1.0491983791402397,
+        "awayMult": 0.9471117424242425,
+        "last5Avg": 2.8,
+        "recentForm": 0.8,
+        "restB2B": {
+          "n": 10,
+          "avgPts": 7.9,
           "mult": 1.15
         },
         "rest1Day": {
           "n": 48,
-          "avgPts": 5.520833333333333,
-          "mult": 0.9704077593032462
+          "avgPts": 6.395833333333333,
+          "mult": 1.0054056186868687
         },
         "rest2Plus": {
-          "n": 17,
-          "avgPts": 5.588235294117647,
-          "mult": 0.9822551348330305
+          "n": 25,
+          "avgPts": 5.68,
+          "mult": 0.8928787878787878
         },
         "vsOpponent": {
-          "n": 5,
-          "avgPts": 8,
-          "avgReb": 4.4,
-          "avgAst": 2.2,
-          "mult": 1.3
+          "n": 8,
+          "avgPts": 4.5,
+          "avgReb": 5.875,
+          "avgAst": 1.25,
+          "mult": 0.7073863636363636
         },
         "playoff": {
-          "n": 16,
-          "avgMin": 23.625,
-          "avgPts": 4.9375
-        }
-      }
-    },
-    {
-      "id": "schroder",
-      "espnId": 3032979,
-      "name": "Dennis Schroder",
-      "team": "CLE",
-      "position": "PG",
-      "seasonMin": 26.4,
-      "projMin": 16.25,
-      "projMinRosterDefault": 15,
-      "usage": 0.19235425744333168,
-      "ts": 0.5310321938267508,
-      "per36": {
-        "pts": 17.454545454545457,
-        "reb": 4.2272727272727275,
-        "ast": 7.2272727272727275,
-        "tpm": 1.9090909090909092,
-        "stl": 1.090909090909091,
-        "blk": 0.27272727272727276,
-        "to": 2.7272727272727275
-      },
-      "ptsStd": 9.315842141835091,
-      "starter": false,
-      "split": {
-        "n": 86,
-        "homeN": 38,
-        "awayN": 48,
-        "seasonAvgPts": 9.848837209302326,
-        "seasonStdPts": 6.831617570679066,
-        "homePts": 9.026315789473685,
-        "awayPts": 10.5,
-        "homeMult": 0.916485428447151,
-        "awayMult": 1.0661157024793388,
-        "last5Avg": 2.8,
-        "recentForm": 0.8,
-        "restB2B": {
           "n": 14,
-          "avgPts": 11.214285714285714,
-          "mult": 1.1386405801990216
-        },
-        "rest1Day": {
-          "n": 53,
-          "avgPts": 9.226415094339623,
-          "mult": 0.936802477111225
-        },
-        "rest2Plus": {
-          "n": 19,
-          "avgPts": 10.578947368421053,
-          "mult": 1.0741316100167775
-        },
-        "vsOpponent": {
-          "n": 4,
-          "avgPts": 3.5,
-          "avgReb": 1.75,
-          "avgAst": 4.25,
-          "mult": 0.7
-        },
-        "playoff": {
-          "n": 16,
-          "avgMin": 16.25,
-          "avgPts": 5.6875
+          "avgMin": 15.214285714285714,
+          "avgPts": 5
         }
       }
     }
   ],
   "splits": {
     "NYK": {
-      "homeN": 7,
-      "homeW": 6,
-      "homePPG": 116.28571428571429,
-      "homeAllow": 100.42857142857143,
+      "homeN": 6,
+      "homeW": 5,
+      "homePPG": 118.16666666666667,
+      "homeAllow": 103.83333333333333,
       "awayN": 5,
-      "awayW": 4,
-      "awayPPG": 122.8,
-      "awayAllow": 100.8
+      "awayW": 5,
+      "awayPPG": 124.2,
+      "awayAllow": 111.4
     },
     "CLE": {
       "homeN": 7,
-      "homeW": 6,
-      "homePPG": 114.57142857142857,
-      "homeAllow": 109.57142857142857,
-      "awayN": 9,
-      "awayW": 2,
-      "awayPPG": 104.44444444444444,
-      "awayAllow": 108.88888888888889
+      "homeW": 4,
+      "homePPG": 113.85714285714286,
+      "homeAllow": 102.57142857142857,
+      "awayN": 7,
+      "awayW": 5,
+      "awayPPG": 118.85714285714286,
+      "awayAllow": 109.85714285714286
     }
   },
   "pace": {
-    "NYK": 98.65999999999997,
-    "CLE": 99.61733333333332
+    "NYK": 99.59272727272727,
+    "CLE": 102.38142857142857
   },
   "backtest": {
-    "sampleSize": 26,
-    "marketBrier": 0.2057425769406479,
-    "spreadCoverRate": 0.6153846153846154,
-    "overRate": 0.5769230769230769,
-    "games": 26
+    "sampleSize": 22,
+    "marketBrier": 0.16191924208202402,
+    "spreadCoverRate": 0.5,
+    "overRate": 0.6818181818181818,
+    "games": 22
   },
   "tunedWeights": {
     "mcWeight": 0.55,
     "regWeight": 0.45,
-    "expectedBrier": 0.2057425769406479
+    "expectedBrier": 0.16191924208202402
   }
 }

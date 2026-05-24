@@ -1,5 +1,6 @@
 import type { BestBet, Provenance } from "../types";
 import { fmtAmerican, fmtNum, fmtPct } from "../lib/format";
+import { displaySelection } from "../lib/display";
 
 interface Props {
   bets: BestBet[];
@@ -53,7 +54,7 @@ export function BestBetsTable({ bets, oddsProvenance, bankroll }: Props) {
               return (
                 <tr key={i}>
                   <td className="text-terminal-dim uppercase">{b.market}</td>
-                  <td className="font-semibold">{b.selection}</td>
+                  <td className="font-semibold">{displaySelection(b.selection)}</td>
                   <td>{fmtAmerican(b.bookPrice)}</td>
                   <td>{fmtPct(b.bookImpliedProb)}</td>
                   <td>{fmtPct(b.devigProb)}</td>

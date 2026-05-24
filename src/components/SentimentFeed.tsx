@@ -1,5 +1,6 @@
 import type { SentimentItem } from "../types";
 import { fmtPct, fmtSign } from "../lib/format";
+import { DISPLAY } from "../lib/display";
 
 interface Props {
   items: SentimentItem[];
@@ -43,7 +44,7 @@ export function SentimentFeed({ items }: Props) {
                         : "bg-terminal-cle/15 text-terminal-cle"
                     }`}
                   >
-                    {s.team}
+                    {DISPLAY[s.team].code}
                   </span>
                 )}
               </div>

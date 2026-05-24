@@ -29,17 +29,16 @@ function classify(edge: number): "LOW" | "MED" | "HIGH" {
 
 function probPlayerOver(
   projection: PlayerProjection,
-  prop: "PTS" | "REB" | "AST" | "3PM",
+  prop: "PTS" | "REB" | "AST" | "3PM" | "BLK" | "STL",
   line: number,
 ): number {
   const dist =
-    prop === "PTS"
-      ? projection.pts
-      : prop === "REB"
-      ? projection.reb
-      : prop === "AST"
-      ? projection.ast
-      : projection.tpm;
+    prop === "PTS" ? projection.pts
+    : prop === "REB" ? projection.reb
+    : prop === "AST" ? projection.ast
+    : prop === "BLK" ? projection.blk
+    : prop === "STL" ? projection.stl
+    : projection.tpm;
   return pNormalAbove(line, dist.mean, dist.std);
 }
 
@@ -167,7 +166,7 @@ function rationaleFor(
     return `Model gives ${(modelProb * 100).toFixed(1)}% to win vs ${(devig * 100).toFixed(1)}% de-vig market (${edgePct}). Driven by venue split, must-win desperation factor, and head-to-head matchup priors.`;
   }
   if (line.market === "spread") {
-    return `Spread coverage prob ${(modelProb * 100).toFixed(1)}% vs ${(devig * 100).toFixed(1)}% (${edgePct}). Cleveland gets the full home lift here; Knicks defensive matchup limits how much.`;
+    return `Spread coverage prob ${(modelProb * 100).toFixed(1)}% vs ${(devig * 100).toFixed(1)}% (${edgePct}). Home/road split + matchup defense drive the gap from the market line.`;
   }
   if (line.market === "total") {
     return `Total side prob ${(modelProb * 100).toFixed(1)}% vs ${(devig * 100).toFixed(1)}% (${edgePct}). ${homeTeam} home pace and 3PT rate are the primary swing factors.`;
