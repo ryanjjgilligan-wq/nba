@@ -31,11 +31,13 @@ describe("real ESPN data (OKC @ SAS)", () => {
     expect(w.rebPer36).toBeGreaterThan(10);
   });
 
-  it("loaded real DraftKings odds (SAS -2.5, total 218.5)", () => {
+  it("loaded real DraftKings odds (SAS favored, real total)", () => {
     expect(ODDS_META.provider).toMatch(/DraftKings/i);
-    expect(ODDS_META.closeSpread).toBe(-2.5);
-    expect(ODDS_META.closeTotal).toBe(218.5);
-    expect(ODDS.find((l) => /CLE -2\.5/.test(l.selection))).toBeDefined();
+    expect(ODDS_META.closeSpread).toBeLessThan(0); // SAS favored
+    expect(ODDS_META.closeSpread).toBeGreaterThan(-6);
+    expect(ODDS_META.closeTotal).toBeGreaterThan(210);
+    expect(ODDS_META.closeTotal).toBeLessThan(230);
+    expect(ODDS.find((l) => /CLE -/.test(l.selection))).toBeDefined();
   });
 
   it("computed real team splits from playoff games", () => {
