@@ -45,26 +45,23 @@ interface RealPlayer {
 // Player notes layered on top of real measured splits — narrative only,
 // no math impact (the actual multipliers below come from real game logs).
 const PER_PLAYER_NOTES: Record<string, string> = {
-  // OKC
-  sga:         "MVP-tier usage; 30+ in every road game this postseason. Wemby challenges every rim attempt.",
-  jdub:        "Jalen Williams — secondary creator; matchup with Vassell/Castle is the swing.",
-  chet:        "Real H2H drops his PPG vs Wemby — long-armed defender shrinks his rim diet.",
-  dort:        "Catch-and-shoot specialist + Fox primary defender — opportunity cost in his offense.",
-  wallace:     "Pestering on-ball guard; minutes spike when Fox heats up.",
-  hartenstein: "Backup C minutes shrink against Wemby switchability.",
-  caruso:      "Plus-defender, off-ball cuts; foul-prone in postseason.",
-  wiggins:     "Three-point variance off the bench.",
-  joe:         "Pure shooter; tiny floor, high ceiling on hot nights.",
-  // SAS
-  wemby:       "DPOY favorite + 27 PPG home; the gravitational center of every SAS possession.",
-  fox:         "Pace-changer in transition; matchup with Wallace/Caruso is grueling.",
-  vassell:     "Two-way wing; absorbs Caruso when on the floor.",
-  castle:      "Real split shows usage spike at home — primary secondary creator.",
-  kjohnson:    "Streaky scorer; H2H against OKC has been quiet.",
-  harper:      "Rookie spark off the bench; high variance.",
-  champagnie:  "Switchable wing; matchup-specific minutes.",
-  barnes:      "Veteran spot-up minutes when SAS needs spacing.",
-  kornet:      "Specialist big when Wemby sits.",
+  // NYK
+  brunson:  "Carrying late-clock offense; minutes load up in road must-wins.",
+  bridges:  "Primary Mitchell defender; real split shows higher road scoring.",
+  hart:     "Glue minutes; rebound-rate spikes vs CLE bigs all series.",
+  anunoby:  "Real split shows trending up: cross-matches onto Mobley.",
+  kat:      "Pulls Allen out of paint; small but real road tilt this matchup.",
+  robinson: "Bench rim-protector; minutes hinge on KAT foul state.",
+  mcbride:  "Backup PG, point-of-attack defender on Harden.",
+  // CLE
+  mitchell: "REAL DATA: home/road PPG nearly identical; volume-shooter target tonight.",
+  mobley:   "DPOY-tier rim protection; opponent-history mult drags scoring vs NYK.",
+  allen:    "REAL DATA: actually scores MORE on the road; lower-volume at home.",
+  harden:   "REAL DATA: scores more on the road. NYK pressure forces TO.",
+  strus:    "REAL DATA: huge real home boost (catch-and-shoot variance).",
+  merrill:  "Pure shooter; sample-size noisy but a real swing piece.",
+  wade:     "Real split: clear home tilt; matchup-specific bench bump.",
+  schroder: "REAL DATA: scores more on the road; tempo-changer minutes.",
 };
 
 const REAL = realDump as {

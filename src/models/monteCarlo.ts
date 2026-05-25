@@ -26,12 +26,12 @@ interface StarRisk {
   ortgImpact: number; // points off team ORtg if triggered
 }
 const STAR_RISKS: StarRisk[] = [
-  // OKC
-  { team: "NYK", triggerProb: 0.18, ortgImpact: -4.0 }, // Chet foul trouble
-  { team: "NYK", triggerProb: 0.10, ortgImpact: -3.0 }, // Dort foul trouble
-  // SAS
-  { team: "CLE", triggerProb: 0.20, ortgImpact: -5.0 }, // Wemby foul trouble
-  { team: "CLE", triggerProb: 0.12, ortgImpact: -3.0 }, // Castle foul trouble
+  // NYK
+  { team: "NYK", triggerProb: 0.20, ortgImpact: -4.5 }, // KAT foul trouble (he gets in trouble vs Mobley/Allen)
+  { team: "NYK", triggerProb: 0.10, ortgImpact: -3.0 }, // Brunson foul trouble (lower base rate)
+  // CLE
+  { team: "CLE", triggerProb: 0.18, ortgImpact: -3.5 }, // Mobley foul trouble
+  { team: "CLE", triggerProb: 0.14, ortgImpact: -2.5 }, // Allen foul trouble
 ];
 
 // Possession-level simulator: each iteration samples a game pace (possessions),

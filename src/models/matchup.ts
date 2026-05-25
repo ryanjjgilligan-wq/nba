@@ -34,9 +34,9 @@ const DEF_VS_POS_FALLBACK: Record<string, Partial<Record<string, number>>> = {
   NYK: { PG: 0.94, SG: 0.93, SF: 0.97, "G/F": 0.97, PF: 0.99, C: 1.00 },
 };
 
-// Individual defender priors for OKC @ SAS. Used as FALLBACK only — when a
-// player has ≥3 real games of head-to-head history against the opposing team,
-// the opponent-specific multiplier overrides these.
+// Individual defender priors for NYK @ CLE Game 4. Used as FALLBACK only —
+// when a player has ≥3 real games of head-to-head history against the
+// opposing team, the opponent-specific multiplier overrides these.
 export const DEFENDER_MATCHUPS: Array<{
   scorer: string;
   primaryDefender: string;
@@ -44,28 +44,34 @@ export const DEFENDER_MATCHUPS: Array<{
   note: string;
 }> = [
   {
-    scorer: "Shai Gilgeous-Alexander",
-    primaryDefender: "Stephon Castle / Wemby help",
+    scorer: "Donovan Mitchell",
+    primaryDefender: "Mikal Bridges + Anunoby help",
+    impact: -0.05,
+    note: "Bridges has held Mitchell to capped efficiency across the series; switches onto Anunoby further drag.",
+  },
+  {
+    scorer: "Jalen Brunson",
+    primaryDefender: "Merrill / Schroder",
+    impact: +0.04,
+    note: "Cleveland lacks a PoA stopper for Brunson; he gets paint touches.",
+  },
+  {
+    scorer: "Karl-Anthony Towns",
+    primaryDefender: "Mobley + Allen",
     impact: -0.03,
-    note: "Castle PoA + Wemby rim-protection caps his drive efficiency.",
+    note: "Mobley shrinks KAT rim conversion; usage holds, efficiency dips.",
   },
   {
-    scorer: "Victor Wembanyama",
-    primaryDefender: "Holmgren switches",
+    scorer: "Evan Mobley",
+    primaryDefender: "Anunoby switches + Towns help",
     impact: -0.02,
-    note: "Chet length contests but Wemby's range neutralizes most help.",
+    note: "Anunoby switches prevent face-up post; Wade-vs-KAT lineup shifts also restrict touches.",
   },
   {
-    scorer: "De'Aaron Fox",
-    primaryDefender: "Wallace/Caruso",
-    impact: -0.04,
-    note: "OKC's elite PoA shrinks paint touches; pull-up volume up.",
-  },
-  {
-    scorer: "Jalen Williams",
-    primaryDefender: "Vassell/Castle",
-    impact: -0.02,
-    note: "Two switchable wings; gets fewer mismatches than usual.",
+    scorer: "James Harden",
+    primaryDefender: "Brunson / Bridges PnR pressure",
+    impact: -0.05,
+    note: "Aggressive blitz on Harden PnR has forced TOs all series — same script likely.",
   },
 ];
 

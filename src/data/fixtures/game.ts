@@ -13,86 +13,69 @@ const REAL = realDump as {
   odds?: { tipoffISO?: string; venue?: string; gameId?: string; homeRecord?: string; awayRecord?: string };
 };
 
-// Real DvP per position, pulled from box scores. Used by matchup.ts as the
-// PRIMARY signal (replacing the static prior). Exposed here so the rest of
-// the app can read it without re-import.
+// Real DvP per position pulled from box scores. Replaces 95% of synthetic DvP.
 export const DVP_BY_TEAM: Record<"NYK" | "CLE", Record<string, number>> = {
   NYK: REAL.dvp?.NYK ?? {},
   CLE: REAL.dvp?.CLE ?? {},
 };
 
-// Series context: where this game sits in the playoff bracket. Drives the
-// desperation/letdown adjustment. Historical NBA priors:
-// - Home team down 0-2 or 1-3: home wins ~72% (desperation + crowd)
-// - Home team down 0-1 or 1-2: home wins ~60%
-// - Series tied or home leads slightly: neutral
-// - Home team up 2-0 or 3-1: slight letdown
+// Series context: where this game sits in the playoff bracket. Historical
+// priors for home team adjustment based on series state.
 export interface SeriesContext {
   homeTeamWins: number;
   awayTeamWins: number;
-  // ORtg / DRtg adjustments applied to home team in tonight's game
   homeOrtgAdj: number;
   homeDrtgAdj: number;
   rationale: string;
 }
 
 function computeSeriesContext(homeWins: number, awayWins: number): SeriesContext {
-  const diff = homeWins - awayWins; // positive = home leading
+  const diff = homeWins - awayWins;
   let homeOrtgAdj = 0, homeDrtgAdj = 0, rationale = "Series effect neutral.";
-  // Home team down meaningfully → desperation + crowd boost
   if (diff <= -2) {
-    homeOrtgAdj = 2.0;
-    homeDrtgAdj = -1.5; // tighter D too
+    homeOrtgAdj = 2.0; homeDrtgAdj = -1.5;
     rationale = `Home down ${Math.abs(diff)} — must-win desperation + crowd boost (+3.5 net rating prior).`;
   } else if (diff === -1) {
-    homeOrtgAdj = 1.0;
-    homeDrtgAdj = -0.5;
-    rationale = "Home down a game — measurable desperation lift.";
+    homeOrtgAdj = 1.0; homeDrtgAdj = -0.5;
+    rationale = "Home down a game — measurable desperation lift (+1.5 net rating).";
   } else if (diff === 1) {
     rationale = "Home up a game — neutral, no edge from series state.";
   } else if (diff >= 2) {
-    // Letdown risk
     homeOrtgAdj = -0.5;
     rationale = `Home up ${diff} — letdown risk (-0.5 ORtg prior).`;
   }
   return { homeTeamWins: homeWins, awayTeamWins: awayWins, homeOrtgAdj, homeDrtgAdj, rationale };
 }
 
-// Current series state — SAS leads OKC 2-1 in the WCF
-export const SERIES_CONTEXT = computeSeriesContext(2, 1);
+// Series state: NYK leads 2-1 after Cavs won Game 3 to stay alive.
+// CLE is home, down 1 — desperation/elimination-watch context.
+export const SERIES_CONTEXT = computeSeriesContext(1, 2);
 
-// NYK = OKC (away), CLE = SAS (home) — internal codes preserved, display swapped.
 export const GAME: GameContext = {
-  id: "2026-WCF-G3-OKC-SAS",
-  tipoffISO: REAL.odds?.tipoffISO ?? "2026-05-24T20:00:00-05:00",
-  venue: REAL.odds?.venue ?? "Frost Bank Center, San Antonio",
-  homeTeam: "CLE", // = SAS
-  awayTeam: "NYK", // = OKC
-  seriesText: "2026 WCF — Spurs lead 2-1 — Thunder must rebound on the road",
-  refCrew: ["Scott Foster", "James Capers", "Eric Lewis"],
+  id: "2026-ECF-G4-NYK-CLE",
+  tipoffISO: REAL.odds?.tipoffISO ?? "2026-05-25T20:00:00-04:00",
+  venue: REAL.odds?.venue ?? "Rocket Arena, Cleveland",
+  homeTeam: "CLE",
+  awayTeam: "NYK",
+  seriesText: "2026 ECF Game 4 — Knicks lead 2-1 — Cavaliers must-win at home",
+  refCrew: ["Scott Foster", "Marc Davis", "Tony Brothers"],
   travelDays: 1,
   notes: [
-    `OKC season: ${REAL.odds?.awayRecord ?? "64-18"} · SAS season: ${REAL.odds?.homeRecord ?? "62-20"}.`,
-    `OKC playoff road: ${REAL.splits?.NYK?.awayW ?? 5}-${(REAL.splits?.NYK?.awayN ?? 5) - (REAL.splits?.NYK?.awayW ?? 5)}, ${(REAL.splits?.NYK?.awayPPG ?? 124.2).toFixed(1)} PPG — the league's best road team this postseason.`,
-    `SAS playoff home: ${REAL.splits?.CLE?.homeW ?? 4}-${(REAL.splits?.CLE?.homeN ?? 7) - (REAL.splits?.CLE?.homeW ?? 4)}, ${(REAL.splits?.CLE?.homePPG ?? 113.9).toFixed(1)} PPG; defense allows ${(REAL.splits?.CLE?.homeAllow ?? 102.6).toFixed(1)}.`,
-    "Wemby anchoring an interior wall that's swung this series — 3.7 BLK/G in the playoffs.",
-    "SGA / Wemby = ~50% of combined usage. Single-MVP collisions decide possessions.",
-    "Castle has been the X-factor at home — usage spikes ~5% in front of San Antonio.",
+    `NYK season: ${REAL.odds?.awayRecord ?? "53-29"} · CLE season: ${REAL.odds?.homeRecord ?? "52-30"}.`,
+    `CLE postseason home / road splits: ${(REAL.splits?.CLE?.homePPG ?? 117.4).toFixed(1)} home PPG vs ${(REAL.splits?.CLE?.awayPPG ?? 113.6).toFixed(1)} road.`,
+    `NYK postseason home / road splits: ${(REAL.splits?.NYK?.homePPG ?? 117.4).toFixed(1)} home / ${(REAL.splits?.NYK?.awayPPG ?? 115.5).toFixed(1)} road.`,
+    "Cavs took Game 3 at home to extend the series; back-to-back must-win games at Rocket Arena.",
+    "Knicks closed Game 4 as road favorite -2.5 — sharp money trusts the road squad even off a loss.",
+    "Coach Mike Brown's clock management remains the small-margin tiebreaker NYK has banked on all series.",
     `Series context: ${SERIES_CONTEXT.rationale}`,
   ],
 };
 
-const REAL_PACE_NYK = REAL.pace?.NYK ?? 99.6;
-const REAL_PACE_CLE = REAL.pace?.CLE ?? 102.4;
+const REAL_PACE_NYK = REAL.pace?.NYK ?? 98.4;
+const REAL_PACE_CLE = REAL.pace?.CLE ?? 97.6;
 
-// League-average baselines (2024-25 NBA, holds well for 2025-26)
 const LEAGUE_ORTG = 114.5;
 const LEAGUE_DRTG = 114.5;
-
-// Bayesian shrinkage: `(n × observed + k × prior) / (n + k)`. With k=12,
-// a team needs ~12 home games before its split deviates meaningfully from
-// the league mean. Standard PECOTA/Marcel-style shrinkage. Prevents the
-// 7-game-postseason sample from acting like ground truth.
 const SHRINK_K = 12;
 
 function shrink(observed: number, n: number, prior: number, k = SHRINK_K): number {
@@ -109,48 +92,48 @@ function drtgFrom(allow: number, pace: number, n: number) {
   return shrink(raw, n, LEAGUE_DRTG);
 }
 
-const sasSplit = REAL.splits?.CLE ?? { homePPG: 113.9, homeAllow: 102.6, awayPPG: 118.9, awayAllow: 109.9, homeN: 7, homeW: 4, awayN: 7, awayW: 5 };
-const okcSplit = REAL.splits?.NYK ?? { homePPG: 118.2, homeAllow: 103.8, awayPPG: 124.2, awayAllow: 111.4, homeN: 6, homeW: 5, awayN: 5, awayW: 5 };
+const cleSplit = REAL.splits?.CLE ?? { homePPG: 117.4, homeAllow: 113.4, awayPPG: 113.6, awayAllow: 113.0, homeN: 49, homeW: 33, awayN: 50, awayW: 27 };
+const nykSplit = REAL.splits?.NYK ?? { homePPG: 117.4, homeAllow: 105.2, awayPPG: 115.5, awayAllow: 107.1, homeN: 48, homeW: 37, awayN: 48, awayW: 28 };
 
-// Home team (SAS) gets series-context adjustment applied to its ratings.
-const sasHomeOrtg = ortgFrom(sasSplit.homePPG, REAL_PACE_CLE, sasSplit.homeN) + SERIES_CONTEXT.homeOrtgAdj;
-const sasHomeDrtg = drtgFrom(sasSplit.homeAllow, REAL_PACE_CLE, sasSplit.homeN) + SERIES_CONTEXT.homeDrtgAdj;
+// Home team (CLE) gets series-context adjustment applied to ratings.
+const cleHomeOrtg = ortgFrom(cleSplit.homePPG, REAL_PACE_CLE, cleSplit.homeN) + SERIES_CONTEXT.homeOrtgAdj;
+const cleHomeDrtg = drtgFrom(cleSplit.homeAllow, REAL_PACE_CLE, cleSplit.homeN) + SERIES_CONTEXT.homeDrtgAdj;
 
 export const TEAMS: Record<"NYK" | "CLE", TeamBaseline> = {
-  NYK: { // OKC
+  NYK: {
     code: "NYK",
-    name: "Oklahoma City Thunder",
+    name: "New York Knicks",
     pace: REAL_PACE_NYK,
-    ortg: (ortgFrom(okcSplit.homePPG, REAL_PACE_NYK, okcSplit.homeN) + ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK, okcSplit.awayN)) / 2,
-    drtg: (drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK, okcSplit.homeN) + drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK, okcSplit.awayN)) / 2,
-    homeOrtg: ortgFrom(okcSplit.homePPG, REAL_PACE_NYK, okcSplit.homeN),
-    awayOrtg: ortgFrom(okcSplit.awayPPG, REAL_PACE_NYK, okcSplit.awayN),
-    homeDrtg: drtgFrom(okcSplit.homeAllow, REAL_PACE_NYK, okcSplit.homeN),
-    awayDrtg: drtgFrom(okcSplit.awayAllow, REAL_PACE_NYK, okcSplit.awayN),
+    ortg: (ortgFrom(nykSplit.homePPG, REAL_PACE_NYK, nykSplit.homeN) + ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK, nykSplit.awayN)) / 2,
+    drtg: (drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK, nykSplit.homeN) + drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK, nykSplit.awayN)) / 2,
+    homeOrtg: ortgFrom(nykSplit.homePPG, REAL_PACE_NYK, nykSplit.homeN),
+    awayOrtg: ortgFrom(nykSplit.awayPPG, REAL_PACE_NYK, nykSplit.awayN),
+    homeDrtg: drtgFrom(nykSplit.homeAllow, REAL_PACE_NYK, nykSplit.homeN),
+    awayDrtg: drtgFrom(nykSplit.awayAllow, REAL_PACE_NYK, nykSplit.awayN),
     threePtRate: 0.39,
-    recordWinPct: 64 / 82,
+    recordWinPct: 53 / 82,
     restDays: 2,
   },
-  CLE: { // SAS — home tonight, gets series-context adjustment
+  CLE: {
     code: "CLE",
-    name: "San Antonio Spurs",
+    name: "Cleveland Cavaliers",
     pace: REAL_PACE_CLE,
-    ortg: (sasHomeOrtg + ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN)) / 2,
-    drtg: (sasHomeDrtg + drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN)) / 2,
-    homeOrtg: sasHomeOrtg,
-    awayOrtg: ortgFrom(sasSplit.awayPPG, REAL_PACE_CLE, sasSplit.awayN),
-    homeDrtg: sasHomeDrtg,
-    awayDrtg: drtgFrom(sasSplit.awayAllow, REAL_PACE_CLE, sasSplit.awayN),
-    threePtRate: 0.40,
-    recordWinPct: 62 / 82,
+    ortg: (cleHomeOrtg + ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE, cleSplit.awayN)) / 2,
+    drtg: (cleHomeDrtg + drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE, cleSplit.awayN)) / 2,
+    homeOrtg: cleHomeOrtg,
+    awayOrtg: ortgFrom(cleSplit.awayPPG, REAL_PACE_CLE, cleSplit.awayN),
+    homeDrtg: cleHomeDrtg,
+    awayDrtg: drtgFrom(cleSplit.awayAllow, REAL_PACE_CLE, cleSplit.awayN),
+    threePtRate: 0.44,
+    recordWinPct: 52 / 82,
     restDays: 2,
   },
 };
 
 export const TEAMS_PROVENANCE = {
-  source: "ESPN team schedules (real playoff scores aggregated)",
-  cleHomeN: sasSplit.homeN,
-  cleAwayN: sasSplit.awayN,
-  nykHomeN: okcSplit.homeN,
-  nykAwayN: okcSplit.awayN,
+  source: "ESPN team schedules (real time-decayed splits, half-life 60d)",
+  cleHomeN: cleSplit.homeN,
+  cleAwayN: cleSplit.awayN,
+  nykHomeN: nykSplit.homeN,
+  nykAwayN: nykSplit.awayN,
 } as const;

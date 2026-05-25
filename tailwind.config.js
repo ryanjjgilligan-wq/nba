@@ -15,8 +15,8 @@ export default {
           warn: "#f59e0b",
           danger: "#f85149",
           info: "#58a6ff",
-          nyk: "#007ac1", // = OKC blue
-          cle: "#c4ced4", // = SAS silver
+          nyk: "#f58426", // Knicks orange
+          cle: "#860038", // Cavaliers wine
         },
       },
       fontFamily: {

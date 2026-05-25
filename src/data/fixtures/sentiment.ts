@@ -1,43 +1,42 @@
 import type { SentimentItem } from "../../types";
 
-// Reporter sentiment is intentionally low-weight (cap ±4% per player). Without
-// a wired X API these are representative items, used to demonstrate the
-// pipeline. Wire X_BEARER_TOKEN to replace with live signal.
+// Reporter sentiment — intentionally low-weight (cap ±4% per player). Without
+// a wired X API these are representative items. Wire X_BEARER_TOKEN to swap.
 export const SENTIMENT: SentimentItem[] = [
   {
     id: "s1",
     source: "Beat reporter",
-    author: "@MWAndrews_AP (Beat — OKC)",
-    credibility: 0.84,
-    ts: "2026-05-24T13:00:00-05:00",
-    text: "OKC shootaround had SGA fully participating; he's described the game plan as 'unchanged' from Game 2.",
-    topic: "narrative",
+    author: "@FredKatz (Knicks)",
+    credibility: 0.90,
+    ts: "2026-05-25T13:00:00-04:00",
+    text: "Knicks shootaround: starters in full participation; Brunson moving normally after rolled ankle scare in Game 3.",
+    topic: "injury",
     team: "NYK",
-    polarity: 0.18,
-    weightOnProjection: 0.012,
+    polarity: 0.20,
+    weightOnProjection: 0.014,
   },
   {
     id: "s2",
-    source: "X / Insider",
-    author: "@PaulGarciaPCH (SAS)",
+    source: "Beat reporter",
+    author: "@ChrisFedor (Cavs)",
     credibility: 0.86,
-    ts: "2026-05-24T12:30:00-05:00",
-    text: "Wemby reports 'feeling good' after extra recovery; expects normal minutes load tonight.",
-    topic: "injury",
+    ts: "2026-05-25T12:30:00-04:00",
+    text: "Cavs film session emphasized transition defense after Game 3 — coaching staff insistent the road blueprint hasn't changed.",
+    topic: "narrative",
     team: "CLE",
-    polarity: 0.22,
-    weightOnProjection: 0.015,
+    polarity: 0.12,
+    weightOnProjection: 0.012,
   },
   {
     id: "s3",
     source: "X / Insider",
     author: "@JoeVardon",
     credibility: 0.88,
-    ts: "2026-05-24T11:10:00-05:00",
-    text: "Castle expected to start; SAS leaning into the lineup that gave OKC trouble in Game 1.",
+    ts: "2026-05-25T11:10:00-04:00",
+    text: "Cavs leaning toward Wade starting again — matchup minutes vs KAT outweigh the Allen lineup last night.",
     topic: "lineup",
     team: "CLE",
-    polarity: 0.10,
+    polarity: 0.05,
     weightOnProjection: 0.018,
   },
 ];

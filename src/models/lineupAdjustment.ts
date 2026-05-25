@@ -1,8 +1,8 @@
 import type { PlayerBaseline } from "../types";
 
-// Foul-trouble redistribution plans for OKC @ SAS. Each entry is a starter
-// whose minutes are partially absorbed by a backup at the same position
-// (modeled as a Bernoulli per-game with triggerProb).
+// Foul-trouble redistribution plans for NYK @ CLE Game 4. Each entry is a
+// starter whose minutes are partially absorbed by a backup at the same
+// position (modeled as a Bernoulli with triggerProb).
 
 interface RedistributionPlan {
   starter: string;
@@ -12,14 +12,13 @@ interface RedistributionPlan {
 }
 
 export const REDISTRIBUTION_PLANS: RedistributionPlan[] = [
-  // OKC
-  { starter: "Chet Holmgren",  backup: "Isaiah Hartenstein", triggerProb: 0.24, minutesShifted: 5 },
-  { starter: "Luguentz Dort",  backup: "Aaron Wiggins",      triggerProb: 0.18, minutesShifted: 4 },
-  { starter: "Cason Wallace",  backup: "Alex Caruso",        triggerProb: 0.16, minutesShifted: 3 },
-  // SAS
-  { starter: "Victor Wembanyama", backup: "Luke Kornet",     triggerProb: 0.22, minutesShifted: 5 },
-  { starter: "Stephon Castle",    backup: "Dylan Harper",    triggerProb: 0.14, minutesShifted: 4 },
-  { starter: "Keldon Johnson",    backup: "Julian Champagnie", triggerProb: 0.12, minutesShifted: 3 },
+  // NYK
+  { starter: "Karl-Anthony Towns", backup: "Mitchell Robinson", triggerProb: 0.22, minutesShifted: 4 },
+  { starter: "Josh Hart",          backup: "Miles McBride",      triggerProb: 0.10, minutesShifted: 2 },
+  // CLE
+  { starter: "Evan Mobley",        backup: "Dean Wade",          triggerProb: 0.18, minutesShifted: 4 },
+  { starter: "Jarrett Allen",      backup: "Dean Wade",          triggerProb: 0.14, minutesShifted: 3 },
+  { starter: "James Harden",       backup: "Dennis Schroder",    triggerProb: 0.08, minutesShifted: 3 },
 ];
 
 export function applyMinuteRedistribution(players: PlayerBaseline[]): PlayerBaseline[] {

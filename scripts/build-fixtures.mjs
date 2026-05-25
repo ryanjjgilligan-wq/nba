@@ -12,35 +12,28 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
-// Team ID aliasing: the app's data types use "NYK" (away slot) and "CLE"
-// (home slot) as internal codes. For this build we point those slots at
-// OKC (away) @ SAS (home) — Sun May 24 2026. Display layer maps them back
-// to "OKC" and "SAS".
-const TEAM_IDS = { NYK: 25 /* OKC away */, CLE: 24 /* SAS home */ };
-const ESPN_GAME_REGEX = /Thunder.*Spurs|Spurs.*Thunder/;
+const TEAM_IDS = { NYK: 18 /* NYK away */, CLE: 5 /* CLE home */ };
+const ESPN_GAME_REGEX = /Knicks.*Cavaliers|Cavaliers.*Knicks/;
 
 const ROSTER = {
-  NYK: [ // = OKC (away)
-    { id: 4278073, key: "sga",         name: "Shai Gilgeous-Alexander", pos: "PG",  projMin: 36, starter: true },
-    { id: 4593803, key: "jdub",        name: "Jalen Williams",          pos: "SF",  projMin: 34, starter: true },
-    { id: 4433255, key: "chet",        name: "Chet Holmgren",           pos: "C",   projMin: 32, starter: true },
-    { id: 4397020, key: "dort",        name: "Luguentz Dort",           pos: "SG",  projMin: 32, starter: true },
-    { id: 4683692, key: "wallace",     name: "Cason Wallace",           pos: "SG",  projMin: 26, starter: true },
-    { id: 4222252, key: "hartenstein", name: "Isaiah Hartenstein",      pos: "C",   projMin: 22, starter: false },
-    { id: 2991350, key: "caruso",      name: "Alex Caruso",             pos: "G",   projMin: 22, starter: false },
-    { id: 4397183, key: "wiggins",     name: "Aaron Wiggins",           pos: "G",   projMin: 18, starter: false },
-    { id: 4395702, key: "joe",         name: "Isaiah Joe",              pos: "SG",  projMin: 14, starter: false },
+  NYK: [
+    { id: 3934672, key: "brunson",  name: "Jalen Brunson",      pos: "PG",  projMin: 38, starter: true },
+    { id: 3147657, key: "bridges",  name: "Mikal Bridges",      pos: "SF",  projMin: 37, starter: true },
+    { id: 3062679, key: "hart",     name: "Josh Hart",          pos: "G/F", projMin: 35, starter: true },
+    { id: 3934719, key: "anunoby",  name: "OG Anunoby",         pos: "SF",  projMin: 36, starter: true },
+    { id: 3136195, key: "kat",      name: "Karl-Anthony Towns", pos: "C",   projMin: 35, starter: true },
+    { id: 4351852, key: "robinson", name: "Mitchell Robinson",  pos: "C",   projMin: 20, starter: false },
+    { id: 4431823, key: "mcbride",  name: "Miles McBride",      pos: "PG",  projMin: 16, starter: false },
   ],
-  CLE: [ // = SAS (home)
-    { id: 5104157, key: "wemby",       name: "Victor Wembanyama",       pos: "C",   projMin: 34, starter: true },
-    { id: 4066259, key: "fox",         name: "De'Aaron Fox",            pos: "PG",  projMin: 35, starter: true },
-    { id: 4395630, key: "vassell",     name: "Devin Vassell",           pos: "SG",  projMin: 33, starter: true },
-    { id: 4845367, key: "castle",      name: "Stephon Castle",          pos: "SG",  projMin: 30, starter: true },
-    { id: 4395723, key: "kjohnson",    name: "Keldon Johnson",          pos: "SF",  projMin: 27, starter: true },
-    { id: 5037871, key: "harper",      name: "Dylan Harper",            pos: "PG",  projMin: 22, starter: false },
-    { id: 4592479, key: "champagnie",  name: "Julian Champagnie",       pos: "SF",  projMin: 18, starter: false },
-    { id: 6578,    key: "barnes",      name: "Harrison Barnes",         pos: "SF",  projMin: 17, starter: false },
-    { id: 3064560, key: "kornet",      name: "Luke Kornet",             pos: "C",   projMin: 16, starter: false },
+  CLE: [
+    { id: 3908809, key: "mitchell", name: "Donovan Mitchell",   pos: "SG",  projMin: 38, starter: true },
+    { id: 4432158, key: "mobley",   name: "Evan Mobley",        pos: "PF",  projMin: 36, starter: true },
+    { id: 4066328, key: "allen",    name: "Jarrett Allen",      pos: "C",   projMin: 30, starter: true },
+    { id: 3992,    key: "harden",   name: "James Harden",       pos: "PG",  projMin: 34, starter: true },
+    { id: 4065778, key: "strus",    name: "Max Strus",          pos: "SF",  projMin: 28, starter: true },
+    { id: 4066757, key: "merrill",  name: "Sam Merrill",        pos: "SG",  projMin: 19, starter: false },
+    { id: 3912848, key: "wade",     name: "Dean Wade",          pos: "PF",  projMin: 17, starter: false },
+    { id: 3032979, key: "schroder", name: "Dennis Schroder",    pos: "PG",  projMin: 15, starter: false },
   ],
 };
 
@@ -517,8 +510,8 @@ async function fetchOdds() {
   const sb = await getJSON(
     "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
   );
-  // Date-anchored fetch for tomorrow's game
-  const dated = await getJSON("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260524");
+  // Date-anchored fetch for tonight's game
+  const dated = await getJSON("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260525");
   const game = (dated.events || sb.events).find((e) => ESPN_GAME_REGEX.test(e.name));
   if (!game) return null;
   const odds = game.competitions[0].odds?.[0];
