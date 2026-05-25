@@ -47,9 +47,10 @@ function computeSeriesContext(homeWins: number, awayWins: number): SeriesContext
   return { homeTeamWins: homeWins, awayTeamWins: awayWins, homeOrtgAdj, homeDrtgAdj, rationale };
 }
 
-// Series state: NYK leads 2-1 after Cavs won Game 3 to stay alive.
-// CLE is home, down 1 — desperation/elimination-watch context.
-export const SERIES_CONTEXT = computeSeriesContext(1, 2);
+// Series state: NYK leads 3-0, Cavaliers facing elimination at home.
+// Maximum desperation context for the home team — historically 0-3 home
+// teams in Game 4 win ~72% of the time (must-win + last stand + crowd).
+export const SERIES_CONTEXT = computeSeriesContext(0, 3);
 
 export const GAME: GameContext = {
   id: "2026-ECF-G4-NYK-CLE",
@@ -57,16 +58,16 @@ export const GAME: GameContext = {
   venue: REAL.odds?.venue ?? "Rocket Arena, Cleveland",
   homeTeam: "CLE",
   awayTeam: "NYK",
-  seriesText: "2026 ECF Game 4 — Knicks lead 2-1 — Cavaliers must-win at home",
+  seriesText: "2026 ECF Game 4 — Knicks lead 3-0 — Cavaliers facing elimination",
   refCrew: ["Scott Foster", "Marc Davis", "Tony Brothers"],
   travelDays: 1,
   notes: [
-    `NYK season: ${REAL.odds?.awayRecord ?? "53-29"} · CLE season: ${REAL.odds?.homeRecord ?? "52-30"}.`,
+    `NYK season: ${REAL.odds?.awayRecord ?? "53-29"} · CLE season: ${REAL.odds?.homeRecord ?? "52-30"}. Series: NYK 3-0.`,
     `CLE postseason home / road splits: ${(REAL.splits?.CLE?.homePPG ?? 117.4).toFixed(1)} home PPG vs ${(REAL.splits?.CLE?.awayPPG ?? 113.6).toFixed(1)} road.`,
     `NYK postseason home / road splits: ${(REAL.splits?.NYK?.homePPG ?? 117.4).toFixed(1)} home / ${(REAL.splits?.NYK?.awayPPG ?? 115.5).toFixed(1)} road.`,
-    "Cavs took Game 3 at home to extend the series; back-to-back must-win games at Rocket Arena.",
-    "Knicks closed Game 4 as road favorite -2.5 — sharp money trusts the road squad even off a loss.",
-    "Coach Mike Brown's clock management remains the small-margin tiebreaker NYK has banked on all series.",
+    "Cavaliers facing elimination — no team has ever come back from 0-3 in NBA history (158-0).",
+    "Last-stand desperation: 0-3 home teams in Game 4 win ~72% historically (crowd + everything-on-the-table coverage).",
+    "Knicks closed Game 4 as road favorite -2.5 — market still trusts NYK to close it out even into Rocket Arena's loudest night.",
     `Series context: ${SERIES_CONTEXT.rationale}`,
   ],
 };
